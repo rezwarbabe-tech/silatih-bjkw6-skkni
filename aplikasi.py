@@ -1,6 +1,6 @@
 # ==============================================
-# APLIKASI siLATIH - BJKW VI MAKASSAR (VERSI 2.2 PERBAIKAN)
-# Perubahan: Tampilan Terpisah Pengelola & Peserta
+# APLIKASI siLATIH - BJKW VI MAKASSAR (VERSI 2.3 PERBAIKAN KONTRAS)
+# Perubahan: Semua tulisan jelas & kontras tinggi
 # ==============================================
 
 # 1. MUAT PUSTAKA & GAYA KUSTOM PUPR
@@ -11,44 +11,116 @@ from io import BytesIO
 from datetime import datetime, date
 import re
 
-# === GAYA WARNA & LATAR IDENTITAS PUPR ===
+# === GAYA WARNA DENGAN KONTRAS TINGGI ===
 st.markdown("""
 <style>
 :root {
-    --pu-biru-utama: #004B87;
-    --pu-biru-terang: #0071BC;
-    --pu-biru-muda: #E8F3FC;
-    --pu-merah: #DC2626;
-    --pu-hijau: #059669;
-    --pu-kuning: #F59E0B;
-    --pu-abu: #F5F7FA;
-    --pu-teks: #2C3E50;
+    --pu-biru-utama: #003366;      /* Lebih gelap agar tulisan tegas */
+    --pu-biru-terang: #005A9C;
+    --pu-biru-muda: #F0F6FC;       /* Latar lebih terang */
+    --pu-merah: #B91C1C;
+    --pu-hijau: #047857;
+    --pu-kuning: #B45309;
+    --pu-abu: #F8FAFC;
+    --pu-teks-utama: #1E293B;      /* Tulisan utama gelap pekat */
+    --pu-teks-kedua: #334155;      /* Tulisan penjelas jelas */
+    --pu-teks-terbalik: #FFFFFF;   /* Tulisan di latar berwarna */
 }
 .stApp {
     background-color: var(--pu-biru-muda);
-    background-image: radial-gradient(circle at 20% 50%, rgba(0,75,135,0.03) 0%, transparent 50%),
-                      radial-gradient(circle at 80% 20%, rgba(0,113,188,0.03) 0%, transparent 50%);
+    background-image: radial-gradient(circle at 20% 50%, rgba(0,51,102,0.04) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, rgba(0,90,156,0.04) 0%, transparent 50%);
     background-attachment: fixed;
+    color: var(--pu-teks-utama);
 }
-h1, h2, h3, h4 { color: var(--pu-biru-utama); font-weight: 700; }
+h1, h2, h3, h4 { 
+    color: var(--pu-biru-utama); 
+    font-weight: 800; 
+    margin-bottom: 0.8rem;
+}
+p, div, span, label {
+    color: var(--pu-teks-utama) !important;
+    font-weight: 400;
+}
 .stButton>button, .stDownloadButton>button {
-    background-color: var(--pu-biru-utama); color: white; border-radius: 6px;
-    border: 2px solid var(--pu-biru-utama); padding: 0.5rem 1.2rem;
-    font-weight: 500; transition: all 0.3s ease;
+    background-color: var(--pu-biru-utama); 
+    color: var(--pu-teks-terbalik) !important; 
+    border-radius: 6px;
+    border: 2px solid var(--pu-biru-utama); 
+    padding: 0.6rem 1.3rem;
+    font-weight: 600; 
+    transition: all 0.2s ease;
 }
 .stButton>button:hover, .stDownloadButton>button:hover {
-    background-color: var(--pu-biru-terang); border-color: var(--pu-biru-terang); transform: translateY(-1px);
+    background-color: var(--pu-biru-terang); 
+    border-color: var(--pu-biru-terang); 
+    color: var(--pu-teks-terbalik) !important;
+    transform: translateY(-1px);
 }
-.pu-info { background: white; border-left: 6px solid var(--pu-biru-utama); padding: 1.2rem; border-radius: 8px; margin-bottom: 1rem; }
-.pu-sukses { background: #F0FDF4; border-left: 6px solid var(--pu-hijau); padding: 1.2rem; border-radius: 8px; margin-bottom: 1rem; }
-.pu-tolak { background: #FEF2F2; border-left: 6px solid var(--pu-merah); padding: 1.2rem; border-radius: 8px; margin-bottom: 1rem; }
-.pu-kuning { background: #FFFBEB; border-left: 6px solid var(--pu-kuning); padding: 1.2rem; border-radius: 8px; margin-bottom: 1rem; }
-section[data-testid="stSidebar"] { background-color: white; border-right: 3px solid var(--pu-biru-muda); }
-.stDataFrame { border-radius: 8px; border: 1px solid var(--pu-biru-muda); }
-div[data-testid="stForm"] {background: white; padding: 1.5rem; border-radius: 10px;}
-.status-akan {color: var(--pu-biru-terang); font-weight: 600;}
-.status-langsung {color: var(--pu-hijau); font-weight: 600;}
-.status-selesai {color: #6B7280; font-weight: 600;}
+.pu-info { 
+    background: white; 
+    border-left: 6px solid var(--pu-biru-utama); 
+    padding: 1.3rem; 
+    border-radius: 8px; 
+    margin-bottom: 1.2rem; 
+    color: var(--pu-teks-utama);
+}
+.pu-sukses { 
+    background: #ECFDF5; 
+    border-left: 6px solid var(--pu-hijau); 
+    padding: 1.3rem; 
+    border-radius: 8px; 
+    margin-bottom: 1.2rem; 
+}
+.pu-tolak { 
+    background: #FEF2F2; 
+    border-left: 6px solid var(--pu-merah); 
+    padding: 1.3rem; 
+    border-radius: 8px; 
+    margin-bottom: 1.2rem; 
+}
+.pu-kuning { 
+    background: #FFFBEB; 
+    border-left: 6px solid var(--pu-kuning); 
+    padding: 1.3rem; 
+    border-radius: 8px; 
+    margin-bottom: 1.2rem; 
+}
+section[data-testid="stSidebar"] { 
+    background-color: white; 
+    border-right: 3px solid var(--pu-biru-muda); 
+    color: var(--pu-teks-utama);
+}
+.stDataFrame { 
+    border-radius: 8px; 
+    border: 1px solid #CBD5E1; 
+    background: white;
+}
+div[data-testid="stForm"] {
+    background: white; 
+    padding: 1.8rem; 
+    border-radius: 10px;
+    border: 1px solid #E2E8F0;
+}
+.status-akan {color: var(--pu-biru-terang); font-weight: 700; font-size: 1rem;}
+.status-langsung {color: var(--pu-hijau); font-weight: 700; font-size: 1rem;}
+.status-selesai {color: #475569; font-weight: 700; font-size: 1rem;}
+.stTextInput>label, .stSelectbox>label, .stDateInput>label, .stNumberInput>label, .stTextArea>label, .stFileUploader>label {
+    color: var(--pu-teks-kedua) !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+}
+.stRadio>label, .stMultiSelect>label {
+    color: var(--pu-teks-utama) !important;
+    font-weight: 500 !important;
+}
+.stInfo, .stSuccess, .stWarning, .stError {
+    color: var(--pu-teks-utama) !important;
+    font-weight: 500 !important;
+}
+[data-testid="stMarkdownContainer"] ul, [data-testid="stMarkdownContainer"] ol {
+    color: var(--pu-teks-utama) !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -299,21 +371,17 @@ def verifikasi_syarat(jabatan_pilihan, jenjang_pendidikan, total_pengalaman):
 # ==============================================
 # 4. NAVIGASI & MENU UTAMA
 # ==============================================
-st.markdown("<hr style='border: 3px solid #004B87; border-radius: 2px; margin-bottom: 1.5rem;'>", unsafe_allow_html=True)
+st.markdown("<hr style='border: 3px solid #003366; border-radius: 2px; margin-bottom: 1.5rem;'>", unsafe_allow_html=True)
 st.title("🏛️ Aplikasi Pelatihan & Sertifikasi UJI Kompetensi")
 st.subheader("Balai Jasa Konstruksi Wilayah VI Makassar")
-st.markdown("<h3 style='color:#004B87;'>siLATIH - Sistem Informasi Pelatihan Terintegrasi</h3>", unsafe_allow_html=True)
+st.markdown("<h3 style='color:#003366;'>siLATIH - Sistem Informasi Pelatihan Terintegrasi</h3>", unsafe_allow_html=True)
 
 # --- MENU NAVIGASI DI SAMPING ---
 st.sidebar.markdown("---")
 st.sidebar.header("📋 Menu Utama")
 
-# Menu untuk semua pengguna
 menu_umum = ["🏠 Halaman Utama", "📋 Daftar Jabatan SKKNI", "📚 Jadwal Pelatihan", "📝 Pendaftaran Pelatihan"]
-# Menu tambahan jika sudah login pengelola
 menu_pengelola = ["⚙️ Pengelolaan Pelatihan"] if st.session_state.sedang_login else []
-
-# Gabungkan menu
 semua_menu = menu_umum + menu_pengelola
 pilihan_menu = st.sidebar.radio("Pilih Halaman", semua_menu, index=semua_menu.index(st.session_state.menu_aktif))
 st.session_state.menu_aktif = pilihan_menu
@@ -348,10 +416,9 @@ else:
         st.rerun()
 
 # ==============================================
-# 5. ISI HALAMAN SESUAI MENU YANG DIPILIH
+# 5. ISI HALAMAN SESUAI MENU
 # ==============================================
 
-# --- HALAMAN UTAMA ---
 if pilihan_menu == "🏠 Halaman Utama":
     st.markdown("""
     <div class="pu-info">
@@ -363,29 +430,28 @@ if pilihan_menu == "🏠 Halaman Utama":
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown("""
-        <div class="card-hasil" style="text-align:center;">
-            <h3>📋 13 Jabatan</h3>
-            <p>Terstandarisasi SKKNI</p>
+        <div style="text-align:center; padding:1.5rem; background:white; border-radius:8px; border:1px solid #E2E8F0;">
+            <h3 style="color:#003366; margin:0;">📋 13 Jabatan</h3>
+            <p style="margin-top:0.5rem;">Terstandarisasi SKKNI</p>
         </div>
         """, unsafe_allow_html=True)
     with col2:
         st.markdown("""
-        <div class="card-hasil" style="text-align:center;">
-            <h3>📚 Jadwal Teratur</h3>
-            <p>Pelatihan rutin setiap bulan</p>
+        <div style="text-align:center; padding:1.5rem; background:white; border-radius:8px; border:1px solid #E2E8F0;">
+            <h3 style="color:#003366; margin:0;">📚 Jadwal Teratur</h3>
+            <p style="margin-top:0.5rem;">Pelatihan rutin setiap bulan</p>
         </div>
         """, unsafe_allow_html=True)
     with col3:
         st.markdown("""
-        <div class="card-hasil" style="text-align:center;">
-            <h3>✅ Sertifikat Resmi</h3>
-            <p>Diakui industri konstruksi</p>
+        <div style="text-align:center; padding:1.5rem; background:white; border-radius:8px; border:1px solid #E2E8F0;">
+            <h3 style="color:#003366; margin:0;">✅ Sertifikat Resmi</h3>
+            <p style="margin-top:0.5rem;">Diakui industri konstruksi</p>
         </div>
         """, unsafe_allow_html=True)
     
     st.info("💡 Gunakan menu di sebelah kiri untuk melihat daftar jabatan, jadwal pelatihan, atau mengisi formulir pendaftaran.")
 
-# --- HALAMAN DAFTAR JABATAN ---
 elif pilihan_menu == "📋 Daftar Jabatan SKKNI":
     st.header("📋 Daftar Jabatan Berdasarkan SKKNI")
     df = pd.DataFrame(daftar_jabatan)
@@ -407,7 +473,6 @@ elif pilihan_menu == "📋 Daftar Jabatan SKKNI":
     with pd.ExcelWriter(buffer, engine='openpyxl') as writer: df.to_excel(writer, index=False, sheet_name="Daftar Jabatan SKKNI")
     st.download_button(label="📂 Unduh File Excel (.xlsx)", data=buffer.getvalue(), file_name="Daftar_Jabatan_SKKNI_BJKW6_PUPR.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
-# --- HALAMAN JADWAL PELATIHAN ---
 elif pilihan_menu == "📚 Jadwal Pelatihan":
     st.header("📚 Informasi Jadwal Pelatihan")
     
@@ -456,8 +521,8 @@ elif pilihan_menu == "📚 Jadwal Pelatihan":
     if pelatihan_selesai:
         for latih, status in pelatihan_selesai:
             st.markdown(f"""
-            <div style="background: #F9FAFB; border-left: 6px solid #9CA3AF; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-            <h4 style="color: #6B7280;">{latih['nama']}</h4>
+            <div style="background: #F8FAFC; border-left: 6px solid #94A3B8; padding: 1.3rem; border-radius: 8px; margin-bottom: 1.2rem;">
+            <h4 style="color:#475569;">{latih['nama']}</h4>
             <p>Jabatan: {latih['jabatan']}<br>
             Pelatihan dilaksanakan: {latih['mulai']} s.d {latih['selesai']}<br>
             Lokasi: {latih['lokasi']}</p>
@@ -465,7 +530,6 @@ elif pilihan_menu == "📚 Jadwal Pelatihan":
     else:
         st.info("ℹ️ Belum ada riwayat pelatihan selesai.")
 
-# --- HALAMAN PENDAFTARAN ---
 elif pilihan_menu == "📝 Pendaftaran Pelatihan":
     st.header("📝 Formulir Pendaftaran Uji Kompetensi")
     
@@ -501,7 +565,7 @@ elif pilihan_menu == "📝 Pendaftaran Pelatihan":
             
             st.subheader("💼 Bukti Pengalaman Kerja")
             st.markdown("""
-            <div style="background:#FFF8E1;padding:1rem;border-radius:8px;border-left:5px solid #FF9800;">
+            <div style="background:#FFFBEB;padding:1.2rem;border-radius:8px;border-left:5px solid #B45309;">
             ⚠️ <strong>Petunjuk:</strong> Sistem akan menghitung masa kerja otomatis berdasarkan tahun yang tertulis pada nama berkas (Contoh: SK_2020_2024.pdf).<br>
             Format berkas yang diterima: PDF, JPG, PNG, DOC, DOCX, XLS, XLSX, RAR, ZIP
             </div>""", unsafe_allow_html=True)
@@ -568,15 +632,14 @@ elif pilihan_menu == "📝 Pendaftaran Pelatihan":
                 <p>✅ {pesan_ktp}<br>✅ {pesan_syarat}</p>
                 <p>Kami akan menghubungi Anda lewat nomor {kontak} paling lambat 3 hari kerja.</p></div>""", unsafe_allow_html=True)
 
-# --- HALAMAN PENGELOLAAN PELATIHAN ---
 elif pilihan_menu == "⚙️ Pengelolaan Pelatihan":
     st.header("⚙️ Pengelolaan Pelatihan (Hanya Pengelola)")
     
+    df_jabatan = pd.DataFrame(daftar_jabatan)
     with st.form("form_pelatihan_baru", clear_on_submit=True):
         col1, col2 = st.columns(2)
         with col1:
             nama_pelatihan = st.text_input("Nama Pelatihan *")
-            df_jabatan = pd.DataFrame(daftar_jabatan)
             jabatan_terkait = st.selectbox("Jabatan Terkait *", df_jabatan["nama_jabatan"].unique())
             lokasi = st.text_input("Lokasi Pelatihan", value="Balai Jasa Konstruksi VI Makassar")
             kuota = st.number_input("Kuota Peserta", min_value=1, value=25)
@@ -641,5 +704,5 @@ elif pilihan_menu == "⚙️ Pengelolaan Pelatihan":
                         st.rerun()
 
 # --- KAKI HALAMAN ---
-st.markdown("<hr style='border: 2px solid #004B87; margin-top: 2rem;'>", unsafe_allow_html=True)
-st.caption("© 2026 Balai Jasa Konstruksi Wilayah VI Makassar — Kementerian Pekerjaan Umum | siLATIH v2.2")
+st.markdown("<hr style='border: 2px solid #003366; margin-top: 2rem;'>", unsafe_allow_html=True)
+st.caption("© 2026 Balai Jasa Konstruksi Wilayah VI Makassar — Kementerian Pekerjaan Umum | siLATIH v2.3")
