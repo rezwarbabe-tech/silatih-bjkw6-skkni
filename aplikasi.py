@@ -87,3 +87,48 @@ st.download_button(
     file_name="Daftar_Jabatan_SKKNI.xlsx",
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
+# ==============================================
+# FORMULIR PENDAFTARAN PELATIHAN SKKNI
+# ==============================================
+st.markdown("---")
+st.subheader("📝 Formulir Pendaftaran Pelatihan")
+st.caption("Isi data dengan lengkap untuk mendaftar pelatihan sesuai jabatan yang diinginkan")
+
+# Buat formulir
+with st.form("pendaftaran_pelatihan"):
+    # Data Diri
+    st.write("#### Data Peserta")
+    nama = st.text_input("Nama Lengkap *", placeholder="Tulis nama lengkap sesuai KTP")
+    nik = st.text_input("Nomor NIK / KTP *", placeholder="Masukkan 16 digit nomor KTP")
+    kontak = st.text_input("Nomor HP / WhatsApp *", placeholder="Contoh: 081234567890")
+    email = st.text_input("Alamat Email", placeholder="contoh@email.com")
+    alamat = st.text_area("Alamat Lengkap", placeholder="Tulis alamat tempat tinggal saat ini")
+
+    # Pilihan Pelatihan
+    st.write("#### Pilihan Pelatihan")
+    # Ambil daftar jabatan otomatis dari tabel yang sudah ada
+    daftar_jabatan = df["nama_jabatan"].unique()
+    pilihan_jabatan = st.selectbox("Jabatan yang Diinginkan *", options=daftar_jabatan)
+    tanggal_mulai = st.date_input("Tanggal Mulai Pelatihan yang Diinginkan")
+
+    # Unggah Berkas
+    st.write("#### Persyaratan")
+    ktp_file = st.file_uploader("Unggah Scan KTP *", type=["pdf", "jpg", "png"])
+    ijazah_file = st.file_uploader("Unggah Scan Ijazah Terakhir", type=["pdf", "jpg", "png"])
+
+    # Tombol Kirim
+    kirim = st.form_submit_button("✅ Kirim Pendaftaran")
+
+    # Proses setelah dikirim
+    if kirim:
+        # Cek kolom wajib diisi
+        if not nama or not nik or not kontak or not ktp_file:
+            st.error("⚠️ Kolom bertanda * wajib diisi!")
+        else:
+            st.success(f"""
+            🎉 Pendaftaran Berhasil Terkirim!
+            - Atas nama: **{nama}**
+            - Jabatan: **{pilihan_jabatan}**
+            - Kami akan menghubungi Anda lewat nomor {kontak} segera.
+            """)
+            st.balloons()
