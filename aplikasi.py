@@ -1,8 +1,7 @@
-# ==================================================
-# APLIKASI PELATIHAN & SERTIFIKASI KOMPETENSI SKKNI
-# Lengkap 195 Jabatan - Siap Jalankan
-# ==================================================
-
+# Judul Utama Aplikasi
+st.title("🏛️ Aplikasi Pelatihan & Sertifikasi UJI Kompetensi BJKW VI Makassar")
+st.subheader("siLATIH - Sistem Informasi Pelatihan Terintegrasi")
+st.markdown("---")
 import streamlit as st
 import pandas as pd
 from io import BytesIO
@@ -11,12 +10,11 @@ from io import BytesIO
 # PENGATURAN TAMPILAN
 # ----------------------
 st.set_page_config(
-    page_title="Sertifikasi Jabatan SKKNI",
-    page_icon="📜",
+    page_title="Aplikasi Pelatihan & Sertifikasi UJI Kompetensi BJKW VI Makassar (siLATIH)",
+    page_icon="🏢",
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
 # ----------------------
 # DATA LENGKAP 195 JABATAN
 # ----------------------
