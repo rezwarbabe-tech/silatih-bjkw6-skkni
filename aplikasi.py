@@ -1,4 +1,8 @@
-# Judul Utama Aplikasi
+# Muat pustaka yang dibutuhkan
+import streamlit as st
+import pandas as pd
+from io import BytesIO
+from datetime import datetime, date# Judul Utama Aplikasi
 st.title("🏛️ Aplikasi Pelatihan & Sertifikasi UJI Kompetensi BJKW VI Makassar")
 st.subheader("siLATIH - Sistem Informasi Pelatihan Terintegrasi")
 st.markdown("---")
