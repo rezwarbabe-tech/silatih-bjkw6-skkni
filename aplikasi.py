@@ -132,3 +132,106 @@ with st.form("pendaftaran_pelatihan"):
             - Kami akan menghubungi Anda lewat nomor {kontak} segera.
             """)
             st.balloons()
+# ==============================================
+# SISTEM LOGIN ADMIN & DAFTAR PELATIHAN
+# ==============================================
+st.sidebar.subheader("🔐 Akses Pengguna")
+hak_akses = st.sidebar.radio("Masuk Sebagai", ["Peserta", "Admin"])
+
+# Data login admin (bisa diubah sesuai keinginan)
+akun_admin = {
+    "username": "admin_silatih",
+    "password": "skkni_2026"
+}
+
+# Variabel penyimpanan daftar pelatihan
+if "daftar_pelatihan" not in st.session_state:
+    st.session_state.daftar_pelatihan = []
+
+# --- HALAMAN KHUSUS ADMIN ---
+if hak_akses == "Admin":
+    st.sidebar.info("✅ Kamu masuk sebagai ADMIN: bisa kelola pelatihan")
+    
+    with st.sidebar.expander("🔑 Login Admin"):
+        user = st.text_input("Username")
+        sandi = st.text_input("Password", type="password")
+        login_ok = st.button("Masuk Admin")
+    
+    if login_ok and user == akun_admin["username"] and sandi == akun_admin["password"]:
+        st.subheader("⚙️ Kelola Daftar Pelatihan")
+        st.caption("Pelatihan akan otomatis terhubung dengan Jabatan SKKNI")
+        
+        # Form tambah pelatihan
+        with st.form("tambah_pelatihan"):
+            nama_pelatihan = st.text_input("Nama Pelatihan *")
+            jabatan_terkait = st.selectbox("Jabatan Terkait *", df["nama_jabatan"].unique())
+            tanggal_buka = st.date_input("Tanggal Buka Pendaftaran")
+            tanggal_tutup = st.date_input("Tanggal Tutup Pendaftaran")
+            kuota = st.number_input("Kuota Peserta", min_value=1, value=20)
+            lokasi = st.text_input("Lokasi Pelatihan")
+            
+            simpan = st.form_submit_button("➕ Tambah Pelatihan")
+            
+            if simpan:
+                st.session_state.daftar_pelatihan.append({
+                    "nama": nama_pelatihan,
+                    "jabatan": jabatan_terkait,
+                    "buka": tanggal_buka,
+                    "tutup": tanggal_tutup,
+                    "kuota": kuota,
+                    "lokasi": lokasi
+                })
+                st.success("✅ Pelatihan berhasil ditambahkan!")
+        
+        # Tampilkan & hapus pelatihan
+        st.markdown("---")
+        st.subheader("📋 Daftar Pelatihan Aktif")
+        if st.session_state.daftar_pelatihan:
+            for idx, latih in enumerate(st.session_state.daftar_pelatihan, 1):
+                st.write(f"""
+                **{idx}. {latih['nama']}**
+                - Jabatan: {latih['jabatan']}
+                - Pendaftaran: {latih['buka']} s.d {latih['tutup']}
+                - Kuota: {latih['kuota']} orang
+                - Lokasi: {latih['lokasi']}
+                """)
+                if st.button(f"🗑️ Hapus Pelatihan {idx}"):
+                    st.session_state.daftar_pelatihan.pop(idx-1)
+                    st.rerun()
+        else:
+            st.info("Belum ada pelatihan yang dibuat.")
+
+    elif login_ok:
+        st.error("❌ Username atau password salah!")
+
+# --- HALAMAN PESERTA & FORM PENDAFTARAN ---
+st.markdown("---")
+st.subheader("📚 Daftar Pelatihan Tersedia")
+if st.session_state.daftar_pelatihan:
+    for latih in st.session_state.daftar_pelatihan:
+        st.write(f"""
+        **{latih['nama']}**
+        Untuk Jabatan: {latih['jabatan']} | Daftar sampai: {latih['tutup']}
+        """)
+else:
+    st.info("Belum ada pelatihan yang dibuka. Silakan cek kembali nanti.")
+
+# --- PERBARUI FORM PENDAFTARAN ---
+st.markdown("---")
+st.subheader("📝 Formulir Pendaftaran Pelatihan")
+with st.form("form_daftar"):
+    nama = st.text_input("Nama Lengkap *")
+    nik = st.text_input("Nomor NIK / KTP *")
+    kontak = st.text_input("Nomor HP / WhatsApp *")
+    
+    # Pilihan pelatihan (hanya tampil yang tersedia)
+    if st.session_state.daftar_pelatihan:
+        pilihan = st.selectbox("Pilih Pelatihan yang Diikuti *", 
+                             [p["nama"] + " - " + p["jabatan"] for p in st.session_state.daftar_pelatihan])
+    else:
+        pilihan = "Belum ada pelatihan"
+        st.warning("Pendaftaran ditutup karena belum ada pelatihan tersedia.")
+    
+    kirim = st.form_submit_button("Kirim Pendaftaran")
+    if kirim and pilihan != "Belum ada pelatihan":
+        st.success(f"✅ Pendaftaran atas nama {nama} untuk pelatihan {pilihan} berhasil!")
