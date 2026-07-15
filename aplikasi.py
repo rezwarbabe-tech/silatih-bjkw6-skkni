@@ -4738,10 +4738,11 @@ def validasi_no_hp(kontak):
     return bool(re.fullmatch(r"^(0|\+62)\d{9,13}$", kontak.strip()))
 
 def validasi_email(email):
-    if not email: return True
+    if not email or email.strip() == "": return True
     return bool(re.fullmatch(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", email.strip()))
 
 def validasi_link_pddikti(link):
+    if not link or link.strip() == "": return True
     return bool(re.match(r"^https?://pddikti\.kemdikbud\.go\.id/", link.strip()))
 
 def ekstrak_tahun_pengalaman(berkas_list):
@@ -4762,7 +4763,7 @@ def ekstrak_tahun_pengalaman(berkas_list):
         return 0
 
 def cek_kesesuaian_ktp_ijazah(nama_ktp, nik_ktp, nama_ijazah, nik_ijazah=""):
-    if not nama_ktp or not nama_ijazah:
+    if not nama_ktp or nama_ktp.strip() == "" or not nama_ijazah or nama_ijazah.strip() == "":
         return False, "Nama lengkap wajib diisi pada kedua berkas"
     nama_sama = nama_ktp.lower().strip() == nama_ijazah.lower().strip()
     nik_sama = True
@@ -4820,7 +4821,7 @@ if not st.session_state.sedang_login:
         nama_pengguna = st.text_input("Nama Lengkap Sesuai Data Kepegawaian")
         nip_pengguna = st.text_input("Nomor Induk Pegawai (NIP)", max_chars=18)
         if st.button("Masuk Akun Pengelola"):
-            if not nama_pengguna or not nip_pengguna:
+            if not nama_pengguna or nama_pengguna.strip() == "" or not nip_pengguna or nip_pengguna.strip() == "":
                 st.error("❌ Lengkapi Nama Lengkap dan NIP terlebih dahulu!")
             elif not validasi_nip(nip_pengguna):
                 st.error("❌ Format NIP salah! Harus berisi 18 digit angka.")
@@ -4968,7 +4969,7 @@ elif pilihan_menu == "📝 Pendaftaran Pelatihan":
         if "Akan Datang" in status:
             pilihan_pendaftaran.append(f"{latih['nama']} — {latih['jabatan']}")
     
-    if not pilihan_pendaftaran:
+    if not pilihan_pendaftaran or not st.session_state.daftar_pelatihan:
         st.warning("⏳ Saat ini tidak ada pelatihan yang menerima pendaftaran. Silakan cek kembali di menu Jadwal Pelatihan nanti.")
     else:
         with st.form("pendaftaran_pelatihan"):
@@ -5005,7 +5006,7 @@ elif pilihan_menu == "📝 Pendaftaran Pelatihan":
 
             st.subheader("🎓 Pilihan Pelatihan")
             pilihan = st.selectbox("Pilih Pelatihan yang Diikuti *", pilihan_pendaftaran)
-            jabatan_pilihan = pilihan.split(" — ")[1] if " — " in pilihan else pilihan
+            jabatan_pilihan = pilihan.split(" — ")[1].strip() if " — " in pilihan and pilihan.split(" — ")[1].strip() != "" else pilihan.strip()
 
             kirim = st.form_submit_button("✅ Kirim & Verifikasi Pendaftaran")
 
@@ -5013,7 +5014,7 @@ elif pilihan_menu == "📝 Pendaftaran Pelatihan":
                 valid = True
                 pesan_error = []
 
-                if not nama or not nik or not kontak or not nama_ijazah or not berkas_ijazah or not bukti_ig or not link_pddikti or not bukti_pengalaman or not berkas_ktp or jenjang_pendidikan == "Pilih...":
+                if not nama or nama.strip() == "" or not nik or nik.strip() == "" or not kontak or kontak.strip() == "" or not nama_ijazah or nama_ijazah.strip() == "" or not berkas_ijazah or not bukti_ig or not link_pddikti or link_pddikti.strip() == "" or not bukti_pengalaman or not berkas_ktp or jenjang_pendidikan == "Pilih...":
                     pesan_error.append("Lengkapi semua kolom bertanda * terlebih dahulu!")
                     valid = False
                 
@@ -5068,7 +5069,7 @@ elif pilihan_menu == "⚙️ Pengelolaan Pelatihan":
     with st.form("form_pelatihan_baru", clear_on_submit=True):
         col1, col2 = st.columns(2)
         with col1:
-            nama_pelatihan = st.text_input("Nama Pelatihan *")
+            nama_pelatihan = st.text_input("Nama Pelatihan *") or "[Nama Pelatihan Kosong]"
             df_jabatan = pd.DataFrame(daftar_jabatan)
             jabatan_terkait = st.selectbox("Jabatan Terkait *", df_jabatan["nama_jabatan"].unique())
             lokasi = st.text_input("Lokasi Pelatihan", value="Balai Jasa Konstruksi VI Makassar")
@@ -5100,12 +5101,12 @@ elif pilihan_menu == "⚙️ Pengelolaan Pelatihan":
             status = tentukan_status(latih["mulai"], latih["selesai"])
             warna_status = "status-akan" if "Akan Datang" in status else ("status-langsung" if "Sedang Berlangsung" in status else "status-selesai")
             
-            with st.expander( {idx}. {latih['nama']} — <span class='{warna_status}'>{status}</span>", unsafe_allow_html=True):
+            with st.expander(f"📌 {idx}. {latih['nama']} — <span class='{warna_status}'>{status}</span>", unsafe_allow_html=True):
                 with st.form(f"ubah_pelatihan_{idx}"):
                     col1, col2 = st.columns(2)
                     with col1:
-                        ubah_nama = st.text_input("Nama Pelatihan *", value=latih["nama"])
-                        ubah_jabatan = st.selectbox("Jabatan Terkait *", df_jabatan["nama_jabatan"].unique(), index=df_jabatan["nama_jabatan"].tolist().index(latih["jabatan"]))
+                        ubah_nama = st.text_input("Nama Pelatihan *", value=latih.get("nama", "[Nama Pelatihan Kosong]"))
+                        ubah_jabatan = st.selectbox("Jabatan Terkait *", df_jabatan["nama_jabatan"].unique(), index=df_jabatan["nama_jabatan"].tolist().index(latih.get("jabatan", "")) if latih.get("jabatan") in df_jabatan["nama_jabatan"].unique() else 0)
                         ubah_lokasi = st.text_input("Lokasi", value=latih["lokasi"])
                         ubah_kuota = st.number_input("Kuota", min_value=1, value=latih["kuota"])
                     with col2:
