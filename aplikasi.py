@@ -1,6 +1,6 @@
 # ==============================================
-# APLIKASI siLATIH - BJKW VI MAKASSAR (VERSI 2.3)
-# Ditambahkan: Alat Hitung Capaian Output Manual + Unggah + Grafik Lengkap
+# APLIKASI siLATIH - BJKW VI MAKASSAR (VERSI LENGKAP FINAL)
+# Fitur Lengkap: Daftar Jabatan, Login Pengelola, Pelatihan, Capaian Output + Grafik
 # ==============================================
 
 # 1. MUAT PUSTAKA & GAYA KUSTOM PUPR
@@ -68,7 +68,7 @@ daftar_pengelola = [
     }
 ]
 
-# === BOBOT INDIKATOR (STANDAR) ===
+# === BOBOT INDIKATOR STANDAR ANGGARAN ===
 BOBOT_STANDAR = {
     "revisi_dipa": 10,
     "deviasi_hal3": 15,
@@ -312,24 +312,20 @@ def verifikasi_syarat(jabatan_pilihan, jenjang_pendidikan, total_pengalaman):
         return False, f"Pengalaman kerja {total_pengalaman} tahun belum memenuhi syarat minimal {butuh} tahun"
 
 def hitung_nilai_capaian(data):
-    """Menghitung nilai gabungan dari semua komponen"""
-    # Nilai Aspek Perencanaan
+    """Menghitung nilai gabungan dari semua komponen sesuai bobot standar"""
     nilai_perencanaan = round(
         (data["revisi_dipa"] * BOBOT_STANDAR["revisi_dipa"] / 100) +
         (data["deviasi_hal3"] * BOBOT_STANDAR["deviasi_hal3"] / 100), 2
     )
-    # Nilai Aspek Pelaksanaan
     nilai_pelaksanaan = round(
         (data["penyerapan"] * BOBOT_STANDAR["penyerapan"] / 100) +
         (data["belanja_kontrak"] * BOBOT_STANDAR["belanja_kontrak"] / 100) +
         (data["tagihan"] * BOBOT_STANDAR["tagihan"] / 100) +
         (data["up_tup"] * BOBOT_STANDAR["up_tup"] / 100), 2
     )
-    # Nilai Aspek Hasil
     nilai_hasil = round(data["capaian_output"] * BOBOT_STANDAR["capaian_output"] / 100, 2)
-    # Nilai Akhir
     nilai_total = round(nilai_perencanaan + nilai_pelaksanaan + nilai_hasil, 2)
-    nilai_akhir = round(nilai_total / 1, 2)  # Konversi bobot total 100%
+    nilai_akhir = round(nilai_total / 1, 2)
     
     return {
         "nilai_perencanaan": nilai_perencanaan,
@@ -340,13 +336,12 @@ def hitung_nilai_capaian(data):
     }
 
 def olah_data_capaian(file):
-    """Mengolah file Excel capaian output sesuai format standar"""
+    """Membaca dan memproses file Excel format Indikator Pelaksanaan Anggaran Satker"""
     try:
         df = pd.read_excel(file)
         data_baru = {}
         periode = ""
         
-        # Membaca data sesuai struktur tabel yang diberikan
         for idx, baris in df.iterrows():
             if str(baris.iloc[0]) == "1" and str(baris.iloc[1]).isdigit():
                 bulan = int(baris.iloc[1])
@@ -354,7 +349,6 @@ def olah_data_capaian(file):
                              "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
                 periode = f"Bulan {nama_bulan[bulan-1]}" if 1 <= bulan <=12 else f"Bulan {bulan}"
                 
-                # Mengambil nilai komponen
                 data_baru = {
                     "Periode": periode,
                     "Revisi DIPA": float(str(baris.iloc[7]).replace(',', '.')),
@@ -371,7 +365,7 @@ def olah_data_capaian(file):
         if data_baru:
             return pd.DataFrame([data_baru])
         else:
-            st.error("❌ Tidak ditemukan data nilai pada file! Pastikan format tabel sesuai.")
+            st.error("❌ Tidak ditemukan data nilai pada file! Pastikan format tabel sesuai contoh.")
             return None
             
     except Exception as e:
@@ -379,7 +373,7 @@ def olah_data_capaian(file):
         return None
 
 # ==============================================
-# 4. TAMPILAN UTAMA
+# 4. TAMPILAN UTAMA APLIKASI
 # ==============================================
 st.markdown("<hr style='border: 3px solid #004B87; border-radius: 2px; margin-bottom: 1.5rem;'>", unsafe_allow_html=True)
 st.title("🏛️ Aplikasi Pelatihan & Sertifikasi UJI Kompetensi")
@@ -389,7 +383,7 @@ st.markdown("<h3 style='color:#004B87;'>siLATIH - Sistem Informasi Pelatihan Ter
 st.markdown("""
 <div class="pu-info">
 📢 <strong>Selamat Datang!</strong><br>
-Aplikasi resmi untuk informasi jabatan SKKNI, pengelolaan pelatihan, serta pendaftaran uji kompetensi dan capaian kinerja anggaran.
+Aplikasi resmi untuk informasi jabatan SKKNI, pengelolaan pelatihan, pendaftaran uji kompetensi, serta pemantauan capaian kinerja anggaran Balai Jasa Konstruksi Wilayah VI Makassar.
 </div>
 """, unsafe_allow_html=True)
 
@@ -445,7 +439,6 @@ else:
     st.markdown("---")
     st.header("⚙️ Pengelolaan Pelatihan (Hanya Pengelola)")
     
-    # Form Tambah Pelatihan Baru
     with st.form("form_pelatihan_baru", clear_on_submit=True):
         col1, col2 = st.columns(2)
         with col1:
@@ -472,7 +465,6 @@ else:
                 st.success("✅ Pelatihan berhasil ditambahkan!")
                 st.rerun()
 
-    # Daftar Semua Pelatihan untuk Diedit
     st.subheader("📋 Daftar Semua Pelatihan (Bisa Diedit/Dihapus)")
     if not st.session_state.daftar_pelatihan:
         st.info("ℹ️ Belum ada pelatihan yang dibuat.")
@@ -515,31 +507,29 @@ else:
                         st.rerun()
 
 # ==============================================
-# BAGIAN KHUSUS: ALAT CAPAIAN OUTPUT BJKW VI MAKASSAR
+# BAGIAN KHUSUS: ALAT CAPAIAN OUTPUT & INDIKATOR ANGGARAN
 # ==============================================
 st.markdown("---")
 st.header("📊 Alat Capaian Output & Indikator Anggaran")
 st.markdown("""
 <div class="pu-info">
-Alat ini berfungsi untuk menghitung, menampilkan uraian rinci, serta memvisualisasikan capaian kinerja anggaran Balai Jasa Konstruksi Wilayah VI Makassar.
-Tersedia dua cara pengisian: **unggah file Excel** atau **masukan data secara manual**.
+Alat ini menampilkan uraian rinci, perhitungan otomatis, serta grafik capaian kinerja anggaran BJKW VI Makassar.
+Tersedia cara unggah file format standar atau isi manual, data akan terakumulasi bulanan.
 </div>
 """, unsafe_allow_html=True)
 
-# Pilih Cara Pengisian
 cara_isi = st.radio("Pilih Cara Pengisian Data:", ["📂 Unggah File Excel Format Standar", "✍️ Masukkan Data Secara Manual"])
 
 # --- CARA 1: UNGGAH FILE ---
 if cara_isi == "📂 Unggah File Excel Format Standar":
     if st.session_state.sedang_login:
         st.markdown("#### 🔼 Unggah File Indikator Pelaksanaan Anggaran (.xlsx)")
-        st.info("Gunakan file dengan format persis seperti contoh yang diberikan: INDIKATOR PELAKSANAAN ANGGARAN SATKER")
+        st.info("Gunakan file dengan format persis seperti contoh: INDIKATOR PELAKSANAAN ANGGARAN SATKER")
         
         file_capaian = st.file_uploader("Pilih File", type=["xlsx"], key="unggah_capaian")
         if file_capaian:
             data_baru = olah_data_capaian(file_capaian)
             if data_baru is not None and not data_baru.empty:
-                # Gabungkan data lama dan baru, hapus duplikat periode
                 if not st.session_state.data_capaian.empty:
                     st.session_state.data_capaian = pd.concat([st.session_state.data_capaian, data_baru], ignore_index=True)
                     st.session_state.data_capaian = st.session_state.data_capaian.drop_duplicates(subset=["Periode"], keep="last")
@@ -559,7 +549,7 @@ if cara_isi == "📂 Unggah File Excel Format Standar":
 # --- CARA 2: ISI MANUAL ---
 else:
     st.markdown("#### ✍️ Masukkan Nilai Komponen Indikator")
-    st.info("Isi semua nilai dengan rentang 0 s.d 100. Bobot penilaian sudah menggunakan standar yang berlaku.")
+    st.info("Isi nilai 0-100, bobot penilaian sesuai standar berlaku.")
     
     with st.form("form_hitung_capaian"):
         nama_bulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", 
@@ -597,7 +587,6 @@ else:
             }
             hasil = hitung_nilai_capaian(data_input)
             
-            # Tambahkan ke data sesi
             data_baru = pd.DataFrame([{
                 "Periode": f"Bulan {periode}",
                 "Revisi DIPA": revisi_dipa,
@@ -618,12 +607,11 @@ else:
             
             st.success(f"✅ Perhitungan periode Bulan {periode} selesai!")
 
-# --- TAMPILAN HASIL, URAIAN & GRAFIK ---
+# --- TAMPILAN HASIL, URAIAN & GRAFIK LENGKAP ---
 if not st.session_state.data_capaian.empty:
     st.markdown("---")
     st.subheader("📋 Uraian Lengkap Capaian Kinerja")
     
-    # Ambil data terakhir untuk uraian rinci
     data_terakhir = st.session_state.data_capaian.iloc[-1]
     periode_terakhir = data_terakhir["Periode"]
     
@@ -660,7 +648,7 @@ if not st.session_state.data_capaian.empty:
     </div>
     """, unsafe_allow_html=True)
     
-    # Tabel Data Lengkap Semua Periode
+    # Tabel Data Lengkap
     st.subheader("📑 Data Lengkap Seluruh Periode")
     st.dataframe(st.session_state.data_capaian, use_container_width=True, hide_index=True)
     
@@ -668,40 +656,31 @@ if not st.session_state.data_capaian.empty:
     st.subheader("📈 Visualisasi Grafik & Diagram")
     
     col1, col2 = st.columns(2)
-    
-    # 1. Grafik Garis Perkembangan Nilai Akhir
+    # Grafik Garis Nilai Akhir
     with col1:
         fig_akhir = px.line(
-            st.session_state.data_capaian, 
-            x="Periode", 
-            y="Nilai Akhir",
-            title=f"Perkembangan Nilai Akhir Indikator Anggaran",
-            markers=True,
-            color_discrete_sequence=["#004B87"],
-            text="Nilai Akhir"
+            st.session_state.data_capaian, x="Periode", y="Nilai Akhir",
+            title="Perkembangan Nilai Akhir Indikator Anggaran",
+            markers=True, color_discrete_sequence=["#004B87"], text="Nilai Akhir"
         )
         fig_akhir.update_layout(yaxis_title="Nilai", yaxis_range=[0,100])
         fig_akhir.update_traces(textposition="top center")
         st.plotly_chart(fig_akhir, use_container_width=True)
     
-    # 2. Grafik Batang Capaian Output
+    # Grafik Batang Capaian Output
     with col2:
         fig_output = px.bar(
-            st.session_state.data_capaian,
-            x="Periode",
-            y="Capaian Output",
+            st.session_state.data_capaian, x="Periode", y="Capaian Output",
             title="Realisasi Capaian Output Per Periode",
-            color_discrete_sequence=["#059669"],
-            text="Capaian Output"
+            color_discrete_sequence=["#059669"], text="Capaian Output"
         )
         fig_output.update_layout(yaxis_title="Nilai Capaian", yaxis_range=[0,100])
         fig_output.update_traces(texttemplate='%{text:.2f}', textposition='outside')
         st.plotly_chart(fig_output, use_container_width=True)
     
-    # 3. Diagram Lingkaran Komposisi Nilai Terakhir
     col3, col4 = st.columns(2)
+    # Diagram Lingkaran Komposisi
     with col3:
-        # Hitung komposisi nilai aspek terakhir
         nilai_perencanaan = round((data_terakhir['Revisi DIPA']*10 + data_terakhir['Deviasi Halaman III']*15)/100,2)
         nilai_pelaksanaan = round((data_terakhir['Penyerapan Anggaran']*10 + data_terakhir['Belanja Kontraktual']*10 + 
                                   data_terakhir['Penyelesaian Tagihan']*10 + data_terakhir['Pengelolaan UP & TUP']*10)/100,2)
@@ -710,40 +689,27 @@ if not st.session_state.data_capaian.empty:
         fig_pie = px.pie(
             values=[nilai_perencanaan, nilai_pelaksanaan, nilai_hasil],
             names=["Perencanaan", "Pelaksanaan", "Capaian Output"],
-            title=f"Komposisi Nilai Indikator {periode_terakhir}",
+            title=f"Komposisi Nilai {periode_terakhir}",
             color_discrete_map={"Perencanaan":"#004B87", "Pelaksanaan":"#0071BC", "Capaian Output":"#059669"}
         )
         st.plotly_chart(fig_pie, use_container_width=True)
     
-    # 4. Grafik Perbandingan Semua Indikator
+    # Grafik Perbandingan Indikator
     with col4:
         fig_banding = go.Figure()
-        fig_banding.add_trace(go.Scatter(
-            x=st.session_state.data_capaian["Periode"],
-            y=st.session_state.data_capaian["Revisi DIPA"],
-            name="Revisi DIPA", line=dict(color="#004B87", dash="solid")
-        ))
-        fig_banding.add_trace(go.Scatter(
-            x=st.session_state.data_capaian["Periode"],
-            y=st.session_state.data_capaian["Penyerapan Anggaran"],
-            name="Penyerapan", line=dict(color="#0071BC", dash="dash")
-        ))
-        fig_banding.add_trace(go.Scatter(
-            x=st.session_state.data_capaian["Periode"],
-            y=st.session_state.data_capaian["Capaian Output"],
-            name="Capaian Output", line=dict(color="#059669", dash="dot")
-        ))
+        fig_banding.add_trace(go.Scatter(x=st.session_state.data_capaian["Periode"], y=st.session_state.data_capaian["Revisi DIPA"], name="Revisi DIPA", line=dict(color="#004B87")))
+        fig_banding.add_trace(go.Scatter(x=st.session_state.data_capaian["Periode"], y=st.session_state.data_capaian["Penyerapan Anggaran"], name="Penyerapan", line=dict(color="#0071BC", dash="dash")))
+        fig_banding.add_trace(go.Scatter(x=st.session_state.data_capaian["Periode"], y=st.session_state.data_capaian["Capaian Output"], name="Capaian Output", line=dict(color="#059669", dash="dot")))
         fig_banding.update_layout(title="Perbandingan Indikator Utama", yaxis_title="Nilai", yaxis_range=[0,100])
         st.plotly_chart(fig_banding, use_container_width=True)
 
 else:
-    st.info("ℹ️ Belum ada data capaian yang ditampilkan. Silakan unggah file atau isi data secara manual di atas.")
+    st.info("ℹ️ Belum ada data capaian. Silakan unggah file atau isi data manual di atas.")
 
-# --- SISA BAGIAN APLIKASI (DAFTAR PELATIHAN & PENDAFTARAN) ---
+# --- BAGIAN INFORMASI PELATIHAN LENGKAP ---
 st.markdown("---")
 st.header("📚 Informasi Pelatihan")
 
-# Kelompokkan pelatihan
 pelatihan_akan = []
 pelatihan_langsung = []
 pelatihan_selesai = []
@@ -759,4 +725,15 @@ for latih in st.session_state.daftar_pelatihan:
 
 # Tampilkan Pelatihan Akan Datang
 st.subheader("🟢 Pelatihan Akan Datang")
-if pelatihan_
+if pelatihan_akan:
+    for latih, status in pelatihan_akan:
+        st.markdown(f"""
+        <div class="pu-info">
+        <h4>{latih['nama']}</h4>
+        <p>Jabatan Terkait: <strong>{latih['jabatan']}</strong><br>
+        Masa Pendaftaran: {latih['buka_daftar'].strftime('%d %B %Y')} s.d {latih['tutup_daftar'].strftime('%d %B %Y')}<br>
+        Waktu Pelatihan: {latih['mulai'].strftime('%d %B %Y')} s.d {latih['selesai'].strftime('%d %B %Y')}<br>
+        Kuota Peserta: {latih['kuota']} orang | Lokasi: {latih['lokasi']}</p>
+        </div>""", unsafe_allow_html=True)
+else:
+    st.info("ℹ️ Belum ada pelatihan yang dijadwalkan akan datang.")
