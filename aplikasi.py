@@ -1,6 +1,7 @@
 # ==============================================
-# APLIKASI siLATIH - BJKW VI MAKASSAR (VERSI 2.2)
-# Ditambahkan: Fitur Capaian Output & Grafik Anggaran
+# APLIKASI siLATIH - BJKW VI MAKASSAR (VERSI 2.1)
+# Balai Jasa Konstruksi Wilayah VI Makassar - PUPR
+# Perubahan: Login Pengelola pakai Nama & NIP
 # ==============================================
 
 # 1. MUAT PUSTAKA & GAYA KUSTOM PUPR
@@ -10,8 +11,6 @@ import pandas as pd
 from io import BytesIO
 from datetime import datetime, date
 import re
-import plotly.express as px
-import plotly.graph_objects as go
 
 # === GAYA WARNA & LATAR IDENTITAS PUPR ===
 st.markdown("""
@@ -212,14 +211,13 @@ if "sedang_login" not in st.session_state:
     st.session_state.sedang_login = False
 if "nama_pengelola" not in st.session_state:
     st.session_state.nama_pengelola = ""
-if "data_capaian" not in st.session_state:
-    st.session_state.data_capaian = pd.DataFrame()
 
 # ==============================================
 # 3. FUNGSI BANTUAN & VALIDASI
 # ==============================================
 
 def cek_akses_pengelola(nama, nip):
+    """Memverifikasi apakah nama dan NIP terdaftar sebagai pengelola"""
     nama_bersih = nama.strip().lower()
     nip_bersih = nip.strip()
     for pengelola in daftar_pengelola:
@@ -229,6 +227,7 @@ def cek_akses_pengelola(nama, nip):
     return False, ""
 
 def tentukan_status(tgl_mulai, tgl_selesai):
+    """Menentukan status pelatihan berdasarkan tanggal hari ini"""
     hari_ini = date.today()
     if hari_ini < tgl_mulai:
         return "🟢 Akan Datang"
@@ -241,6 +240,7 @@ def validasi_nik(nik):
     return bool(re.fullmatch(r"\d{16}", nik.strip()))
 
 def validasi_nip(nip):
+    """Memeriksa format NIP PNS 18 digit angka"""
     return bool(re.fullmatch(r"\d{18}", nip.strip()))
 
 def validasi_no_hp(kontak):
@@ -297,48 +297,6 @@ def verifikasi_syarat(jabatan_pilihan, jenjang_pendidikan, total_pengalaman):
         return True, f"Pengalaman kerja {total_pengalaman} tahun memenuhi syarat minimal {butuh} tahun"
     else:
         return False, f"Pengalaman kerja {total_pengalaman} tahun belum memenuhi syarat minimal {butuh} tahun"
-
-def olah_data_capaian(file):
-    """Mengolah file Excel capaian output sesuai format yang ditentukan"""
-    try:
-        df = pd.read_excel(file)
-        # Pembersihan data dan penyesuaian format
-        df = df.dropna(how='all')
-        # Menyesuaikan nama kolom sesuai format standar
-        kolom_standar = ["Periode", "Revisi DIPA", "Deviasi Halaman III", "Nilai Perencanaan", 
-                        "Penyerapan Anggaran", "Belanja Kontraktual", "Penyelesaian Tagihan", 
-                        "Pengelolaan UP/TUP", "Nilai Pelaksanaan", "Capaian Output", "Nilai Akhir"]
-        # Memproses data dari format tabel yang diberikan
-        data_bersih = []
-        periode = ""
-        baris_nilai = None
-        for idx, baris in df.iterrows():
-            if str(baris.iloc[1]).strip().isdigit():
-                periode = f"Bulan {baris.iloc[1]}"
-            elif "NILAI" in str(baris.iloc[6]):
-                baris_nilai = baris
-            elif baris_nilai is not None and "BOBOT" not in str(baris.iloc[6]):
-                try:
-                    data_bersih.append({
-                        "Periode": periode,
-                        "Revisi DIPA": float(str(baris_nilai.iloc[7]).replace(',', '.')),
-                        "Deviasi Halaman III": float(str(baris_nilai.iloc[8]).replace(',', '.')),
-                        "Nilai Perencanaan": float(str(baris_nilai.iloc[9]).replace(',', '.')),
-                        "Penyerapan Anggaran": float(str(baris_nilai.iloc[10]).replace(',', '.')),
-                        "Belanja Kontraktual": float(str(baris_nilai.iloc[11]).replace(',', '.')),
-                        "Penyelesaian Tagihan": float(str(baris_nilai.iloc[12]).replace(',', '.')),
-                        "Pengelolaan UP/TUP": float(str(baris_nilai.iloc[13]).replace(',', '.')),
-                        "Nilai Pelaksanaan": float(str(baris_nilai.iloc[14]).replace(',', '.')),
-                        "Capaian Output": float(str(baris_nilai.iloc[15]).replace(',', '.')),
-                        "Nilai Akhir": float(str(baris_nilai.iloc[21]).replace(',', '.'))
-                    })
-                    baris_nilai = None
-                except:
-                    continue
-        return pd.DataFrame(data_bersih)
-    except Exception as e:
-        st.error(f"❌ Format file tidak sesuai! Pastikan menggunakan format: Indikator Pelaksanaan Anggaran Satker")
-        return None
 
 # ==============================================
 # 4. TAMPILAN UTAMA
@@ -475,72 +433,6 @@ else:
                         st.session_state.daftar_pelatihan.pop(idx-1)
                         st.success("🗑️ Pelatihan dihapus!")
                         st.rerun()
-
-# --- BAGIAN BARU: CAPAIAN OUTPUT BJKW VI MAKASSAR ---
-st.markdown("---")
-st.header("📊 Capaian Output BJKW VI Makassar")
-
-# Fitur Unggah File Hanya untuk Pengelola
-if st.session_state.sedang_login:
-    st.markdown("""
-    <div class="pu-kuning">
-    ⚠️ <strong>Catatan Pengelola:</strong> Hanya file dengan format <strong>Indikator Pelaksanaan Anggaran Satker</strong> (.xlsx) yang dapat diproses. Data akan muncul secara berurutan dari bulan ke bulan.
-    </div>
-    """, unsafe_allow_html=True)
-    
-    file_capaian = st.file_uploader("Unggah File Capaian Anggaran (.xlsx)", type=["xlsx"], key="unggah_capaian")
-    if file_capaian:
-        data_baru = olah_data_capaian(file_capaian)
-        if data_baru is not None and not data_baru.empty:
-            # Gabungkan data lama dan baru, hapus duplikat
-            if not st.session_state.data_capaian.empty:
-                st.session_state.data_capaian = pd.concat([st.session_state.data_capaian, data_baru], ignore_index=True)
-                st.session_state.data_capaian = st.session_state.data_capaian.drop_duplicates(subset=["Periode"], keep="last")
-            else:
-                st.session_state.data_capaian = data_baru
-            st.success(f"✅ Data capaian periode {data_baru['Periode'].iloc[0]} berhasil dimuat!")
-            st.rerun()
-    
-    if st.button("🗑️ Hapus Semua Data Capaian"):
-        st.session_state.data_capaian = pd.DataFrame()
-        st.success("✅ Semua data capaian telah dihapus!")
-        st.rerun()
-else:
-    st.info("🔒 Fitur unggah data hanya tersedia untuk Pengelola Aplikasi.")
-
-# Tampilan Data dan Grafik untuk Semua Pengguna
-if not st.session_state.data_capaian.empty:
-    st.subheader("📋 Data Capaian Per Bulan")
-    st.dataframe(st.session_state.data_capaian, use_container_width=True, hide_index=True)
-    
-    st.subheader("📈 Grafik Perkembangan Capaian")
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        # Grafik Garis Nilai Akhir
-        fig_akhir = px.line(st.session_state.data_capaian, x="Periode", y="Nilai Akhir", 
-                           title="Perkembangan Nilai Akhir Pelaksanaan Anggaran",
-                           markers=True, color_discrete_sequence=["#004B87"])
-        fig_akhir.update_layout(yaxis_range=[0, 100])
-        st.plotly_chart(fig_akhir, use_container_width=True)
-    
-    with col2:
-        # Grafik Batang Capaian Output
-        fig_output = px.bar(st.session_state.data_capaian, x="Periode", y="Capaian Output",
-                           title="Realisasi Capaian Output",
-                           color_discrete_sequence=["#059669"])
-        fig_output.update_layout(yaxis_range=[0, 100])
-        st.plotly_chart(fig_output, use_container_width=True)
-    
-    # Grafik Perbandingan Aspek
-    fig_aspek = go.Figure()
-    fig_aspek.add_trace(go.Scatter(x=st.session_state.data_capaian["Periode"], y=st.session_state.data_capaian["Nilai Perencanaan"], name="Kualitas Perencanaan", line=dict(color="#004B87")))
-    fig_aspek.add_trace(go.Scatter(x=st.session_state.data_capaian["Periode"], y=st.session_state.data_capaian["Nilai Pelaksanaan"], name="Kualitas Pelaksanaan", line=dict(color="#0071BC")))
-    fig_aspek.add_trace(go.Scatter(x=st.session_state.data_capaian["Periode"], y=st.session_state.data_capaian["Capaian Output"], name="Capaian Output", line=dict(color="#059669")))
-    fig_aspek.update_layout(title="Perbandingan Kinerja Tiap Aspek", yaxis_title="Nilai", yaxis_range=[0, 100])
-    st.plotly_chart(fig_aspek, use_container_width=True)
-else:
-    st.info("ℹ️ Belum ada data capaian yang ditampilkan. Pengelola dapat mengunggah file data capaian anggaran di atas.")
 
 # --- HALAMAN UTAMA PESERTA: DAFTAR PELATIHAN BERDASARKAN STATUS ---
 st.markdown("---")
@@ -710,4 +602,4 @@ else:
 
 # Kaki halaman
 st.markdown("<hr style='border: 2px solid #004B87; margin-top: 2rem;'>", unsafe_allow_html=True)
-st.caption("© 2026 Balai Jasa Konstruksi Wilayah VI Makassar — Kementerian Pekerjaan Umum | siLATIH v2.2")
+st.caption("© 2026 Balai Jasa Konstruksi Wilayah VI Makassar — Kementerian Pekerjaan Umum | siLATIH v2.1")
