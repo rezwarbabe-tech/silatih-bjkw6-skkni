@@ -273,30 +273,60 @@ with st.form("pendaftaran_pelatihan"):
     
     alamat = st.text_area("Alamat Lengkap Tempat Tinggal")
 
+    st.subheader("📎 Bukti Pendukung Pendaftaran")
+    # Bukti Follow Instagram
+    bukti_ig = st.file_uploader("Bukti Mengikuti Instagram @bjkw6_makassar *", type=["pdf", "jpg", "jpeg", "png"])
+    st.caption("📸 Silakan buka dan ikuti akun resmi kami: https://www.instagram.com/bjkw6_makassar/ lalu ambil tangkapan layar sebagai bukti")
+    
+    # Link Bukti Kelulusan PDDIKTI
+    link_pddikti = st.text_input("Link Bukti Kelulusan / Data Mahasiswa dari PDDIKTI *", placeholder="Contoh: https://pddikti.kemdikbud.go.id/...")
+    st.caption("🔗 Salin tautan halaman profil kamu dari laman resmi PDDIKTI")
+
+    # === BAGIAN BARU: BUKTI PENGALAMAN KERJA ===
+    st.subheader("💼 Bukti Pengalaman Kerja")
+    st.markdown("""
+    <div style="background-color: #FFF8E1; padding: 1rem; border-radius: 8px; border-left: 5px solid #FF9800; margin-bottom: 1rem;">
+    <strong>📋 Persyaratan Pengalaman Kerja Sesuai Jenjang:</strong><br>
+    • <strong>Jenjang 9 (Ahli):</strong> Doktor/Spesialis: 0 thn; S2: min 4–7 thn; S1: min 6–8 thn<br>
+    • <strong>Jenjang 8 (Ahli):</strong> S2: 0 thn; Profesi: min 5 thn; S1: min 6 thn<br>
+    • <strong>Jenjang 7 (Ahli):</strong> Profesi: 0 thn; S1: 0–2 thn<br>
+    • <strong>Jenjang 6 (Teknisi):</strong> S1: 0 thn; D3: min 4 thn; D2: min 8 thn; D1: min 12 thn<br>
+    • <strong>Jenjang 5 (Teknisi):</strong> D3: 0 thn; D2: min 4 thn; SMK/SMA: min 8–12 thn<br>
+    • <strong>Jenjang 4 (Teknisi):</strong> D2: 0 thn; SMK: min 2–4 thn; SMA: min 6 thn<br>
+    • <strong>Jenjang 3 (Operator):</strong> D1/SMK: 0 thn; SMA: min 3–4 thn; Dasar: min 5 thn<br>
+    • <strong>Jenjang 2 (Operator):</strong> SMK/SMA: 0–1 thn; Dasar: min 0 thn<br>
+    • <strong>Jenjang 1 (Operator):</strong> Dasar: 0 thn; Non-Pendidikan: min 2 thn<br>
+    <em>Unggah SK Pekerjaan, Sertifikat Kerja, atau Dokumen Pendukung lain yang sah.</em>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    bukti_pengalaman = st.file_uploader("Unggah Bukti Pengalaman Kerja Sesuai Jabatan yang Dipilih *", type=["pdf", "jpg", "jpeg", "png"], accept_multiple_files=True)
+    st.caption("📂 Bisa mengunggah lebih dari satu berkas (misal: SK pengangkatan, surat keterangan kerja, dll.)")
+
     st.subheader("🎓 Pilihan Pelatihan")
     if st.session_state.daftar_pelatihan:
         pilihan = st.selectbox("Pilih Pelatihan yang Diikuti *", 
                              [p["nama"] + " — " + p["jabatan"] for p in st.session_state.daftar_pelatihan])
     else:
         pilihan = "Belum ada pelatihan tersedia"
-        st.warning("Pendaftaran ditutup.")
+        st.warning("Pendaftaran ditutup karena belum ada pelatihan yang dibuka.")
 
-    st.subheader("📎 Berkas Persyaratan")
+    st.subheader("📄 Berkas Persyaratan Utama")
     ktp_file = st.file_uploader("Unggah Scan KTP *", type=["pdf", "jpg", "jpeg", "png"])
     ijazah_file = st.file_uploader("Unggah Scan Ijazah Terakhir", type=["pdf", "jpg", "jpeg", "png"])
 
     kirim = st.form_submit_button("✅ Kirim Pendaftaran Sekarang")
 
     if kirim:
-        if not nama or not nik or not kontak or not ktp_file or pilihan == "Belum ada pelatihan tersedia":
-            st.error("⚠️ Lengkapi semua kolom bertanda *!")
+        if not nama or not nik or not kontak or not ktp_file or not bukti_ig or not link_pddikti or not bukti_pengalaman or pilihan == "Belum ada pelatihan tersedia":
+            st.error("⚠️ Lengkapi semua kolom bertanda * termasuk bukti follow Instagram, link PDDIKTI, dan bukti pengalaman kerja!")
         else:
             st.balloons()
             st.markdown(f"""
             <div class="pu-sukses">
             <h4>🎉 Pendaftaran Berhasil Diterima!</h4>
-            <p>Terima kasih <strong>{nama}</strong> untuk pelatihan <strong>{pilihan}</strong>.<br>
-            Kami hubungi lewat {kontak} paling lambat 3 hari kerja.</p>
+            <p>Terima kasih <strong>{nama}</strong> atas pendaftaran Anda untuk pelatihan <strong>{pilihan}</strong>.<br>
+            Bukti follow Instagram, tautan PDDIKTI, dan berkas pengalaman kerja sudah kami terima. Kami akan menghubungi Anda lewat nomor {kontak} paling lambat 3 hari kerja berikutnya.</p>
             </div>
             """, unsafe_allow_html=True)
 
