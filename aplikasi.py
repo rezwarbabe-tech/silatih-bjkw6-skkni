@@ -1,7 +1,7 @@
 # ==============================================
-# APLIKASI siLATIH - BJKW VI MAKASSAR (VERSI 2.0)
+# APLIKASI siLATIH - BJKW VI MAKASSAR (VERSI 2.1)
 # Balai Jasa Konstruksi Wilayah VI Makassar - PUPR
-# Fitur: Pengelolaan Status Pelatihan & Hak Akses Terbatas
+# Perubahan: Login Pengelola pakai Nama & NIP
 # ==============================================
 
 # 1. MUAT PUSTAKA & GAYA KUSTOM PUPR
@@ -57,6 +57,14 @@ div[data-testid="stForm"] {background: white; padding: 1.5rem; border-radius: 10
 # 2. KONFIGURASI & DATA REFERENSI
 # ==============================================
 st.set_page_config(page_title="siLATIH - BJKW VI Makassar", page_icon="🏗️", layout="wide", initial_sidebar_state="expanded")
+
+# === DAFTAR PENGELOLA YANG DIPERBOLEHKAN ===
+daftar_pengelola = [
+    {
+        "nama_lengkap": "Muhamad Reza Bugis",
+        "nip": "197904142009111002"
+    }
+]
 
 # === TABEL PERSYARATAN PENGALAMAN KERJA ===
 persyaratan = {
@@ -196,18 +204,27 @@ daftar_jabatan = [
     {"no": 13, "kode_jabatan": "MN-MPR-001", "klasifikasi": "MANAJEMEN PROYEK", "subklasifikasi": "Manajemen Proyek", "kualifikasi": "Manajer", "jenjang": 9, "nama_jabatan": "Manajer Proyek Utama", "acuan_skkni": "SKKNI 145-2021"}
 ]
 
-# Data Akun Admin
-akun_admin = {"username": "admin_silatih", "password": "pupr_bjkw6_2026"}
-
 # Inisialisasi State
 if "daftar_pelatihan" not in st.session_state:
     st.session_state.daftar_pelatihan = []
 if "sedang_login" not in st.session_state:
     st.session_state.sedang_login = False
+if "nama_pengelola" not in st.session_state:
+    st.session_state.nama_pengelola = ""
 
 # ==============================================
 # 3. FUNGSI BANTUAN & VALIDASI
 # ==============================================
+
+def cek_akses_pengelola(nama, nip):
+    """Memverifikasi apakah nama dan NIP terdaftar sebagai pengelola"""
+    nama_bersih = nama.strip().lower()
+    nip_bersih = nip.strip()
+    for pengelola in daftar_pengelola:
+        if (pengelola["nama_lengkap"].lower() == nama_bersih and 
+            pengelola["nip"] == nip_bersih):
+            return True, pengelola["nama_lengkap"]
+    return False, ""
 
 def tentukan_status(tgl_mulai, tgl_selesai):
     """Menentukan status pelatihan berdasarkan tanggal hari ini"""
@@ -221,6 +238,10 @@ def tentukan_status(tgl_mulai, tgl_selesai):
 
 def validasi_nik(nik):
     return bool(re.fullmatch(r"\d{16}", nik.strip()))
+
+def validasi_nip(nip):
+    """Memeriksa format NIP PNS 18 digit angka"""
+    return bool(re.fullmatch(r"\d{18}", nip.strip()))
 
 def validasi_no_hp(kontak):
     return bool(re.fullmatch(r"^(0|\+62)\d{9,13}$", kontak.strip()))
@@ -312,29 +333,37 @@ buffer = BytesIO()
 with pd.ExcelWriter(buffer, engine='openpyxl') as writer: df.to_excel(writer, index=False, sheet_name="Daftar Jabatan SKKNI")
 st.download_button(label="📂 Unduh File Excel (.xlsx)", data=buffer.getvalue(), file_name="Daftar_Jabatan_SKKNI_BJKW6_PUPR.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
-# --- SISTEM LOGIN ADMIN ---
+# --- SISTEM LOGIN PENGELOLA ---
 st.sidebar.markdown("---")
 st.sidebar.header("🔐 Akses Pengelola")
 
 if not st.session_state.sedang_login:
-    with st.sidebar.expander("🔑 Masuk Pengelola"):
-        user = st.text_input("Nama Pengguna")
-        sandi = st.text_input("Kata Sandi", type="password")
-        if st.button("Masuk Akun"):
-            if user == akun_admin["username"] and sandi == akun_admin["password"]:
-                st.session_state.sedang_login = True
-                st.rerun()
+    with st.sidebar.expander("🔑 Masuk Sebagai Pengelola"):
+        nama_pengguna = st.text_input("Nama Lengkap Sesuai Data Kepegawaian")
+        nip_pengguna = st.text_input("Nomor Induk Pegawai (NIP)", max_chars=18)
+        if st.button("Masuk Akun Pengelola"):
+            if not nama_pengguna or not nip_pengguna:
+                st.error("❌ Lengkapi Nama Lengkap dan NIP terlebih dahulu!")
+            elif not validasi_nip(nip_pengguna):
+                st.error("❌ Format NIP salah! Harus berisi 18 digit angka.")
             else:
-                st.error("❌ Nama pengguna atau kata sandi salah!")
+                terdaftar, nama_terverifikasi = cek_akses_pengelola(nama_pengguna, nip_pengguna)
+                if terdaftar:
+                    st.session_state.sedang_login = True
+                    st.session_state.nama_pengelola = nama_terverifikasi
+                    st.rerun()
+                else:
+                    st.error("❌ Nama atau NIP tidak terdaftar sebagai pengelola aplikasi!")
 else:
-    st.sidebar.success("✅ Sedang masuk sebagai Pengelola")
+    st.sidebar.success(f"✅ Selamat datang, **{st.session_state.nama_pengelola}**")
     if st.sidebar.button("🚪 Keluar Akun"):
         st.session_state.sedang_login = False
+        st.session_state.nama_pengelola = ""
         st.rerun()
 
     # === MENU PENGELOLA: TAMBAH & UBAH PELATIHAN ===
     st.markdown("---")
-    st.header("⚙️ Pengelolaan Pelatihan (Hanya untuk Pengelola)")
+    st.header("⚙️ Pengelolaan Pelatihan (Hanya Pengelola)")
     
     # Form Tambah Pelatihan Baru
     with st.form("form_pelatihan_baru", clear_on_submit=True):
@@ -474,9 +503,8 @@ st.header("📝 Formulir Pendaftaran")
 
 # Ambil daftar pelatihan yang bisa didaftar
 pilihan_pendaftaran = []
-for latih, status in pelatihan_akan + pelatihan_langsung:
-    if "Akan Datang" in status:
-        pilihan_pendaftaran.append(f"{latih['nama']} — {latih['jabatan']}")
+for latih, status in pelatihan_akan:
+    pilihan_pendaftaran.append(f"{latih['nama']} — {latih['jabatan']}")
 
 if not pilihan_pendaftaran:
     st.warning("⏳ Saat ini tidak ada pelatihan yang menerima pendaftaran. Silakan cek kembali nanti.")
@@ -574,4 +602,4 @@ else:
 
 # Kaki halaman
 st.markdown("<hr style='border: 2px solid #004B87; margin-top: 2rem;'>", unsafe_allow_html=True)
-st.caption("© 2026 Balai Jasa Konstruksi Wilayah VI Makassar — Kementerian Pekerjaan Umum | siLATIH v2.0")
+st.caption("© 2026 Balai Jasa Konstruksi Wilayah VI Makassar — Kementerian Pekerjaan Umum | siLATIH v2.1")
