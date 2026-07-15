@@ -1,42 +1,87 @@
 # ==============================================
-# 1. MUAT PUSTAKA & PENGATURAN TAMBAHAN
+# 1. MUAT PUSTAKA & GAYA KUSTOM PUPR
 # ==============================================
 import streamlit as st
 import pandas as pd
 from io import BytesIO
 from datetime import datetime, date
 
-# Gaya tampilan kustom
+# === GAYA WARNA & LATAR IDENTITAS PUPR ===
 st.markdown("""
 <style>
-/* Warna utama biru resmi BJKW */
+/* Warna dasar Kementerian PUPR: Biru Resmi */
+:root {
+    --pu-biru-utama: #004B87;
+    --pu-biru-terang: #0071BC;
+    --pu-biru-muda: #E8F3FC;
+    --pu-abu: #F5F7FA;
+    --pu-teks: #2C3E50;
+}
+
+/* Latar belakang dengan motif batik ringan */
 .stApp {
-    background-color: #f8fafc;
+    background-color: var(--pu-biru-muda);
+    background-image: radial-gradient(circle at 20% 50%, rgba(0,75,135,0.03) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, rgba(0,113,188,0.03) 0%, transparent 50%);
+    background-attachment: fixed;
 }
-h1, h2, h3 {
-    color: #0b4a91;
+
+/* Judul dan teks utama */
+h1, h2, h3, h4 {
+    color: var(--pu-biru-utama);
+    font-weight: 700;
 }
-.stButton>button {
-    background-color: #0b4a91;
+p, div, span {
+    color: var(--pu-teks);
+}
+
+/* Tombol gaya PUPR */
+.stButton>button, .stDownloadButton>button {
+    background-color: var(--pu-biru-utama);
     color: white;
+    border-radius: 6px;
+    border: 2px solid var(--pu-biru-utama);
+    padding: 0.5rem 1.2rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+.stButton>button:hover, .stDownloadButton>button:hover {
+    background-color: var(--pu-biru-terang);
+    border-color: var(--pu-biru-terang);
+    transform: translateY(-1px);
+}
+
+/* Kotak info dan pesan */
+.pu-info {
+    background: white;
+    border-left: 6px solid var(--pu-biru-utama);
+    padding: 1.2rem;
     border-radius: 8px;
-    border: none;
-    padding: 0.5rem 1rem;
+    box-shadow: 0 2px 8px rgba(0,75,135,0.08);
+    margin-bottom: 1rem;
 }
-.stButton>button:hover {
-    background-color: #165fc7;
+.pu-sukses {
+    background: #F0F9FF;
+    border-left: 6px solid #059669;
+    padding: 1.2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(5,150,105,0.08);
+    margin-bottom: 1rem;
 }
-.info-box {
-    background-color: #e7f0ff;
-    padding: 1rem;
-    border-radius: 10px;
-    border-left: 5px solid #0b4a91;
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background-color: white;
+    border-right: 3px solid var(--pu-biru-muda);
 }
-.success-box {
-    background-color: #e6fffa;
-    padding: 1rem;
-    border-radius: 10px;
-    border-left: 5px solid #009688;
+section[data-testid="stSidebar"] h2, section[data-testid="stSidebar"] h3 {
+    color: var(--pu-biru-utama);
+}
+
+/* Tabel */
+.stDataFrame {
+    border-radius: 8px;
+    border: 1px solid var(--pu-biru-muda);
 }
 </style>
 """, unsafe_allow_html=True)
@@ -46,24 +91,23 @@ h1, h2, h3 {
 # ==============================================
 st.set_page_config(
     page_title="siLATIH - BJKW VI Makassar",
-    page_icon="🏛️",
+    page_icon="🏗️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Judul Utama dengan pemisah
-st.markdown("---")
+# Garis pemisah atas berwarna biru PU
+st.markdown("<hr style='border: 3px solid #004B87; border-radius: 2px; margin-bottom: 1.5rem;'>", unsafe_allow_html=True)
+
 st.title("🏛️ Aplikasi Pelatihan & Sertifikasi UJI Kompetensi")
 st.subheader("Balai Jasa Konstruksi Wilayah VI Makassar")
-st.markdown("<h3 style='color:#0b4a91;'>siLATIH - Sistem Informasi Pelatihan Terintegrasi</h3>", unsafe_allow_html=True)
-st.markdown("---")
+st.markdown("<h3 style='color:#004B87;'>siLATIH - Sistem Informasi Pelatihan Terintegrasi</h3>", unsafe_allow_html=True)
 
-# Kotak sambutan
 st.markdown("""
-<div class="info-box">
-📢 Selamat datang! Aplikasi ini menyediakan informasi jabatan sesuai Standar Kompetensi Kerja Nasional Indonesia (SKKNI), daftar pelatihan yang dibuka, serta formulir pendaftaran peserta.
+<div class="pu-info">
+📢 <strong>Selamat Datang!</strong><br>
+Aplikasi resmi untuk informasi jabatan sesuai Standar Kompetensi Kerja Nasional Indonesia (SKKNI), pengelolaan pelatihan, serta pendaftaran uji kompetensi di lingkungan Kementerian Pekerjaan Umum dan Perumahan Rakyat.
 </div>
-<br>
 """, unsafe_allow_html=True)
 
 # ----------------------
@@ -129,7 +173,7 @@ with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
 st.download_button(
     label="📂 Unduh File Excel (.xlsx)",
     data=buffer.getvalue(),
-    file_name="Daftar_Jabatan_SKKNI_BJKW6.xlsx",
+    file_name="Daftar_Jabatan_SKKNI_BJKW6_PUPR.xlsx",
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
 
@@ -140,13 +184,13 @@ st.sidebar.markdown("---")
 st.sidebar.header("🔐 Akses Pengguna")
 hak_akses = st.sidebar.radio("Masuk Sebagai", ["Peserta Pelatihan", "Pengelola Aplikasi"])
 
-akun_admin = {"username": "admin_silatih", "password": "skkni_2026"}
+akun_admin = {"username": "admin_silatih", "password": "pupr_bjkw6_2026"}
 
 if "daftar_pelatihan" not in st.session_state:
     st.session_state.daftar_pelatihan = []
 
 if hak_akses == "Pengelola Aplikasi":
-    st.sidebar.success("✅ Mode Pengelola: Bisa menambah & mengatur pelatihan")
+    st.sidebar.success("✅ Mode Pengelola: Bisa mengatur pelatihan")
     
     with st.sidebar.expander("🔑 Masuk Admin"):
         user = st.text_input("Nama Pengguna")
@@ -176,7 +220,7 @@ if hak_akses == "Pengelola Aplikasi":
                     "buka": tanggal_buka, "tutup": tanggal_tutup,
                     "kuota": kuota, "lokasi": lokasi
                 })
-                st.success("✅ Pelatihan berhasil ditambahkan dan tersedia untuk peserta!")
+                st.success("✅ Pelatihan berhasil ditambahkan!")
                 st.rerun()
         
         st.markdown("---")
@@ -192,7 +236,7 @@ if hak_akses == "Pengelola Aplikasi":
                         st.session_state.daftar_pelatihan.pop(idx-1)
                         st.rerun()
         else:
-            st.info("ℹ️ Belum ada pelatihan yang dibuat. Silakan tambahkan pelatihan di atas.")
+            st.info("ℹ️ Belum ada pelatihan yang dibuat.")
 
     elif login_ok:
         st.error("❌ Nama pengguna atau kata sandi salah!")
@@ -203,21 +247,19 @@ st.header("📚 Pelatihan yang Sedang Dibuka")
 if st.session_state.daftar_pelatihan:
     for latih in st.session_state.daftar_pelatihan:
         st.markdown(f"""
-        <div class="info-box">
+        <div class="pu-info">
         <h4>{latih['nama']}</h4>
         <p>Untuk Jabatan: <strong>{latih['jabatan']}</strong><br>
         Batas Pendaftaran: {latih['tutup']} | Kuota: {latih['kuota']} orang<br>
         Lokasi: {latih['lokasi']}</p>
         </div>
-        <br>
         """, unsafe_allow_html=True)
 else:
-    st.info("ℹ️ Saat ini belum ada pelatihan yang dibuka. Silakan cek kembali secara berkala.")
+    st.info("ℹ️ Saat ini belum ada pelatihan yang dibuka.")
 
 # --- FORMULIR PENDAFTARAN ---
 st.markdown("---")
 st.header("📝 Formulir Pendaftaran Pelatihan")
-st.caption("Isi data dengan lengkap dan benar untuk mengikuti pelatihan")
 
 with st.form("pendaftaran_pelatihan"):
     st.subheader("👤 Data Diri Peserta")
@@ -229,7 +271,7 @@ with st.form("pendaftaran_pelatihan"):
         kontak = st.text_input("Nomor HP / WhatsApp *", placeholder="08xx-xxxx-xxxx")
         email = st.text_input("Alamat Email", placeholder="anda@email.com")
     
-    alamat = st.text_area("Alamat Lengkap Tempat Tinggal", placeholder="Kecamatan, Kabupaten, Provinsi")
+    alamat = st.text_area("Alamat Lengkap Tempat Tinggal")
 
     st.subheader("🎓 Pilihan Pelatihan")
     if st.session_state.daftar_pelatihan:
@@ -237,7 +279,7 @@ with st.form("pendaftaran_pelatihan"):
                              [p["nama"] + " — " + p["jabatan"] for p in st.session_state.daftar_pelatihan])
     else:
         pilihan = "Belum ada pelatihan tersedia"
-        st.warning("Pendaftaran ditutup karena belum ada pelatihan yang dibuka.")
+        st.warning("Pendaftaran ditutup.")
 
     st.subheader("📎 Berkas Persyaratan")
     ktp_file = st.file_uploader("Unggah Scan KTP *", type=["pdf", "jpg", "jpeg", "png"])
@@ -247,17 +289,17 @@ with st.form("pendaftaran_pelatihan"):
 
     if kirim:
         if not nama or not nik or not kontak or not ktp_file or pilihan == "Belum ada pelatihan tersedia":
-            st.error("⚠️ Mohon lengkapi semua kolom yang bertanda * dan pilih pelatihan yang tersedia!")
+            st.error("⚠️ Lengkapi semua kolom bertanda *!")
         else:
             st.balloons()
             st.markdown(f"""
-            <div class="success-box">
+            <div class="pu-sukses">
             <h4>🎉 Pendaftaran Berhasil Diterima!</h4>
-            <p>Terima kasih <strong>{nama}</strong> atas pendaftaran Anda untuk pelatihan <strong>{pilihan}</strong>.<br>
-            Kami akan menghubungi Anda melalui nomor {kontak} paling lambat 3 hari kerja berikutnya.</p>
+            <p>Terima kasih <strong>{nama}</strong> untuk pelatihan <strong>{pilihan}</strong>.<br>
+            Kami hubungi lewat {kontak} paling lambat 3 hari kerja.</p>
             </div>
             """, unsafe_allow_html=True)
 
 # Kaki halaman
-st.markdown("---")
-st.caption("© 2026 Balai Jasa Konstruksi Wilayah VI Makassar | siLATIH v1.0")
+st.markdown("<hr style='border: 2px solid #004B87; margin-top: 2rem;'>", unsafe_allow_html=True)
+st.caption("© 2026 Balai Jasa Konstruksi Wilayah VI Makassar — Kementerian Pekerjaan Umum dan Perumahan Rakyat | siLATIH v1.0")
