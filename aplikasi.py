@@ -377,4 +377,4 @@ with st.form("pendaftaran_pelatihan"):
 
 # Kaki halaman
 st.markdown("<hr style='border: 2px solid #004B87; margin-top: 2rem;'>", unsafe_allow_html=True)
-st.caption("© 2026 Balai Jasa Konstruksi Wilayah VI Makassar — Kementerian PUPR | siLATIH v1.0")
+st.caption("© 2026 Balai Jasa Konstruksi Wilayah VI Makassar — Kementerian Pekerjaan Umum | siLATIH v1.0")
