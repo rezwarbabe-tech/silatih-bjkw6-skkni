@@ -5101,7 +5101,7 @@ elif pilihan_menu == "⚙️ Pengelolaan Pelatihan":
             status = tentukan_status(latih["mulai"], latih["selesai"])
             warna_status = "status-akan" if "Akan Datang" in status else ("status-langsung" if "Sedang Berlangsung" in status else "status-selesai")
             
-            with st.expander(f"📌 {idx}. {latih['nama']} — <span class='{warna_status}'>{status}</span>", unsafe_allow_html=True):
+            with st.expander(f"📌 {idx}. {latih['nama']} — {status}"):
                 with st.form(f"ubah_pelatihan_{idx}"):
                     col1, col2 = st.columns(2)
                     with col1:
