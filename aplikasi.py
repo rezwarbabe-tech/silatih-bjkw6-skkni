@@ -1,21 +1,14 @@
 # ==============================================
-# APLIKASI SI LATIH LENGKAP + PEMANTAUAN CAPAIAN ANGGARAN
-# Balai Jasa Konstruksi Wilayah VI Makassar
-# Kementerian Pekerjaan Umum
+# 1. MUAT PUSTAKA & GAYA KUSTOM PUPR
 # ==============================================
-
 import streamlit as st
 import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
 from io import BytesIO
 from datetime import datetime, date
 import re
 from dateutil.relativedelta import relativedelta
 
-# ==============================================
-# 1. GAYA TAMPILAN RESMI KEMENTERIAN PEKERJAAN UMUM
-# ==============================================
+# === GAYA WARNA & LATAR IDENTITAS PUPR ===
 st.markdown("""
 <style>
 :root {
@@ -24,98 +17,159 @@ st.markdown("""
     --pu-biru-muda: #E8F3FC;
     --pu-merah: #DC2626;
     --pu-hijau: #059669;
-    --pu-kuning: #F59E0B;
     --pu-abu: #F5F7FA;
     --pu-teks: #2C3E50;
 }
-
 .stApp {
     background-color: var(--pu-biru-muda);
     background-image: radial-gradient(circle at 20% 50%, rgba(0,75,135,0.03) 0%, transparent 50%),
                       radial-gradient(circle at 80% 20%, rgba(0,113,188,0.03) 0%, transparent 50%);
     background-attachment: fixed;
-    font-family: 'Segoe UI', Roboto, sans-serif;
 }
-
 h1, h2, h3, h4 { color: var(--pu-biru-utama); font-weight: 700; }
-p, div, span { color: var(--pu-teks); }
-
 .stButton>button, .stDownloadButton>button {
-    background-color: var(--pu-biru-utama);
-    color: white;
-    border-radius: 6px;
-    border: 2px solid var(--pu-biru-utama);
-    padding: 0.5rem 1.2rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    background-color: var(--pu-biru-utama); color: white; border-radius: 6px;
+    border: 2px solid var(--pu-biru-utama); padding: 0.5rem 1.2rem;
+    font-weight: 500; transition: all 0.3s ease;
 }
 .stButton>button:hover, .stDownloadButton>button:hover {
-    background-color: var(--pu-biru-terang);
-    border-color: var(--pu-biru-terang);
-    transform: translateY(-1px);
+    background-color: var(--pu-biru-terang); border-color: var(--pu-biru-terang); transform: translateY(-1px);
 }
-
-.pu-info {
-    background: white;
-    border-left: 6px solid var(--pu-biru-utama);
-    padding: 1.2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,75,135,0.08);
-    margin-bottom: 1rem;
-}
-.pu-sukses {
-    background: #F0FDF4;
-    border-left: 6px solid var(--pu-hijau);
-    padding: 1.2rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-}
-.pu-tolak {
-    background: #FEF2F2;
-    border-left: 6px solid var(--pu-merah);
-    padding: 1.2rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-}
-.pu-kotak {
-    background: white;
-    border-left: 6px solid var(--pu-biru-utama);
-    padding: 1.2rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-}
-
-section[data-testid="stSidebar"] {
-    background-color: white;
-    border-right: 3px solid var(--pu-biru-muda);
-}
+.pu-info { background: white; border-left: 6px solid var(--pu-biru-utama); padding: 1.2rem; border-radius: 8px; margin-bottom: 1rem; }
+.pu-sukses { background: #F0FDF4; border-left: 6px solid var(--pu-hijau); padding: 1.2rem; border-radius: 8px; margin-bottom: 1rem; }
+.pu-tolak { background: #FEF2F2; border-left: 6px solid var(--pu-merah); padding: 1.2rem; border-radius: 8px; margin-bottom: 1rem; }
+section[data-testid="stSidebar"] { background-color: white; border-right: 3px solid var(--pu-biru-muda); }
 .stDataFrame { border-radius: 8px; border: 1px solid var(--pu-biru-muda); }
 </style>
 """, unsafe_allow_html=True)
 
 # ==============================================
-# 2. KONFIGURASI UTAMA & MENU NAVIGASI
+# 2. KONFIGURASI & DATA REFERENSI
 # ==============================================
-st.set_page_config(
-    page_title="siLATIH & Capaian Anggaran - BJKW VI Makassar",
-    page_icon="🏗️",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+st.set_page_config(page_title="siLATIH - BJKW VI Makassar", page_icon="🏗️", layout="wide", initial_sidebar_state="expanded")
 
-st.sidebar.markdown("---")
-st.sidebar.header("📋 Menu Utama")
-menu = st.sidebar.radio("Pilih Halaman", [
-    "🏠 Beranda",
-    "📚 Daftar Jabatan SKKNI",
-    "📝 Pendaftaran Pelatihan",
-    "📊 Pemantauan Capaian Output Anggaran",
-    "🔐 Pengelola Aplikasi"
-])
+# === TABEL PERSYARATAN PENGALAMAN KERJA ===
+persyaratan = {
+    "Ahli Utama Teknik Sumber Daya Air": {
+        "jenjang": 9,
+        "min_tahun": {
+            "Doktor/Doktor Terapan/Pendidikan Spesialis_2": 0,
+            "S2/S2 Terapan/Pendidikan Spesialis_1": 4,
+            "Pendidikan Profesi": 7,
+            "S1/S1 Terapan/D4 Terapan": 8
+        }
+    },
+    "Ahli Madya Teknik Sumber Daya Air": {
+        "jenjang": 8,
+        "min_tahun": {
+            "Magister/Magister Terapan/S2/S2 Terapan/Pendidikan Spesialis_1": 0,
+            "Pendidikan Profesi": 5,
+            "S1/S1 Terapan/D4 Terapan": 6
+        }
+    },
+    "Ahli Muda Teknik Sumber Daya Air": {
+        "jenjang": 7,
+        "min_tahun": {
+            "Pendidikan Profesi": 0,
+            "S1/S1 Terapan/D4 Terapan (Fresh Graduate)": 0,
+            "S1/S1 Terapan/D4 Terapan": 2
+        }
+    },
+    "Ahli Utama Rekayasa Jalan Raya": {
+        "jenjang": 9,
+        "min_tahun": {
+            "Doktor/Doktor Terapan/Pendidikan Spesialis_2": 0,
+            "S2/S2 Terapan/Pendidikan Spesialis_1": 4,
+            "Pendidikan Profesi": 7,
+            "S1/S1 Terapan/D4 Terapan": 8
+        }
+    },
+    "Pengawas Pelaksanaan Gedung": {
+        "jenjang": 6,
+        "min_tahun": {
+            "S1/S1 Terapan/D4 Terapan": 0,
+            "D3": 4,
+            "D2": 8,
+            "D1": 12
+        }
+    },
+    "Tukang Beton Terampil": {
+        "jenjang": 4,
+        "min_tahun": {
+            "D2": 0,
+            "D1/SMK Plus": 2,
+            "SMK": 4,
+            "SMA": 6
+        }
+    },
+    "Operator Bulldozer": {
+        "jenjang": 3,
+        "min_tahun": {
+            "D1/SMK Plus": 0,
+            "SMK": 3,
+            "SMA": 4,
+            "Pendidikan Dasar": 5
+        }
+    },
+    "Operator Ekskavator": {
+        "jenjang": 3,
+        "min_tahun": {
+            "D1/SMK Plus": 0,
+            "SMK": 3,
+            "SMA": 4,
+            "Pendidikan Dasar": 5
+        }
+    },
+    "Teknisi Mekanik Alat Berat": {
+        "jenjang": 5,
+        "min_tahun": {
+            "D3": 0,
+            "D2": 4,
+            "D1/SMK Plus": 8,
+            "SMK": 10,
+            "SMA": 12
+        }
+    },
+    "Teknisi Instalasi Listrik Terampil": {
+        "jenjang": 5,
+        "min_tahun": {
+            "D3": 0,
+            "D2": 4,
+            "D1/SMK Plus": 8,
+            "SMK": 10,
+            "SMA": 12
+        }
+    },
+    "Teknisi Pemasangan Panel Surya": {
+        "jenjang": 5,
+        "min_tahun": {
+            "D3": 0,
+            "D2": 4,
+            "D1/SMK Plus": 8,
+            "SMK": 10,
+            "SMA": 12
+        }
+    },
+    "Ahli Utama Keselamatan dan Kesehatan Kerja": {
+        "jenjang": 9,
+        "min_tahun": {
+            "Doktor/Doktor Terapan/Pendidikan Spesialis_2": 0,
+            "S2/S2 Terapan/Pendidikan Spesialis_1": 4,
+            "Pendidikan Profesi": 7,
+            "S1/S1 Terapan/D4 Terapan": 8
+        }
+    },
+    "Manajer Proyek Utama": {
+        "jenjang": 9,
+        "min_tahun": {
+            "Doktor/Doktor Terapan/Pendidikan Spesialis_2": 0,
+            "S2/S2 Terapan/Pendidikan Spesialis_1": 4,
+            "Pendidikan Profesi": 7,
+            "S1/S1 Terapan/D4 Terapan": 8
+        }
+    }
+}
 
-# ==============================================
-# 3. DATA REFERENSI LENGKAP
-# ==============================================
 daftar_jabatan = [
     {"no": 1, "kode_jabatan": "SI-SDA-001", "klasifikasi": "SIPIL", "subklasifikasi": "Sumber Daya Air", "kualifikasi": "Ahli", "jenjang": 9, "nama_jabatan": "Ahli Utama Teknik Sumber Daya Air", "acuan_skkni": "SKKNI 124-2021"},
     {"no": 2, "kode_jabatan": "SI-SDA-002", "klasifikasi": "SIPIL", "subklasifikasi": "Sumber Daya Air", "kualifikasi": "Ahli", "jenjang": 8, "nama_jabatan": "Ahli Madya Teknik Sumber Daya Air", "acuan_skkni": "SKKNI 124-2021"},
@@ -132,265 +186,195 @@ daftar_jabatan = [
     {"no": 13, "kode_jabatan": "MN-MPR-001", "klasifikasi": "MANAJEMEN PROYEK", "subklasifikasi": "Manajemen Proyek", "kualifikasi": "Manajer", "jenjang": 9, "nama_jabatan": "Manajer Proyek Utama", "acuan_skkni": "SKKNI 145-2021"}
 ]
 
-persyaratan_pengalaman = {
-    "Ahli Utama Teknik Sumber Daya Air": {"jenjang":9,"min_tahun":{"Doktor/Doktor Terapan/Pendidikan Spesialis_2":0,"S2/S2 Terapan/Pendidikan Spesialis_1":4,"Pendidikan Profesi":7,"S1/S1 Terapan/D4 Terapan":8}},
-    "Ahli Madya Teknik Sumber Daya Air": {"jenjang":8,"min_tahun":{"Magister/Magister Terapan/S2/S2 Terapan/Pendidikan Spesialis_1":0,"Pendidikan Profesi":5,"S1/S1 Terapan/D4 Terapan":6}},
-    "Ahli Muda Teknik Sumber Daya Air": {"jenjang":7,"min_tahun":{"Pendidikan Profesi":0,"S1/S1 Terapan/D4 Terapan (Fresh Graduate)":0,"S1/S1 Terapan/D4 Terapan":2}},
-    "Ahli Utama Rekayasa Jalan Raya": {"jenjang":9,"min_tahun":{"Doktor/Doktor Terapan/Pendidikan Spesialis_2":0,"S2/S2 Terapan/Pendidikan Spesialis_1":4,"Pendidikan Profesi":7,"S1/S1 Terapan/D4 Terapan":8}},
-    "Pengawas Pelaksanaan Gedung": {"jenjang":6,"min_tahun":{"S1/S1 Terapan/D4 Terapan":0,"D3":4,"D2":8,"D1":12}},
-    "Tukang Beton Terampil": {"jenjang":4,"min_tahun":{"D2":0,"D1/SMK Plus":2,"SMK":4,"SMA":6}},
-    "Operator Bulldozer": {"jenjang":3,"min_tahun":{"D1/SMK Plus":0,"SMK":3,"SMA":4,"Pendidikan Dasar":5}},
-    "Operator Ekskavator": {"jenjang":3,"min_tahun":{"D1/SMK Plus":0,"SMK":3,"SMA":4,"Pendidikan Dasar":5}},
-    "Teknisi Mekanik Alat Berat": {"jenjang":5,"min_tahun":{"D3":0,"D2":4,"D1/SMK Plus":8,"SMK":10,"SMA":12}},
-    "Teknisi Instalasi Listrik Terampil": {"jenjang":5,"min_tahun":{"D3":0,"D2":4,"D1/SMK Plus":8,"SMK":10,"SMA":12}},
-    "Teknisi Pemasangan Panel Surya": {"jenjang":5,"min_tahun":{"D3":0,"D2":4,"D1/SMK Plus":8,"SMK":10,"SMA":12}},
-    "Ahli Utama Keselamatan dan Kesehatan Kerja": {"jenjang":9,"min_tahun":{"Doktor/Doktor Terapan/Pendidikan Spesialis_2":0,"S2/S2 Terapan/Pendidikan Spesialis_1":4,"Pendidikan Profesi":7,"S1/S1 Terapan/D4 Terapan":8}},
-    "Manajer Proyek Utama": {"jenjang":9,"min_tahun":{"Doktor/Doktor Terapan/Pendidikan Spesialis_2":0,"S2/S2 Terapan/Pendidikan Spesialis_1":4,"Pendidikan Profesi":7,"S1/S1 Terapan/D4 Terapan":8}}
-}
-
-if "daftar_pelatihan" not in st.session_state:
-    st.session_state.daftar_pelatihan = []
-akun_admin = {"username": "admin_silatih", "password": "pupr_bjkw6_2026"}
-
 # ==============================================
-# 4. FUNGSI VERIFIKASI & PENGOLAHAN DATA
+# 3. FUNGSI VERIFIKASI OTOMATIS
 # ==============================================
 def ekstrak_tahun_pengalaman(berkas_list):
+    """Menghitung akumulasi masa kerja dari berkas yang diunggah (simulasi ekstraksi data)"""
     total_tahun = 0
     try:
         for berkas in berkas_list:
             nama_berkas = berkas.name.lower()
+            # Pola pencarian tanggal mulai dan selesai dari nama berkas/konten
             pola_tanggal = r'(\d{4})'
             tahun = re.findall(pola_tanggal, nama_berkas)
-            if len(tahun)>=2:
+            if len(tahun) >= 2:
                 mulai = int(tahun[0])
-                selesai = int(tahun[1]) if int(tahun[1])<=datetime.now().year else datetime.now().year
+                selesai = int(tahun[1]) if int(tahun[1]) <= datetime.now().year else datetime.now().year
                 total_tahun += max(0, selesai - mulai)
-            elif len(tahun)==1:
+            elif len(tahun) == 1:
                 total_tahun += max(0, datetime.now().year - int(tahun[0]))
-        return round(total_tahun,1) if total_tahun>0 else 0
+        return round(total_tahun, 1) if total_tahun > 0 else 0
     except:
         return 0
 
 def cek_kesesuaian_ktp_ijazah(nama_ktp, nik_ktp, nama_ijazah, nik_ijazah=""):
-    if not nama_ktp or not nama_ijazah: return False, "Nama lengkap wajib diisi pada kedua berkas"
+    """Memverifikasi kesesuaian data KTP dan Ijazah"""
+    if not nama_ktp or not nama_ijazah:
+        return False, "Nama lengkap wajib diisi pada kedua berkas"
     nama_sama = nama_ktp.lower().strip() == nama_ijazah.lower().strip()
-    nik_sama = nik_ktp.strip() == nik_ijazah.strip() if nik_ijazah else True
-    if nama_sama and nik_sama: return True, "✅ Data KTP dan Ijazah sesuai"
-    elif not nama_sama: return False, "❌ Nama lengkap pada KTP tidak sama dengan Ijazah"
-    else: return False, "❌ Nomor identitas pada KTP tidak sesuai dengan Ijazah"
+    nik_sama = True
+    if nik_ijazah:
+        nik_sama = nik_ktp.strip() == nik_ijazah.strip()
+    if nama_sama and nik_sama:
+        return True, "Data KTP dan Ijazah sesuai"
+    elif not nama_sama:
+        return False, "Nama lengkap pada KTP tidak sama dengan Ijazah"
+    else:
+        return False, "Nomor identitas pada KTP tidak sesuai dengan Ijazah"
 
 def verifikasi_syarat(jabatan_pilihan, jenjang_pendidikan, total_pengalaman):
-    if jabatan_pilihan not in persyaratan_pengalaman: return True, "ℹ️ Syarat belum tercantum, diterima sementara"
-    syarat = persyaratan_pengalaman[jabatan_pilihan]
-    jenjang_terdekat = next((k for k in syarat["min_tahun"].keys() if jenjang_pendidikan.lower() in k.lower()), None)
-    if not jenjang_terdekat: return False, f"❌ Jenjang pendidikan {jenjang_pendidikan} tidak sesuai untuk jabatan ini"
-    butuh = syarat["min_tahun"][jenjang_terdekat]
-    if total_pengalaman >= butuh: return True, f"✅ Pengalaman kerja {total_pengalaman} tahun memenuhi syarat minimal {butuh} tahun"
-    else: return False, f"❌ Pengalaman kerja {total_pengalaman} tahun belum memenuhi syarat minimal {butuh} tahun"
-
-# ==============================================
-# 5. HALAMAN BERANDA
-# ==============================================
-if menu == "🏠 Beranda":
-    st.markdown("<hr style='border:3px solid #004B87; border-radius:2px; margin-bottom:1.5rem;'>", unsafe_allow_html=True)
-    st.title("🏛️ Sistem Informasi Pelatihan & Pemantauan Kinerja")
-    st.subheader("Balai Jasa Konstruksi Wilayah VI Makassar")
-    st.markdown("<h3 style='color:#004B87;'>Kementerian Pekerjaan Umum</h3>", unsafe_allow_html=True)
-    st.markdown("""
-    <div class="pu-info">
-    📢 <strong>Selamat Datang di Aplikasi siLATIH!</strong><br>
-    Layanan pendaftaran pelatihan uji kompetensi konstruksi serta pemantauan capaian output pelaksanaan anggaran Satuan Kerja.
-    </div>
-    """, unsafe_allow_html=True)
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("""<div class="pu-kotak"><h4>📚 Layanan Pelatihan</h4><ul><li>Daftar jabatan SKKNI</li><li>Pendaftaran daring</li><li>Verifikasi otomatis berkas</li></ul></div>""", unsafe_allow_html=True)
-    with col2:
-        st.markdown("""<div class="pu-kotak"><h4>📊 Capaian Anggaran</h4><ul><li>Unggah data indikator</li><li>Grafik capaian bulanan</li><li>Analisis perbandingan</li></ul></div>""", unsafe_allow_html=True)
-
-# ==============================================
-# 6. HALAMAN DAFTAR JABATAN
-# ==============================================
-elif menu == "📚 Daftar Jabatan SKKNI":
-    st.markdown("<hr style='border:3px solid #004B87; border-radius:2px; margin-bottom:1.5rem;'>", unsafe_allow_html=True)
-    st.header("📋 Daftar Jabatan Berdasarkan SKKNI")
-    df = pd.DataFrame(daftar_jabatan)
-    st.sidebar.header("🔎 Saring Data")
-    pilih_klasifikasi = st.sidebar.multiselect("Bidang Klasifikasi", options=sorted(df["klasifikasi"].unique()))
-    if pilih_klasifikasi: df = df[df["klasifikasi"].isin(pilih_klasifikasi)]
-    pilih_kualifikasi = st.sidebar.multiselect("Tingkat Kualifikasi", options=sorted(df["kualifikasi"].unique()))
-    if pilih_kualifikasi: df = df[df["kualifikasi"].isin(pilih_kualifikasi)]
-    kata_kunci = st.text_input("🔍 Cari Jabatan/Kode Jabatan:")
-    if kata_kunci: df = df[df["nama_jabatan"].str.contains(kata_kunci, case=False) | df["kode_jabatan"].str.contains(kata_kunci, case=False)]
-    st.info(f"✅ Menampilkan {len(df)} jabatan")
-    st.dataframe(df, use_container_width=True, hide_index=True)
-    buffer = BytesIO()
-    with pd.ExcelWriter(buffer, engine='openpyxl') as w: df.to_excel(w, index=False, sheet_name="Daftar Jabatan")
-    st.download_button("📂 Unduh Excel", buffer.getvalue(), "Daftar_Jabatan_SKKNI.xlsx")
-
-# ==============================================
-# 7. HALAMAN PENDAFTARAN PELATIHAN
-# ==============================================
-elif menu == "📝 Pendaftaran Pelatihan":
-    st.markdown("<hr style='border:3px solid #004B87; border-radius:2px; margin-bottom:1.5rem;'>", unsafe_allow_html=True)
-    st.header("📚 Pelatihan Sedang Dibuka")
-    if st.session_state.daftar_pelatihan:
-        for l in st.session_state.daftar_pelatihan:
-            st.markdown(f"""<div class="pu-info"><h4>{l['nama']}</h4><p>Jabatan: {l['jabatan']}<br>Batas Daftar: {l['tutup']} | Kuota: {l['kuota']} | Lokasi: {l['lokasi']}</p></div>""", unsafe_allow_html=True)
-    else: st.info("ℹ️ Belum ada pelatihan dibuka.")
-    
-    st.markdown("---")
-    st.header("📝 Formulir Pendaftaran")
-    with st.form("form_daftar"):
-        st.subheader("👤 Data Diri")
-        c1,c2 = st.columns(2)
-        with c1: nama = st.text_input("Nama Lengkap Sesuai KTP *"); nik = st.text_input("NIK / KTP *")
-        with c2: kontak = st.text_input("Nomor HP/WA *"); email = st.text_input("Email")
-        alamat = st.text_area("Alamat Lengkap")
-        
-        st.subheader("🎓 Pendidikan & Ijazah")
-        jenjang = st.selectbox("Jenjang Pendidikan Terakhir *", ["Pilih...", "Pendidikan Dasar", "SMA", "SMK", "SMK Plus/D1", "D2", "D3", "D4/S1", "Profesi", "S2", "Spesialis_1", "Doktor/Spesialis_2"])
-        nama_ijazah = st.text_input("Nama Sesuai Ijazah *"); nik_ijazah = st.text_input("Nomor Identitas di Ijazah")
-        berkas_ijazah = st.file_uploader("Unggah Ijazah *", type=["pdf","jpg","jpeg","png","doc","docx"])
-        
-        st.subheader("📎 Bukti Pendukung")
-        berkas_ktp = st.file_uploader("Unggah KTP *", type=["pdf","jpg","jpeg","png","doc","docx"])
-        bukti_ig = st.file_uploader("Bukti Follow @bjkw6_makassar *", type=["pdf","jpg","jpeg","png"])
-        link_pddikti = st.text_input("Link PDDIKTI *", placeholder="https://pddikti.kemdikbud.go.id/...")
-        
-        st.subheader("💼 Bukti Pengalaman Kerja")
-        st.info("Format diterima: PDF, Gambar, Word, Excel, RAR/ZIP")
-        bukti_pengalaman = st.file_uploader("Unggah Bukti Pengalaman Kerja *", type=["pdf","jpg","jpeg","png","doc","docx","xls","xlsx","rar","zip"], accept_multiple_files=True)
-        
-        st.subheader("🎓 Pilihan Pelatihan")
-        if st.session_state.daftar_pelatihan:
-            pilihan = st.selectbox("Pilih Pelatihan *", [f"{p['nama']} — {p['jabatan']}" for p in st.session_state.daftar_pelatihan])
-            jabatan_pilihan = pilihan.split(" — ")[1]
-        else: pilihan = "Belum ada pelatihan"; jabatan_pilihan = ""; st.warning("Pendaftaran ditutup.")
-        
-        kirim = st.form_submit_button("✅ Kirim & Verifikasi")
-        
-        if kirim:
-            if not nama or not nik or not kontak or not nama_ijazah or not berkas_ijazah or not bukti_ig or not link_pddikti or not bukti_pengalaman or not berkas_ktp or jenjang=="Pilih..." or pilihan=="Belum ada pelatihan":
-                st.error("⚠️ Lengkapi semua kolom bertanda *!")
-            else:
-                ok1, pesan1 = cek_kesesuaian_ktp_ijazah(nama, nik, nama_ijazah, nik_ijazah)
-                if not ok1: st.markdown(f'<div class="pu-tolak"><h4>❌ Ditolak</h4><p>{pesan1}</p></div>', unsafe_allow_html=True); st.stop()
-                total_pengalaman = ekstrak_tahun_pengalaman(bukti_pengalaman)
-                st.info(f"🔍 Akumulasi pengalaman kerja: {total_pengalaman} tahun")
-                ok2, pesan2 = verifikasi_syarat(jabatan_pilihan, jenjang, total_pengalaman)
-                if not ok2: st.markdown(f'<div class="pu-tolak"><h4>❌ Ditolak</h4><p>{pesan2}</p></div>', unsafe_allow_html=True); st.stop()
-                st.balloons()
-                st.markdown(f'<div class="pu-sukses"><h4>🎉 Diterima!</h4><p>Terima kasih {nama} untuk {pilihan}<br>{pesan1}<br>{pesan2}<br>Kami hubungi lewat {kontak} maksimal 3 hari kerja.</p></div>', unsafe_allow_html=True)
-
-# ==============================================
-# 8. HALAMAN PEMANTAUAN CAPAIAN OUTPUT ANGGARAN (LENGKAP)
-# ==============================================
-elif menu == "📊 Pemantauan Capaian Output Anggaran":
-    st.markdown("<hr style='border:3px solid #004B87; border-radius:2px; margin-bottom:1.5rem;'>", unsafe_allow_html=True)
-    st.header("📊 Pemantauan Indikator Pelaksanaan Anggaran")
-    st.subheader("Balai Jasa Konstruksi Wilayah VI Makassar")
-    
-    st.subheader("📂 Unggah Berkas Data")
-    berkas_anggaran = st.file_uploader("Pilih berkas Excel Indikator Pelaksanaan Anggaran Satker", type=["xlsx","xls"])
-    
-    # Data contoh sesuai berkas yang kamu kirim
-    data_contoh = pd.DataFrame([{
-        "Bulan": "Juli", "Tahun": 2026, "Kode KPPN": "054", "Kode BA": "145", "Kode Satker": "694413", "Nama Satker": "BALAI JASA KONSTRUKSI WILAYAH VI MAKASSAR",
-        "Revisi DIPA": 100.00, "Deviasi Halaman III DIPA": 59.50, "Nilai Perencanaan": 79.75,
-        "Penyerapan Anggaran": 93.06, "Belanja Kontraktual": 100.00, "Penyelesaian Tagihan": 100.00, "Pengelolaan UP TUP": 89.53, "Nilai Pelaksanaan": 95.65,
-        "Capaian Output": 66.49, "Nilai Akhir": 66.49
-    }])
-    
-    if berkas_anggaran:
-        try:
-            df_anggaran = pd.read_excel(berkas_anggaran)
-            st.success("✅ Berkas berhasil dibaca!")
-        except:
-            st.warning("⚠️ Format berkas tidak sesuai, menampilkan data contoh Juli 2026")
-            df_anggaran = data_contoh
+    """Memverifikasi pemenuhan syarat pengalaman kerja"""
+    if jabatan_pilihan not in persyaratan:
+        return True, "Syarat belum tercantum, diterima sementara"
+    syarat = persyaratan[jabatan_pilihan]
+    min_tahun = syarat["min_tahun"]
+    jenjang_terdekat = next((k for k in min_tahun.keys() if jenjang_pendidikan.lower() in k.lower()), None)
+    if not jenjang_terdekat:
+        return False, f"Jenjang pendidikan {jenjang_pendidikan} tidak sesuai untuk jabatan ini"
+    butuh = min_tahun[jenjang_terdekat]
+    if total_pengalaman >= butuh:
+        return True, f"Pengalaman kerja {total_pengalaman} tahun memenuhi syarat minimal {butuh} tahun"
     else:
-        st.info("ℹ️ Belum ada berkas diunggah, menampilkan data contoh Juli 2026")
-        df_anggaran = data_contoh
-    
-    st.markdown("---")
-    st.subheader("📋 Ringkasan Data Capaian Bulanan")
-    st.dataframe(df_anggaran, use_container_width=True, hide_index=True)
-    
-    st.markdown("---")
-    st.subheader("📈 Visualisasi Capaian Selama Satu Tahun Berjalan")
-    if len(df_anggaran) < 12:
-        st.info("📝 Unggah berkas lengkap 12 bulan untuk melihat grafik utuh satu tahun berjalan.")
-    
-    # Grafik Garis Perkembangan Nilai Utama
-    st.subheader("Perkembangan Nilai Utama Tiap Bulan")
-    kolom_garis = ["Nilai Perencanaan", "Nilai Pelaksanaan", "Capaian Output", "Nilai Akhir"]
-    fig_garis = px.line(
-        df_anggaran, x="Bulan", y=kolom_garis, markers=True,
-        color_discrete_sequence=["#004B87", "#0071BC", "#F59E0B", "#059669"],
-        labels={"value":"Nilai (0-100)", "variable":"Indikator"}
-    )
-    fig_garis.update_layout(plot_bgcolor="white", paper_bgcolor="white", font_color="#2C3E50")
-    st.plotly_chart(fig_garis, use_container_width=True)
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        # Diagram Batang Perbandingan Komponen
-        st.subheader("Perbandingan Komponen Indikator")
-        kolom_batang = ["Revisi DIPA", "Deviasi Halaman III DIPA", "Penyerapan Anggaran", "Belanja Kontraktual", "Penyelesaian Tagihan", "Pengelolaan UP TUP"]
-        fig_batang = px.bar(
-            df_anggaran.melt(id_vars="Bulan", value_vars=kolom_batang),
-            x="variable", y="value", color="Bulan", barmode="group",
-            labels={"value":"Nilai Capaian", "variable":"Komponen"}
-        )
-        fig_batang.update_layout(plot_bgcolor="white", paper_bgcolor="white", xaxis_tickangle=-45)
-        st.plotly_chart(fig_batang, use_container_width=True)
-    
-    with col2:
-        # Diagram Lingkaran Komposisi Nilai
-        st.subheader("Komposisi Pembentukan Nilai Akhir")
-        fig_pie = px.pie(
-            values=[20, 40, 40], names=["Kualitas Perencanaan", "Kualitas Pelaksanaan", "Capaian Output"],
-            color_discrete_sequence=["#004B87", "#0071BC", "#F59E0B"]
-        )
-        fig_pie.update_layout(paper_bgcolor="white")
-        st.plotly_chart(fig_pie, use_container_width=True)
+        return False, f"Pengalaman kerja {total_pengalaman} tahun belum memenuhi syarat minimal {butuh} tahun"
 
 # ==============================================
-# 9. HALAMAN PENGELOLA APLIKASI
+# 4. TAMPILAN UTAMA & SISTEM
 # ==============================================
-elif menu == "🔐 Pengelola Aplikasi":
-    st.markdown("<hr style='border:3px solid #004B87; border-radius:2px; margin-bottom:1.5rem;'>", unsafe_allow_html=True)
-    st.header("⚙️ Pengaturan Pengelolaan")
+st.markdown("<hr style='border: 3px solid #004B87; border-radius: 2px; margin-bottom: 1.5rem;'>", unsafe_allow_html=True)
+st.title("🏛️ Aplikasi Pelatihan & Sertifikasi UJI Kompetensi")
+st.subheader("Balai Jasa Konstruksi Wilayah VI Makassar")
+st.markdown("<h3 style='color:#004B87;'>siLATIH - Sistem Informasi Pelatihan Terintegrasi</h3>", unsafe_allow_html=True)
+
+st.markdown("""
+<div class="pu-info">
+📢 <strong>Selamat Datang!</strong><br>
+Aplikasi resmi untuk informasi jabatan SKKNI, pengelolaan pelatihan, serta pendaftaran uji kompetensi. Sistem akan memverifikasi kesesuaian berkas secara otomatis.
+</div>
+""", unsafe_allow_html=True)
+
+# --- DAFTAR JABATAN ---
+st.header("📋 Daftar Jabatan Berdasarkan SKKNI")
+df = pd.DataFrame(daftar_jabatan)
+st.sidebar.markdown("---")
+st.sidebar.header("🔎 Saring Data")
+pilih_klasifikasi = st.sidebar.multiselect("Bidang Klasifikasi", options=sorted(df["klasifikasi"].unique()))
+if pilih_klasifikasi: df = df[df["klasifikasi"].isin(pilih_klasifikasi)]
+pilih_kualifikasi = st.sidebar.multiselect("Tingkat Kualifikasi", options=sorted(df["kualifikasi"].unique()))
+if pilih_kualifikasi: df = df[df["kualifikasi"].isin(pilih_kualifikasi)]
+kata_kunci = st.text_input("🔍 Cari Jabatan atau Kode Jabatan:")
+if kata_kunci: df = df[df["nama_jabatan"].str.contains(kata_kunci, case=False) | df["kode_jabatan"].str.contains(kata_kunci, case=False)]
+st.info(f"✅ Menampilkan **{len(df)}** jabatan yang sesuai kriteria Anda")
+st.dataframe(df, use_container_width=True, hide_index=True)
+
+# --- UNDUH DATA ---
+st.subheader("📥 Unduh Daftar Jabatan")
+buffer = BytesIO()
+with pd.ExcelWriter(buffer, engine='openpyxl') as writer: df.to_excel(writer, index=False, sheet_name="Daftar Jabatan SKKNI")
+st.download_button(label="📂 Unduh File Excel (.xlsx)", data=buffer.getvalue(), file_name="Daftar_Jabatan_SKKNI_BJKW6_PUPR.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+# --- SISTEM LOGIN ---
+st.sidebar.markdown("---")
+st.sidebar.header("🔐 Akses Pengguna")
+hak_akses = st.sidebar.radio("Masuk Sebagai", ["Peserta Pelatihan", "Pengelola Aplikasi"])
+akun_admin = {"username": "admin_silatih", "password": "pupr_bjkw6_2026"}
+if "daftar_pelatihan" not in st.session_state: st.session_state.daftar_pelatihan = []
+
+if hak_akses == "Pengelola Aplikasi":
+    st.sidebar.success("✅ Mode Pengelola")
     with st.sidebar.expander("🔑 Masuk Admin"):
         user = st.text_input("Nama Pengguna")
         sandi = st.text_input("Kata Sandi", type="password")
-        login_ok = st.button("Masuk")
-    
+        login_ok = st.button("Masuk Akun")
     if login_ok and user == akun_admin["username"] and sandi == akun_admin["password"]:
-        st.success("✅ Mode Pengelola Aktif")
-        st.subheader("📅 Tambah Pelatihan Baru")
+        st.markdown("---")
+        st.header("⚙️ Pengaturan Pelatihan")
         with st.form("tambah_pelatihan", clear_on_submit=True):
-            c1,c2 = st.columns(2)
-            with c1: nama = st.text_input("Nama Pelatihan *"); jabatan = st.selectbox("Jabatan Terkait *", pd.DataFrame(daftar_jabatan)["nama_jabatan"].unique()); lokasi = st.text_input("Lokasi")
-            with c2: tgl_buka = st.date_input("Tanggal Buka"); tgl_tutup = st.date_input("Tanggal Tutup"); kuota = st.number_input("Kuota", min_value=1, value=25)
-            simpan = st.form_submit_button("➕ Simpan")
-            if simpan:
-                st.session_state.daftar_pelatihan.append({"nama":nama,"jabatan":jabatan,"buka":tgl_buka,"tutup":tgl_tutup,"kuota":kuota,"lokasi":lokasi})
-                st.success("✅ Pelatihan ditambahkan!"); st.rerun()
+            col1, col2 = st.columns(2)
+            with col1: nama_pelatihan = st.text_input("Nama Pelatihan *"); jabatan_terkait = st.selectbox("Jabatan Terkait *", df["nama_jabatan"].unique()); lokasi = st.text_input("Lokasi Pelatihan")
+            with col2: tanggal_buka = st.date_input("Tanggal Buka"); tanggal_tutup = st.date_input("Tanggal Tutup"); kuota = st.number_input("Kuota Peserta", min_value=1, value=25)
+            simpan = st.form_submit_button("➕ Simpan Pelatihan Baru")
+            if simpan: st.session_state.daftar_pelatihan.append({"nama": nama_pelatihan, "jabatan": jabatan_terkait, "buka": tanggal_buka, "tutup": tanggal_tutup, "kuota": kuota, "lokasi": lokasi}); st.success("✅ Pelatihan ditambahkan!"); st.rerun()
         st.markdown("---")
         st.subheader("📋 Daftar Pelatihan Aktif")
         if st.session_state.daftar_pelatihan:
-            for i, l in enumerate(st.session_state.daftar_pelatihan,1):
-                with st.expander(f"{i}. {l['nama']}"):
-                    st.write(f"Jabatan: {l['jabatan']} | Periode: {l['buka']}–{l['tutup']} | Kuota: {l['kuota']} | Lokasi: {l['lokasi']}")
-                    if st.button(f"🗑️ Hapus", key=f"hapus_{i}"): st.session_state.daftar_pelatihan.pop(i-1); st.rerun()
+            for idx, latih in enumerate(st.session_state.daftar_pelatihan, 1):
+                with st.expander(f"📌 {idx}. {latih['nama']}"):
+                    st.write(f"🔹 Jabatan: {latih['jabatan']} | Periode: {latih['buka']}–{latih['tutup']} | Kuota: {latih['kuota']} | Lokasi: {latih['lokasi']}")
+                    if st.button(f"🗑️ Hapus", key=f"hapus_{idx}"): st.session_state.daftar_pelatihan.pop(idx-1); st.rerun()
         else: st.info("ℹ️ Belum ada pelatihan.")
     elif login_ok: st.error("❌ Nama pengguna atau kata sandi salah!")
 
-# ==============================================
-# 10. KAKI HALAMAN RESMI
-# ==============================================
-st.markdown("<hr style='border:2px solid #004B87; margin-top:2rem;'>", unsafe_allow_html=True)
-st.caption("© 2026 Balai Jasa Konstruksi Wilayah VI Makassar — Kementerian Pekerjaan Umum | siLATIH v2.0 Lengkap")
+# --- HALAMAN PESERTA & FORMULIR ---
+st.markdown("---")
+st.header("📚 Pelatihan yang Sedang Dibuka")
+if st.session_state.daftar_pelatihan:
+    for latih in st.session_state.daftar_pelatihan:
+        st.markdown(f"""<div class="pu-info"><h4>{latih['nama']}</h4><p>Jabatan: <strong>{latih['jabatan']}</strong><br>Batas Daftar: {latih['tutup']} | Kuota: {latih['kuota']} | Lokasi: {latih['lokasi']}</p></div>""", unsafe_allow_html=True)
+else: st.info("ℹ️ Belum ada pelatihan yang dibuka.")
+
+st.markdown("---")
+st.header("📝 Formulir Pendaftaran & Verifikasi Otomatis")
+with st.form("pendaftaran_pelatihan"):
+    st.subheader("👤 Data Diri Peserta")
+    col1, col2 = st.columns(2)
+    with col1: nama = st.text_input("Nama Lengkap Sesuai KTP *"); nik = st.text_input("Nomor NIK / KTP *")
+    with col2: kontak = st.text_input("Nomor HP / WhatsApp *"); email = st.text_input("Alamat Email")
+    alamat = st.text_area("Alamat Lengkap Tempat Tinggal")
+
+    st.subheader("🎓 Data Pendidikan & Ijazah")
+    jenjang_pendidikan = st.selectbox("Jenjang Pendidikan Terakhir *", ["Pilih...", "Pendidikan Dasar", "SMA", "SMK", "SMK Plus/D1", "D2", "D3", "D4/S1", "Profesi", "S2", "Spesialis_1", "Doktor/Spesialis_2"])
+    nama_ijazah = st.text_input("Nama Lengkap Sesuai Ijazah *", placeholder="Harus sama dengan KTP")
+    nik_ijazah = st.text_input("Nomor Identitas di Ijazah (jika ada)")
+    berkas_ijazah = st.file_uploader("Unggah Scan Ijazah Terakhir *", type=["pdf", "jpg", "jpeg", "png", "doc", "docx"])
+
+    st.subheader("📎 Bukti Pendukung Lainnya")
+    bukti_ig = st.file_uploader("Bukti Mengikuti Instagram @bjkw6_makassar *", type=["pdf", "jpg", "jpeg", "png", "doc", "docx"])
+    link_pddikti = st.text_input("Link Bukti Kelulusan PDDIKTI *", placeholder="https://pddikti.kemdikbud.go.id/...")
+    
+    st.subheader("💼 Bukti Pengalaman Kerja")
+    st.markdown("""<div style="background:#FFF8E1;padding:1rem;border-radius:8px;border-left:5px solid #FF9800;">
+    Sistem akan menghitung akumulasi masa kerja secara otomatis dari berkas yang Anda unggah.<br>
+    <em>Format berkas yang diterima: PDF, JPG, PNG, DOC, DOCX, XLS, XLSX, RAR, ZIP</em>
+    </div>""", unsafe_allow_html=True)
+    bukti_pengalaman = st.file_uploader("Unggah Bukti Pengalaman Kerja *", type=["pdf", "jpg", "jpeg", "png", "doc", "docx", "xls", "xlsx", "rar", "zip"], accept_multiple_files=True)
+
+    st.subheader("📄 Berkas Utama")
+    berkas_ktp = st.file_uploader("Unggah Scan KTP *", type=["pdf", "jpg", "jpeg", "png", "doc", "docx"])
+
+    st.subheader("🎓 Pilihan Pelatihan")
+    if st.session_state.daftar_pelatihan:
+        pilihan = st.selectbox("Pilih Pelatihan yang Diikuti *", [p["nama"] + " — " + p["jabatan"] for p in st.session_state.daftar_pelatihan])
+        jabatan_pilihan = pilihan.split(" — ")[1] if " — " in pilihan else pilihan
+    else: pilihan = "Belum ada pelatihan tersedia"; jabatan_pilihan = ""; st.warning("Pendaftaran ditutup.")
+
+    kirim = st.form_submit_button("✅ Kirim & Verifikasi Pendaftaran")
+
+    if kirim:
+        # Validasi kolom wajib
+        if not nama or not nik or not kontak or not nama_ijazah or not berkas_ijazah or not bukti_ig or not link_pddikti or not bukti_pengalaman or not berkas_ktp or jenjang_pendidikan == "Pilih..." or pilihan == "Belum ada pelatihan tersedia":
+            st.error("⚠️ Lengkapi semua kolom bertanda * terlebih dahulu!")
+        else:
+            # 1. Cek kesesuaian KTP & Ijazah
+            sesuai_ktp, pesan_ktp = cek_kesesuaian_ktp_ijazah(nama, nik, nama_ijazah, nik_ijazah)
+            if not sesuai_ktp:
+                st.markdown(f"""<div class="pu-tolak"><h4>❌ Pendaftaran Ditolak</h4><p>{pesan_ktp}</p><p>Silakan perbaiki data dan unggah ulang berkas yang sesuai.</p></div>""", unsafe_allow_html=True)
+                st.stop()
+            
+            # 2. Hitung pengalaman kerja
+            total_pengalaman = ekstrak_tahun_pengalaman(bukti_pengalaman)
+            st.info(f"🔍 Hasil perhitungan otomatis: Akumulasi pengalaman kerja Anda adalah **{total_pengalaman} tahun**")
+            
+            # 3. Cek syarat pengalaman
+            lulus_syarat, pesan_syarat = verifikasi_syarat(jabatan_pilihan, jenjang_pendidikan, total_pengalaman)
+            if not lulus_syarat:
+                st.markdown(f"""<div class="pu-tolak"><h4>❌ Pendaftaran Ditolak</h4><p>{pesan_syarat}</p><p>Silakan tambahkan bukti pengalaman kerja atau pilih jabatan yang sesuai dengan kualifikasi Anda.</p></div>""", unsafe_allow_html=True)
+                st.stop()
+            
+            # Jika semua syarat terpenuhi
+            st.balloons()
+            st.markdown(f"""<div class="pu-sukses"><h4>🎉 Pendaftaran Diterima!</h4><p>Terima kasih <strong>{nama}</strong> untuk pelatihan <strong>{pilihan}</strong>.</p><p>✅ {pesan_ktp}<br>✅ {pesan_syarat}</p><p>Kami akan menghubungi Anda lewat {kontak} paling lambat 3 hari kerja.</p></div>""", unsafe_allow_html=True)
+
+# Kaki halaman (sudah diperbaiki)
+st.markdown("<hr style='border: 2px solid #004B87; margin-top: 2rem;'>", unsafe_allow_html=True)
+st.caption("© 2026 Balai Jasa Konstruksi Wilayah VI Makassar — Kementerian Pekerjaan Umum | siLATIH v1.0")
