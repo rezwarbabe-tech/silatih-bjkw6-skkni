@@ -1,24 +1,25 @@
-# Muat pustaka yang dibutuhkan
+# ==============================================
+# 1. MUAT PUSTAKA (WAJIB PALING ATAS)
+# ==============================================
 import streamlit as st
 import pandas as pd
 from io import BytesIO
-from datetime import datetime, date# Judul Utama Aplikasi
-st.title("🏛️ Aplikasi Pelatihan & Sertifikasi UJI Kompetensi BJKW VI Makassar")
-st.subheader("siLATIH - Sistem Informasi Pelatihan Terintegrasi")
-st.markdown("---")
-import streamlit as st
-import pandas as pd
-from io import BytesIO
+from datetime import datetime, date
 
-# ----------------------
-# PENGATURAN TAMPILAN
-# ----------------------
+# ==============================================
+# 2. KONFIGURASI APLIKASI
+# ==============================================
 st.set_page_config(
     page_title="Aplikasi Pelatihan & Sertifikasi UJI Kompetensi BJKW VI Makassar (siLATIH)",
     page_icon="🏢",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# Judul Utama
+st.title("🏛️ Aplikasi Pelatihan & Sertifikasi UJI Kompetensi BJKW VI Makassar")
+st.subheader("siLATIH - Sistem Informasi Pelatihan Terintegrasi")
+st.markdown("---")
 # ----------------------
 # DATA LENGKAP 195 JABATAN
 # ----------------------
