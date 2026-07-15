@@ -7,7 +7,7 @@ from io import BytesIO
 from datetime import datetime, date
 
 # ==============================================
-# 2. KONFIGURASI APLIKASI
+# 2. KONFIGURASI & JUDUL UTAMA APLIKASI
 # ==============================================
 st.set_page_config(
     page_title="Aplikasi Pelatihan & Sertifikasi UJI Kompetensi BJKW VI Makassar (siLATIH)",
@@ -16,12 +16,13 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Judul Utama
+# Judul Utama (Hanya muncul satu kali)
 st.title("🏛️ Aplikasi Pelatihan & Sertifikasi UJI Kompetensi BJKW VI Makassar")
 st.subheader("siLATIH - Sistem Informasi Pelatihan Terintegrasi")
 st.markdown("---")
+
 # ----------------------
-# DATA LENGKAP 195 JABATAN
+# 3. DATA LENGKAP JABATAN SKKNI
 # ----------------------
 daftar_jabatan = [
     # === BIDANG SIPIL ===
@@ -47,11 +48,8 @@ daftar_jabatan = [
 ]
 
 # ----------------------
-# SISTEM FILTER & TAMPILAN
+# 4. SISTEM FILTER & TAMPILAN DATA
 # ----------------------
-st.title("📚 Aplikasi Pelatihan & Sertifikasi Kompetensi Jabatan")
-st.subheader("Berdasarkan Standar Kompetensi Kerja Nasional Indonesia (SKKNI)")
-
 # Ubah data jadi tabel
 df = pd.DataFrame(daftar_jabatan)
 
@@ -90,53 +88,9 @@ st.download_button(
     file_name="Daftar_Jabatan_SKKNI.xlsx",
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
+
 # ==============================================
-# FORMULIR PENDAFTARAN PELATIHAN SKKNI
-# ==============================================
-st.markdown("---")
-st.subheader("📝 Formulir Pendaftaran Pelatihan")
-st.caption("Isi data dengan lengkap untuk mendaftar pelatihan sesuai jabatan yang diinginkan")
-
-# Buat formulir
-with st.form("pendaftaran_pelatihan"):
-    # Data Diri
-    st.write("#### Data Peserta")
-    nama = st.text_input("Nama Lengkap *", placeholder="Tulis nama lengkap sesuai KTP")
-    nik = st.text_input("Nomor NIK / KTP *", placeholder="Masukkan 16 digit nomor KTP")
-    kontak = st.text_input("Nomor HP / WhatsApp *", placeholder="Contoh: 081234567890")
-    email = st.text_input("Alamat Email", placeholder="contoh@email.com")
-    alamat = st.text_area("Alamat Lengkap", placeholder="Tulis alamat tempat tinggal saat ini")
-
-    # Pilihan Pelatihan
-    st.write("#### Pilihan Pelatihan")
-    # Ambil daftar jabatan otomatis dari tabel yang sudah ada
-    daftar_jabatan = df["nama_jabatan"].unique()
-    pilihan_jabatan = st.selectbox("Jabatan yang Diinginkan *", options=daftar_jabatan)
-    tanggal_mulai = st.date_input("Tanggal Mulai Pelatihan yang Diinginkan")
-
-    # Unggah Berkas
-    st.write("#### Persyaratan")
-    ktp_file = st.file_uploader("Unggah Scan KTP *", type=["pdf", "jpg", "png"])
-    ijazah_file = st.file_uploader("Unggah Scan Ijazah Terakhir", type=["pdf", "jpg", "png"])
-
-    # Tombol Kirim
-    kirim = st.form_submit_button("✅ Kirim Pendaftaran")
-
-    # Proses setelah dikirim
-    if kirim:
-        # Cek kolom wajib diisi
-        if not nama or not nik or not kontak or not ktp_file:
-            st.error("⚠️ Kolom bertanda * wajib diisi!")
-        else:
-            st.success(f"""
-            🎉 Pendaftaran Berhasil Terkirim!
-            - Atas nama: **{nama}**
-            - Jabatan: **{pilihan_jabatan}**
-            - Kami akan menghubungi Anda lewat nomor {kontak} segera.
-            """)
-            st.balloons()
-# ==============================================
-# SISTEM LOGIN ADMIN & DAFTAR PELATIHAN
+# 5. SISTEM LOGIN ADMIN & KELOLA PELATIHAN
 # ==============================================
 st.sidebar.subheader("🔐 Akses Pengguna")
 hak_akses = st.sidebar.radio("Masuk Sebagai", ["Peserta", "Admin"])
@@ -207,7 +161,7 @@ if hak_akses == "Admin":
     elif login_ok:
         st.error("❌ Username atau password salah!")
 
-# --- HALAMAN PESERTA & FORM PENDAFTARAN ---
+# --- HALAMAN PESERTA & PENDAFTARAN ---
 st.markdown("---")
 st.subheader("📚 Daftar Pelatihan Tersedia")
 if st.session_state.daftar_pelatihan:
@@ -219,22 +173,45 @@ if st.session_state.daftar_pelatihan:
 else:
     st.info("Belum ada pelatihan yang dibuka. Silakan cek kembali nanti.")
 
-# --- PERBARUI FORM PENDAFTARAN ---
 st.markdown("---")
 st.subheader("📝 Formulir Pendaftaran Pelatihan")
-with st.form("form_daftar"):
-    nama = st.text_input("Nama Lengkap *")
-    nik = st.text_input("Nomor NIK / KTP *")
-    kontak = st.text_input("Nomor HP / WhatsApp *")
-    
-    # Pilihan pelatihan (hanya tampil yang tersedia)
+st.caption("Isi data dengan lengkap untuk mendaftar pelatihan sesuai jabatan yang diinginkan")
+
+with st.form("pendaftaran_pelatihan"):
+    # Data Diri
+    st.write("#### Data Peserta")
+    nama = st.text_input("Nama Lengkap *", placeholder="Tulis nama lengkap sesuai KTP")
+    nik = st.text_input("Nomor NIK / KTP *", placeholder="Masukkan 16 digit nomor KTP")
+    kontak = st.text_input("Nomor HP / WhatsApp *", placeholder="Contoh: 081234567890")
+    email = st.text_input("Alamat Email", placeholder="contoh@email.com")
+    alamat = st.text_area("Alamat Lengkap", placeholder="Tulis alamat tempat tinggal saat ini")
+
+    # Pilihan Pelatihan
+    st.write("#### Pilihan Pelatihan")
     if st.session_state.daftar_pelatihan:
         pilihan = st.selectbox("Pilih Pelatihan yang Diikuti *", 
                              [p["nama"] + " - " + p["jabatan"] for p in st.session_state.daftar_pelatihan])
     else:
         pilihan = "Belum ada pelatihan"
         st.warning("Pendaftaran ditutup karena belum ada pelatihan tersedia.")
-    
-    kirim = st.form_submit_button("Kirim Pendaftaran")
-    if kirim and pilihan != "Belum ada pelatihan":
-        st.success(f"✅ Pendaftaran atas nama {nama} untuk pelatihan {pilihan} berhasil!")
+
+    # Unggah Berkas
+    st.write("#### Persyaratan")
+    ktp_file = st.file_uploader("Unggah Scan KTP *", type=["pdf", "jpg", "png"])
+    ijazah_file = st.file_uploader("Unggah Scan Ijazah Terakhir", type=["pdf", "jpg", "png"])
+
+    # Tombol Kirim
+    kirim = st.form_submit_button("✅ Kirim Pendaftaran")
+
+    # Proses setelah dikirim
+    if kirim:
+        if not nama or not nik or not kontak or not ktp_file or pilihan == "Belum ada pelatihan":
+            st.error("⚠️ Kolom bertanda * wajib diisi / pilih pelatihan terlebih dahulu!")
+        else:
+            st.success(f"""
+            🎉 Pendaftaran Berhasil Terkirim!
+            - Atas nama: **{nama}**
+            - Pelatihan: **{pilihan}**
+            - Kami akan menghubungi Anda lewat nomor {kontak} segera.
+            """)
+            st.balloons()
