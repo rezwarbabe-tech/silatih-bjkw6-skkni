@@ -1,25 +1,70 @@
 # ==============================================
-# 1. MUAT PUSTAKA (WAJIB PALING ATAS)
+# 1. MUAT PUSTAKA & PENGATURAN TAMBAHAN
 # ==============================================
 import streamlit as st
 import pandas as pd
 from io import BytesIO
 from datetime import datetime, date
 
+# Gaya tampilan kustom
+st.markdown("""
+<style>
+/* Warna utama biru resmi BJKW */
+.stApp {
+    background-color: #f8fafc;
+}
+h1, h2, h3 {
+    color: #0b4a91;
+}
+.stButton>button {
+    background-color: #0b4a91;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    padding: 0.5rem 1rem;
+}
+.stButton>button:hover {
+    background-color: #165fc7;
+}
+.info-box {
+    background-color: #e7f0ff;
+    padding: 1rem;
+    border-radius: 10px;
+    border-left: 5px solid #0b4a91;
+}
+.success-box {
+    background-color: #e6fffa;
+    padding: 1rem;
+    border-radius: 10px;
+    border-left: 5px solid #009688;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # ==============================================
-# 2. KONFIGURASI & JUDUL UTAMA APLIKASI
+# 2. KONFIGURASI & JUDUL UTAMA
 # ==============================================
 st.set_page_config(
-    page_title="Aplikasi Pelatihan & Sertifikasi UJI Kompetensi BJKW VI Makassar (siLATIH)",
-    page_icon="🏢",
+    page_title="siLATIH - BJKW VI Makassar",
+    page_icon="🏛️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Judul Utama (Hanya muncul satu kali)
-st.title("🏛️ Aplikasi Pelatihan & Sertifikasi UJI Kompetensi BJKW VI Makassar")
-st.subheader("siLATIH - Sistem Informasi Pelatihan Terintegrasi")
+# Judul Utama dengan pemisah
 st.markdown("---")
+st.title("🏛️ Aplikasi Pelatihan & Sertifikasi UJI Kompetensi")
+st.subheader("Balai Jasa Konstruksi Wilayah VI Makassar")
+st.markdown("<h3 style='color:#0b4a91;'>siLATIH - Sistem Informasi Pelatihan Terintegrasi</h3>", unsafe_allow_html=True)
+st.markdown("---")
+
+# Kotak sambutan
+st.markdown("""
+<div class="info-box">
+📢 Selamat datang! Aplikasi ini menyediakan informasi jabatan sesuai Standar Kompetensi Kerja Nasional Indonesia (SKKNI), daftar pelatihan yang dibuka, serta formulir pendaftaran peserta.
+</div>
+<br>
+""", unsafe_allow_html=True)
 
 # ----------------------
 # 3. DATA LENGKAP JABATAN SKKNI
@@ -48,170 +93,171 @@ daftar_jabatan = [
 ]
 
 # ----------------------
-# 4. SISTEM FILTER & TAMPILAN DATA
+# 4. FILTER & TABEL DATA JABATAN
 # ----------------------
-# Ubah data jadi tabel
+st.header("📋 Daftar Jabatan Berdasarkan SKKNI")
+
 df = pd.DataFrame(daftar_jabatan)
 
-# Sidebar Filter
-st.sidebar.header("🔎 Filter Data")
+st.sidebar.markdown("---")
+st.sidebar.header("🔎 Saring Data")
 
 pilih_klasifikasi = st.sidebar.multiselect("Bidang Klasifikasi", options=sorted(df["klasifikasi"].unique()))
 if pilih_klasifikasi:
     df = df[df["klasifikasi"].isin(pilih_klasifikasi)]
 
-pilih_kualifikasi = st.sidebar.multiselect("Kualifikasi", options=sorted(df["kualifikasi"].unique()))
+pilih_kualifikasi = st.sidebar.multiselect("Tingkat Kualifikasi", options=sorted(df["kualifikasi"].unique()))
 if pilih_kualifikasi:
     df = df[df["kualifikasi"].isin(pilih_kualifikasi)]
 
-# Pencarian
-kata_kunci = st.text_input("Cari berdasarkan Nama Jabatan atau Kode:")
+kata_kunci = st.text_input("🔍 Cari Jabatan atau Kode Jabatan:")
 if kata_kunci:
     df = df[
         df["nama_jabatan"].str.contains(kata_kunci, case=False) |
         df["kode_jabatan"].str.contains(kata_kunci, case=False)
     ]
 
-# Tampilkan hasil
-st.info(f"✅ Ditemukan {len(df)} jabatan yang sesuai kriteria")
+st.info(f"✅ Menampilkan **{len(df)}** jabatan yang sesuai kriteria Anda")
 st.dataframe(df, use_container_width=True, hide_index=True)
 
-# Fitur Ekspor
-st.subheader("📥 Unduh Data")
+# Unduh Data
+st.subheader("📥 Unduh Daftar Jabatan")
 buffer = BytesIO()
 with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
-    df.to_excel(writer, index=False, sheet_name="Daftar Jabatan")
+    df.to_excel(writer, index=False, sheet_name="Daftar Jabatan SKKNI")
 
 st.download_button(
-    label="Unduh File Excel (.xlsx)",
+    label="📂 Unduh File Excel (.xlsx)",
     data=buffer.getvalue(),
-    file_name="Daftar_Jabatan_SKKNI.xlsx",
+    file_name="Daftar_Jabatan_SKKNI_BJKW6.xlsx",
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
 
 # ==============================================
 # 5. SISTEM LOGIN ADMIN & KELOLA PELATIHAN
 # ==============================================
-st.sidebar.subheader("🔐 Akses Pengguna")
-hak_akses = st.sidebar.radio("Masuk Sebagai", ["Peserta", "Admin"])
+st.sidebar.markdown("---")
+st.sidebar.header("🔐 Akses Pengguna")
+hak_akses = st.sidebar.radio("Masuk Sebagai", ["Peserta Pelatihan", "Pengelola Aplikasi"])
 
-# Data login admin (bisa diubah sesuai keinginan)
-akun_admin = {
-    "username": "admin_silatih",
-    "password": "skkni_2026"
-}
+akun_admin = {"username": "admin_silatih", "password": "skkni_2026"}
 
-# Variabel penyimpanan daftar pelatihan
 if "daftar_pelatihan" not in st.session_state:
     st.session_state.daftar_pelatihan = []
 
-# --- HALAMAN KHUSUS ADMIN ---
-if hak_akses == "Admin":
-    st.sidebar.info("✅ Kamu masuk sebagai ADMIN: bisa kelola pelatihan")
+if hak_akses == "Pengelola Aplikasi":
+    st.sidebar.success("✅ Mode Pengelola: Bisa menambah & mengatur pelatihan")
     
-    with st.sidebar.expander("🔑 Login Admin"):
-        user = st.text_input("Username")
-        sandi = st.text_input("Password", type="password")
-        login_ok = st.button("Masuk Admin")
+    with st.sidebar.expander("🔑 Masuk Admin"):
+        user = st.text_input("Nama Pengguna")
+        sandi = st.text_input("Kata Sandi", type="password")
+        login_ok = st.button("Masuk Akun")
     
     if login_ok and user == akun_admin["username"] and sandi == akun_admin["password"]:
-        st.subheader("⚙️ Kelola Daftar Pelatihan")
-        st.caption("Pelatihan akan otomatis terhubung dengan Jabatan SKKNI")
+        st.markdown("---")
+        st.header("⚙️ Pengaturan Pelatihan")
+        st.caption("Buat pelatihan baru yang terhubung langsung dengan jabatan SKKNI")
         
-        # Form tambah pelatihan
-        with st.form("tambah_pelatihan"):
-            nama_pelatihan = st.text_input("Nama Pelatihan *")
-            jabatan_terkait = st.selectbox("Jabatan Terkait *", df["nama_jabatan"].unique())
-            tanggal_buka = st.date_input("Tanggal Buka Pendaftaran")
-            tanggal_tutup = st.date_input("Tanggal Tutup Pendaftaran")
-            kuota = st.number_input("Kuota Peserta", min_value=1, value=20)
-            lokasi = st.text_input("Lokasi Pelatihan")
+        with st.form("tambah_pelatihan", clear_on_submit=True):
+            col1, col2 = st.columns(2)
+            with col1:
+                nama_pelatihan = st.text_input("Nama Pelatihan *")
+                jabatan_terkait = st.selectbox("Jabatan Terkait *", df["nama_jabatan"].unique())
+                lokasi = st.text_input("Lokasi Pelatihan")
+            with col2:
+                tanggal_buka = st.date_input("Tanggal Buka Pendaftaran")
+                tanggal_tutup = st.date_input("Tanggal Tutup Pendaftaran")
+                kuota = st.number_input("Kuota Peserta", min_value=1, value=25)
             
-            simpan = st.form_submit_button("➕ Tambah Pelatihan")
-            
+            simpan = st.form_submit_button("➕ Simpan Pelatihan Baru")
             if simpan:
                 st.session_state.daftar_pelatihan.append({
-                    "nama": nama_pelatihan,
-                    "jabatan": jabatan_terkait,
-                    "buka": tanggal_buka,
-                    "tutup": tanggal_tutup,
-                    "kuota": kuota,
-                    "lokasi": lokasi
+                    "nama": nama_pelatihan, "jabatan": jabatan_terkait,
+                    "buka": tanggal_buka, "tutup": tanggal_tutup,
+                    "kuota": kuota, "lokasi": lokasi
                 })
-                st.success("✅ Pelatihan berhasil ditambahkan!")
+                st.success("✅ Pelatihan berhasil ditambahkan dan tersedia untuk peserta!")
+                st.rerun()
         
-        # Tampilkan & hapus pelatihan
         st.markdown("---")
         st.subheader("📋 Daftar Pelatihan Aktif")
         if st.session_state.daftar_pelatihan:
             for idx, latih in enumerate(st.session_state.daftar_pelatihan, 1):
-                st.write(f"""
-                **{idx}. {latih['nama']}**
-                - Jabatan: {latih['jabatan']}
-                - Pendaftaran: {latih['buka']} s.d {latih['tutup']}
-                - Kuota: {latih['kuota']} orang
-                - Lokasi: {latih['lokasi']}
-                """)
-                if st.button(f"🗑️ Hapus Pelatihan {idx}"):
-                    st.session_state.daftar_pelatihan.pop(idx-1)
-                    st.rerun()
+                with st.expander(f"📌 {idx}. {latih['nama']}"):
+                    st.write(f"🔹 Jabatan: {latih['jabatan']}")
+                    st.write(f"🔹 Periode Daftar: {latih['buka']} s.d {latih['tutup']}")
+                    st.write(f"🔹 Kuota: {latih['kuota']} peserta")
+                    st.write(f"🔹 Lokasi: {latih['lokasi']}")
+                    if st.button(f"🗑️ Hapus Pelatihan", key=f"hapus_{idx}"):
+                        st.session_state.daftar_pelatihan.pop(idx-1)
+                        st.rerun()
         else:
-            st.info("Belum ada pelatihan yang dibuat.")
+            st.info("ℹ️ Belum ada pelatihan yang dibuat. Silakan tambahkan pelatihan di atas.")
 
     elif login_ok:
-        st.error("❌ Username atau password salah!")
+        st.error("❌ Nama pengguna atau kata sandi salah!")
 
-# --- HALAMAN PESERTA & PENDAFTARAN ---
+# --- HALAMAN PESERTA ---
 st.markdown("---")
-st.subheader("📚 Daftar Pelatihan Tersedia")
+st.header("📚 Pelatihan yang Sedang Dibuka")
 if st.session_state.daftar_pelatihan:
     for latih in st.session_state.daftar_pelatihan:
-        st.write(f"""
-        **{latih['nama']}**
-        Untuk Jabatan: {latih['jabatan']} | Daftar sampai: {latih['tutup']}
-        """)
+        st.markdown(f"""
+        <div class="info-box">
+        <h4>{latih['nama']}</h4>
+        <p>Untuk Jabatan: <strong>{latih['jabatan']}</strong><br>
+        Batas Pendaftaran: {latih['tutup']} | Kuota: {latih['kuota']} orang<br>
+        Lokasi: {latih['lokasi']}</p>
+        </div>
+        <br>
+        """, unsafe_allow_html=True)
 else:
-    st.info("Belum ada pelatihan yang dibuka. Silakan cek kembali nanti.")
+    st.info("ℹ️ Saat ini belum ada pelatihan yang dibuka. Silakan cek kembali secara berkala.")
 
+# --- FORMULIR PENDAFTARAN ---
 st.markdown("---")
-st.subheader("📝 Formulir Pendaftaran Pelatihan")
-st.caption("Isi data dengan lengkap untuk mendaftar pelatihan sesuai jabatan yang diinginkan")
+st.header("📝 Formulir Pendaftaran Pelatihan")
+st.caption("Isi data dengan lengkap dan benar untuk mengikuti pelatihan")
 
 with st.form("pendaftaran_pelatihan"):
-    # Data Diri
-    st.write("#### Data Peserta")
-    nama = st.text_input("Nama Lengkap *", placeholder="Tulis nama lengkap sesuai KTP")
-    nik = st.text_input("Nomor NIK / KTP *", placeholder="Masukkan 16 digit nomor KTP")
-    kontak = st.text_input("Nomor HP / WhatsApp *", placeholder="Contoh: 081234567890")
-    email = st.text_input("Alamat Email", placeholder="contoh@email.com")
-    alamat = st.text_area("Alamat Lengkap", placeholder="Tulis alamat tempat tinggal saat ini")
+    st.subheader("👤 Data Diri Peserta")
+    col1, col2 = st.columns(2)
+    with col1:
+        nama = st.text_input("Nama Lengkap *", placeholder="Sesuai KTP")
+        nik = st.text_input("Nomor NIK / KTP *", placeholder="16 digit angka")
+    with col2:
+        kontak = st.text_input("Nomor HP / WhatsApp *", placeholder="08xx-xxxx-xxxx")
+        email = st.text_input("Alamat Email", placeholder="anda@email.com")
+    
+    alamat = st.text_area("Alamat Lengkap Tempat Tinggal", placeholder="Kecamatan, Kabupaten, Provinsi")
 
-    # Pilihan Pelatihan
-    st.write("#### Pilihan Pelatihan")
+    st.subheader("🎓 Pilihan Pelatihan")
     if st.session_state.daftar_pelatihan:
         pilihan = st.selectbox("Pilih Pelatihan yang Diikuti *", 
-                             [p["nama"] + " - " + p["jabatan"] for p in st.session_state.daftar_pelatihan])
+                             [p["nama"] + " — " + p["jabatan"] for p in st.session_state.daftar_pelatihan])
     else:
-        pilihan = "Belum ada pelatihan"
-        st.warning("Pendaftaran ditutup karena belum ada pelatihan tersedia.")
+        pilihan = "Belum ada pelatihan tersedia"
+        st.warning("Pendaftaran ditutup karena belum ada pelatihan yang dibuka.")
 
-    # Unggah Berkas
-    st.write("#### Persyaratan")
-    ktp_file = st.file_uploader("Unggah Scan KTP *", type=["pdf", "jpg", "png"])
-    ijazah_file = st.file_uploader("Unggah Scan Ijazah Terakhir", type=["pdf", "jpg", "png"])
+    st.subheader("📎 Berkas Persyaratan")
+    ktp_file = st.file_uploader("Unggah Scan KTP *", type=["pdf", "jpg", "jpeg", "png"])
+    ijazah_file = st.file_uploader("Unggah Scan Ijazah Terakhir", type=["pdf", "jpg", "jpeg", "png"])
 
-    # Tombol Kirim
-    kirim = st.form_submit_button("✅ Kirim Pendaftaran")
+    kirim = st.form_submit_button("✅ Kirim Pendaftaran Sekarang")
 
-    # Proses setelah dikirim
     if kirim:
-        if not nama or not nik or not kontak or not ktp_file or pilihan == "Belum ada pelatihan":
-            st.error("⚠️ Kolom bertanda * wajib diisi / pilih pelatihan terlebih dahulu!")
+        if not nama or not nik or not kontak or not ktp_file or pilihan == "Belum ada pelatihan tersedia":
+            st.error("⚠️ Mohon lengkapi semua kolom yang bertanda * dan pilih pelatihan yang tersedia!")
         else:
-            st.success(f"""
-            🎉 Pendaftaran Berhasil Terkirim!
-            - Atas nama: **{nama}**
-            - Pelatihan: **{pilihan}**
-            - Kami akan menghubungi Anda lewat nomor {kontak} segera.
-            """)
             st.balloons()
+            st.markdown(f"""
+            <div class="success-box">
+            <h4>🎉 Pendaftaran Berhasil Diterima!</h4>
+            <p>Terima kasih <strong>{nama}</strong> atas pendaftaran Anda untuk pelatihan <strong>{pilihan}</strong>.<br>
+            Kami akan menghubungi Anda melalui nomor {kontak} paling lambat 3 hari kerja berikutnya.</p>
+            </div>
+            """, unsafe_allow_html=True)
+
+# Kaki halaman
+st.markdown("---")
+st.caption("© 2026 Balai Jasa Konstruksi Wilayah VI Makassar | siLATIH v1.0")
