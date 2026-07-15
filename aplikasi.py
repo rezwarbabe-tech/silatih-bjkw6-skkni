@@ -544,7 +544,7 @@ else:
                     "kuota": kuota, "buka_daftar": tgl_buka_daftar, "tutup_daftar": tgl_tutup_daftar,
                     "mulai": tgl_mulai, "selesai": tgl_selesai
                 })
-                 st.success("✅ Pelatihan berhasil ditambahkan ke daftar!")
+                st.success("✅ Pelatihan berhasil ditambahkan ke daftar!")
                 st.rerun()
 
     # Tampilkan Daftar Pelatihan
