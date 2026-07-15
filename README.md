@@ -1,28 +1,25 @@
-# ==================================================
-# APLIKASI SISTEM PELATIHAN & SERTIFIKASI SKKNI
-# Fitur: Daftar Jabatan + Pendaftaran Pelatihan
-# ==================================================
-
+# ==============================================
+# 1. MUAT PUSTAKA (WAJIB PALING ATAS)
+# ==============================================
 import streamlit as st
 import pandas as pd
 from io import BytesIO
-from datetime import datetime
+from datetime import datetime, date
 
-# ----------------------
-# PENGATURAN TAMPILAN
-# ----------------------
+# ==============================================
+# 2. KONFIGURASI APLIKASI
+# ==============================================
 st.set_page_config(
-    page_title="Sistem Pelatihan SKKNI",
-    page_icon="📜",
+    page_title="Aplikasi Pelatihan & Sertifikasi UJI Kompetensi BJKW VI Makassar (siLATIH)",
+    page_icon="🏢",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# ----------------------
-# INISIALISASI PENYIMPANAN DATA
-# ----------------------
-if 'data_pendaftaran' not in st.session_state:
-    st.session_state.data_pendaftaran = []
+# Judul Utama
+st.title("🏛️ Aplikasi Pelatihan & Sertifikasi UJI Kompetensi BJKW VI Makassar")
+st.subheader("siLATIH - Sistem Informasi Pelatihan Terintegrasi")
+st.markdown("---")
 
 # ----------------------
 # DATA JABATAN & PELATIHAN TERKAIT
