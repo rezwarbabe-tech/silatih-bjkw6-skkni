@@ -312,8 +312,4 @@ if peran == "Pengelola":
         tanggal_pelaksanaan = st.date_input("Tanggal Pelaksanaan")
         lokasi = st.text_input("Lokasi Pelatihan")
         kuota = st.number_input("Kuota Peserta", min_value=1, value=30)
-        tombol_simpan = st.form_submit_button("💾 Simpan Pelatihan")
-
-        if tombol_simpan:
-            simpan_pelatihan({
-                "id_j
+        tombol_simpan = st.form
