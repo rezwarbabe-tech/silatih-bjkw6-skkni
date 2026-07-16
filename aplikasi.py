@@ -14,7 +14,7 @@ import pandas as pd
 from datetime import datetime
 
 # ==============================================================
-# KONFIGURASI TAMPILAN & CSS KUSTOM (DIPERBAIKI UNTUK STREAMLIT)
+# KONFIGURASI TAMPILAN & CSS KUSTOM
 # ==============================================================
 st.set_page_config(
     page_title="siLATIH - Sistem Informasi Pelatihan Terintegrasi",
@@ -23,19 +23,16 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# CSS dimasukkan lewat st.markdown dengan format aman
 CSS_STYLE = """
 <style>
 * {
     font-family: 'Segoe UI', Roboto, Arial, sans-serif;
 }
 
-/* Latar belakang utama */
 .stApp {
     background: linear-gradient(135deg, #f0f7ff 0%, #e6f0ff 100%);
 }
 
-/* Header judul */
 .header-box {
     background: linear-gradient(135deg, #0056b3 0%, #003d7a 100%);
     color: white;
@@ -61,7 +58,6 @@ CSS_STYLE = """
     opacity: 0.95;
 }
 
-/* Kartu menu */
 .menu-pengelola {
     background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
     color: white;
@@ -77,7 +73,6 @@ CSS_STYLE = """
     box-shadow: 0 3px 10px rgba(0,0,0,0.08);
 }
 
-/* Kartu kategori syarat */
 .kategori-ahli {
     background-color: #fff9e6;
     border-left: 5px solid #ffc107;
@@ -100,7 +95,14 @@ CSS_STYLE = """
     margin: 1rem 0;
 }
 
-/* Footer */
+.syarat-box {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
 .footer-box {
     background: #2c3e50;
     color: white;
@@ -112,7 +114,6 @@ CSS_STYLE = """
     font-weight: 500;
 }
 
-/* Teks jelas & tebal */
 strong {
     font-weight: 700;
     font-size: 15px;
@@ -122,105 +123,91 @@ strong {
 st.markdown(CSS_STYLE, unsafe_allow_html=True)
 
 # ==============================================================
-# DATA PERSYARATAN JABATAN KERJA (JabKer)
+# DATA PEMETAAN JABATAN KERJA (LENGKAP DENGAN KLASIFIKASI & SUBKLASIFIKASI)
 # ==============================================================
-PERSYARATAN_JABATAN = [
+DATA_JABATAN_KERJA = [
     {
+        "namaJabatan": "Ahli Perencanaan Konstruksi",
         "kualifikasi": "AHLI",
+        "subKlasifikasi": "Perencanaan & Rekayasa",
         "jenjang": 9,
-        "daftarSyarat": [
-            {"pendidikan": "Doktor/Doktor Terapan/Pendidikan Spesialis_2", "pengalamanMinimal": 0},
-            {"pendidikan": "S2/S2 Terapan/Pendidikan Spesialis_1", "pengalamanMinimal": 4},
-            {"pendidikan": "Pendidikan Profesi", "pengalamanMinimal": 7},
-            {"pendidikan": "S1/S1 Terapan/D4 Terapan", "pengalamanMinimal": 8}
-        ]
+        "syaratPendidikan": "Doktor/Doktor Terapan/Pendidikan Spesialis_2",
+        "pengalamanMinimal": 0
     },
     {
+        "namaJabatan": "Ahli Pengawas Konstruksi Utama",
         "kualifikasi": "AHLI",
+        "subKlasifikasi": "Pengawasan & Pengendalian",
         "jenjang": 8,
-        "daftarSyarat": [
-            {"pendidikan": "Magister/Magister Terapan/S2/S2 Terapan/Pendidikan Spesialis_1", "pengalamanMinimal": 0},
-            {"pendidikan": "Pendidikan Profesi", "pengalamanMinimal": 5},
-            {"pendidikan": "S1/S1 Terapan/D4 Terapan", "pengalamanMinimal": 6}
-        ]
+        "syaratPendidikan": "Magister/Magister Terapan/S2/S2 Terapan/Pendidikan Spesialis_1",
+        "pengalamanMinimal": 0
     },
     {
+        "namaJabatan": "Ahli Manajemen Proyek Konstruksi",
         "kualifikasi": "AHLI",
+        "subKlasifikasi": "Manajemen Proyek",
         "jenjang": 7,
-        "daftarSyarat": [
-            {"pendidikan": "Pendidikan Profesi", "pengalamanMinimal": 0},
-            {"pendidikan": "S1/S1 Terapan/D4 Terapan (Dengan Pemberian Kompetensi Tambahan untuk Fresh Graduated, masa berlaku SKK = 1)", "pengalamanMinimal": 0},
-            {"pendidikan": "S1/S1 Terapan/D4 Terapan", "pengalamanMinimal": 2}
-        ]
+        "syaratPendidikan": "Pendidikan Profesi / S1/S1 Terapan/D4 Terapan",
+        "pengalamanMinimal": 0
     },
     {
+        "namaJabatan": "Analis Biaya & Rencana Anggaran",
         "kualifikasi": "TEKNIS/ANALIS",
+        "subKlasifikasi": "Perencanaan Biaya",
         "jenjang": 6,
-        "daftarSyarat": [
-            {"pendidikan": "S1/S1 Terapan/D4 Terapan", "pengalamanMinimal": 0},
-            {"pendidikan": "D3", "pengalamanMinimal": 4},
-            {"pendidikan": "D2", "pengalamanMinimal": 8},
-            {"pendidikan": "D1", "pengalamanMinimal": 12}
-        ]
+        "syaratPendidikan": "S1/S1 Terapan/D4 Terapan",
+        "pengalamanMinimal": 0
     },
     {
+        "namaJabatan": "Teknisi Pengujian Bahan Konstruksi",
         "kualifikasi": "TEKNIS/ANALIS",
+        "subKlasifikasi": "Pengujian & Kualitas",
         "jenjang": 5,
-        "daftarSyarat": [
-            {"pendidikan": "D3", "pengalamanMinimal": 0},
-            {"pendidikan": "D2", "pengalamanMinimal": 4},
-            {"pendidikan": "D1/SMK Plus", "pengalamanMinimal": 8},
-            {"pendidikan": "SMK", "pengalamanMinimal": 10},
-            {"pendidikan": "SMA", "pengalamanMinimal": 12}
-        ]
+        "syaratPendidikan": "D3",
+        "pengalamanMinimal": 0
     },
     {
+        "namaJabatan": "Teknisi Gambar Kerja & Desain",
         "kualifikasi": "TEKNIS/ANALIS",
+        "subKlasifikasi": "Desain & Dokumentasi",
         "jenjang": 4,
-        "daftarSyarat": [
-            {"pendidikan": "D2", "pengalamanMinimal": 0},
-            {"pendidikan": "D1/SMK Plus", "pengalamanMinimal": 2},
-            {"pendidikan": "SMK", "pengalamanMinimal": 4},
-            {"pendidikan": "SMA", "pengalamanMinimal": 6}
-        ]
+        "syaratPendidikan": "D2",
+        "pengalamanMinimal": 0
     },
     {
+        "namaJabatan": "Operator Alat Berat Ekskavator",
         "kualifikasi": "OPERATOR",
+        "subKlasifikasi": "Pengoperasian Alat Berat",
         "jenjang": 3,
-        "daftarSyarat": [
-            {"pendidikan": "D1/SMK Plus", "pengalamanMinimal": 0},
-            {"pendidikan": "SMK", "pengalamanMinimal": 3},
-            {"pendidikan": "SMA", "pengalamanMinimal": 4},
-            {"pendidikan": "Pendidikan Dasar", "pengalamanMinimal": 5}
-        ]
+        "syaratPendidikan": "D1/SMK Plus",
+        "pengalamanMinimal": 0
     },
     {
+        "namaJabatan": "Operator Pekerjaan Beton",
         "kualifikasi": "OPERATOR",
+        "subKlasifikasi": "Pelaksanaan Lapangan",
         "jenjang": 2,
-        "daftarSyarat": [
-            {"pendidikan": "SMK", "pengalamanMinimal": 0},
-            {"pendidikan": "SMA", "pengalamanMinimal": 1},
-            {"pendidikan": "Pendidikan Dasar", "pengalamanMinimal": 0}
-        ]
+        "syaratPendidikan": "SMK",
+        "pengalamanMinimal": 0
     },
     {
+        "namaJabatan": "Pekerja Umum Konstruksi",
         "kualifikasi": "OPERATOR",
+        "subKlasifikasi": "Pelaksanaan Dasar",
         "jenjang": 1,
-        "daftarSyarat": [
-            {"pendidikan": "Pendidikan Dasar", "pengalamanMinimal": 0},
-            {"pendidikan": "Non Pendidikan (Dengan PBK)", "pengalamanMinimal": 2}
-        ]
+        "syaratPendidikan": "Pendidikan Dasar / Non Pendidikan (Dengan PBK)",
+        "pengalamanMinimal": 0
     }
 ]
 
 # ==============================================================
-# PENYIMPANAN DATA PELATIHAN (PERMANEN DALAM SESI)
+# PENYIMPANAN DATA
 # ==============================================================
 if "daftar_pelatihan" not in st.session_state:
     st.session_state.daftar_pelatihan = []
 
 # ==============================================================
-# FUNGSI PENGELOLAAN PELATIHAN
+# FUNGSI PENGELOLAAN
 # ==============================================================
 def simpan_pelatihan(data):
     data["id"] = datetime.now().timestamp()
@@ -238,9 +225,7 @@ def ubah_pelatihan(id_pelatihan, data_baru):
     return False
 
 def hapus_pelatihan(id_pelatihan):
-    st.session_state.daftar_pelatihan = [
-        p for p in st.session_state.daftar_pelatihan if p["id"] != id_pelatihan
-    ]
+    st.session_state.daftar_pelatihan = [p for p in st.session_state.daftar_pelatihan if p["id"] != id_pelatihan]
     return True
 
 # ==============================================================
@@ -255,110 +240,135 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==============================================================
-# PILIH PERAN PENGGUNA
+# PILIH PERAN
 # ==============================================================
 peran = st.sidebar.selectbox("Pilih Peran Anda", ["Pengelola", "Peserta"])
 
 # ==============================================================
-# MENU UTAMA BERDASARKAN PERAN
+# MENU PENGELOLA
 # ==============================================================
-col1, col2 = st.columns(2)
-
 if peran == "Pengelola":
-    with col1:
-        st.markdown("""
-        <div class="menu-pengelola">
-            <h3>🔧 Menu Pengelola</h3>
-            <p>Akses penuh untuk pengelola sistem</p>
-            <ul>
-                <li>Buat, Edit, Hapus Pelatihan</li>
-                <li>Kelola Data Peserta</li>
-                <li>Lihat Laporan & Statistik</li>
-                <li>Pengaturan Konfigurasi</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown("""
+    <div class="menu-pengelola">
+        <h3>🔧 Menu Pengelola</h3>
+        <p>Pilih langsung Jabatan Kerja — klasifikasi, subklasifikasi, dan persyaratan terisi otomatis sesuai pemetaan resmi</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    # FORM PENGELOLAAN PELATIHAN
-    st.subheader("📝 Kelola Pelatihan Baru")
-    with st.form("form_pelatihan"):
-        nama = st.text_input("Nama Pelatihan")
-        deskripsi = st.text_area("Deskripsi Pelatihan")
-        kualifikasi = st.selectbox("Kualifikasi Target", ["AHLI", "TEKNIS/ANALIS", "OPERATOR"])
-        jenjang = st.selectbox("Jenjang Target", [9,8,7,6,5,4,3,2,1])
-        tombol_simpan = st.form_submit_button("Simpan Pelatihan")
+    st.subheader("📝 Buat Pelatihan Berdasarkan Jabatan Kerja")
+    
+    # PILIH JABATAN KERJA (OTOMATIS MEMETA)
+    pilihan_jabatan = [jab["namaJabatan"] for jab in DATA_JABATAN_KERJA]
+    jabatan_terpilih = st.selectbox("Pilih Nama Jabatan Kerja", pilihan_jabatan)
+    
+    # AMBIL DATA OTOMATIS BERDASARKAN JABATAN YANG DIPILIH
+    data_jabatan = next(jab for jab in DATA_JABATAN_KERJA if jab["namaJabatan"] == jabatan_terpilih)
+
+    # TAMPILKAN DATA YANG SUDAH TERPETAKAN (TIDAK BISA DIUBAH)
+    st.markdown("### 📋 Data Jabatan (Terpetakan Otomatis)")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.info(f"**Klasifikasi**: {data_jabatan['kualifikasi']}")
+        st.info(f"**Sub Klasifikasi**: {data_jabatan['subKlasifikasi']}")
+    with col2:
+        st.info(f"**Jenjang Jabatan**: {data_jabatan['jenjang']}")
+    
+    st.markdown('<div class="syarat-box">', unsafe_allow_html=True)
+    st.markdown(f"**Persyaratan Pendidikan**: {data_jabatan['syaratPendidikan']}")
+    st.markdown(f"**Pengalaman Minimal**: {data_jabatan['pengalamanMinimal']} tahun")
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # FORM TAMBAHAN PELATIHAN
+    st.markdown("### 📝 Isi Detail Pelatihan")
+    with st.form("form_pelatihan_jabatan"):
+        nama_pelatihan = st.text_input("Nama Pelatihan", value=f"Pelatihan Sertifikasi {jabatan_terpilih}")
+        deskripsi = st.text_area("Deskripsi & Tujuan Pelatihan")
+        tanggal_pelaksanaan = st.date_input("Tanggal Pelaksanaan")
+        lokasi = st.text_input("Lokasi Pelatihan")
+        tombol_simpan = st.form_submit_button("💾 Simpan Pelatihan")
 
         if tombol_simpan:
             simpan_pelatihan({
-                "nama": nama,
+                "namaJabatan": jabatan_terpilih,
+                "kualifikasi": data_jabatan["kualifikasi"],
+                "subKlasifikasi": data_jabatan["subKlasifikasi"],
+                "jenjang": data_jabatan["jenjang"],
+                "syaratPendidikan": data_jabatan["syaratPendidikan"],
+                "pengalamanMinimal": data_jabatan["pengalamanMinimal"],
+                "namaPelatihan": nama_pelatihan,
                 "deskripsi": deskripsi,
-                "kualifikasiTarget": kualifikasi,
-                "jenjangTarget": jenjang
+                "tanggalPelaksanaan": tanggal_pelaksanaan.strftime("%d-%m-%Y"),
+                "lokasi": lokasi
             })
-            st.success("✅ Pelatihan berhasil disimpan permanen!")
+            st.success("✅ Pelatihan berhasil disimpan! Semua data jabatan sudah sesuai pemetaan resmi.")
 
-    # DAFTAR PELATIHAN UNTUK DIEDIT/HAPUS
-    st.subheader("📋 Daftar Semua Pelatihan")
+    # DAFTAR PELATIHAN & PENGELOLAAN
+    st.subheader("📋 Daftar Semua Pelatihan yang Telah Dibuat")
     if st.session_state.daftar_pelatihan:
-        df_pelatihan = pd.DataFrame(st.session_state.daftar_pelatihan)
-        st.dataframe(df_pelatihan[["nama", "kualifikasiTarget", "jenjangTarget", "status", "tanggal_dibuat"]])
-        
-        id_pilih = st.selectbox("Pilih ID Pelatihan untuk diubah/dihapus", 
+        df = pd.DataFrame(st.session_state.daftar_pelatihan)
+        tampil_kolom = ["namaPelatihan", "namaJabatan", "kualifikasi", "jenjang", "tanggalPelaksanaan", "lokasi", "status"]
+        st.dataframe(df[tampil_kolom])
+
+        id_pilih = st.selectbox("Pilih Pelatihan untuk diubah/dihapus",
                                 options=[p["id"] for p in st.session_state.daftar_pelatihan],
-                                format_func=lambda x: f"{x} - {next(p['nama'] for p in st.session_state.daftar_pelatihan if p['id']==x)}")
+                                format_func=lambda x: f"{next(p['namaPelatihan'] for p in st.session_state.daftar_pelatihan if p['id']==x)}")
         
-        col_edit, col_hapus = st.columns(2)
-        with col_edit:
-            if st.button("✏️ Ubah Status menjadi Ditutup"):
-                ubah_pelatihan(id_pilih, {"status": "Ditutup"})
-                st.success("✅ Pelatihan berhasil diubah!")
-        with col_hapus:
+        col_e, col_h = st.columns(2)
+        with col_e:
+            if st.button("✏️ Ubah Status"):
+                ubah_pelatihan(id_pilih, {"status": "Ditutup" if next(p["status"] for p in st.session_state.daftar_pelatihan if p["id"]==id_pilih) == "Tersedia" else "Tersedia"})
+                st.rerun()
+        with col_h:
             if st.button("🗑️ Hapus Pelatihan", type="secondary"):
                 hapus_pelatihan(id_pilih)
-                st.success("✅ Pelatihan berhasil dihapus!")
+                st.rerun()
     else:
-        st.info("Belum ada pelatihan yang dibuat.")
+        st.info("Belum ada pelatihan yang dibuat. Silakan pilih jabatan di atas.")
 
+# ==============================================================
+# MENU PESERTA
+# ==============================================================
 elif peran == "Peserta":
-    with col2:
-        st.markdown("""
-        <div class="menu-peserta">
-            <h3>👤 Menu Tamu / Peserta</h3>
-            <p>Akses untuk peserta pelatihan</p>
-            <ul>
-                <li>Lihat Pelatihan Tersedia</li>
-                <li>Daftar Pelatihan Saya</li>
-                <li>Riwayat Pendaftaran</li>
-                <li>Informasi Sertifikasi</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown("""
+    <div class="menu-peserta">
+        <h3>👤 Menu Tamu / Peserta</h3>
+        <p>Lihat pelatihan yang tersedia beserta persyaratan jabatan kerjanya</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    # DAFTAR PELATIHAN TERSEDIA UNTUK PESERTA
-    st.subheader("📚 Pelatihan yang Tersedia")
+    st.subheader("📚 Daftar Pelatihan Tersedia")
     pelatihan_tersedia = [p for p in st.session_state.daftar_pelatihan if p["status"] == "Tersedia"]
+    
     if pelatihan_tersedia:
-        df_peserta = pd.DataFrame(pelatihan_tersedia)
-        st.dataframe(df_peserta[["nama", "deskripsi", "kualifikasiTarget", "jenjangTarget"]])
+        for pelatihan in pelatihan_tersedia:
+            with st.expander(f"📌 {pelatihan['namaPelatihan']} — {pelatihan['namaJabatan']}"):
+                st.write(f"**Klasifikasi**: {pelatihan['kualifikasi']}")
+                st.write(f"**Sub Klasifikasi**: {pelatihan['subKlasifikasi']}")
+                st.write(f"**Jenjang**: {pelatihan['jenjang']}")
+                st.write(f"**Syarat Pendidikan**: {pelatihan['syaratPendidikan']}")
+                st.write(f"**Pengalaman Minimal**: {pelatihan['pengalamanMinimal']} tahun")
+                st.write(f"**Tanggal**: {pelatihan['tanggalPelaksanaan']}")
+                st.write(f"**Lokasi**: {pelatihan['lokasi']}")
+                st.write(f"**Deskripsi**: {pelatihan['deskripsi']}")
     else:
-        st.info("Saat ini belum ada pelatihan yang tersedia.")
+        st.info("Saat ini belum ada pelatihan yang tersedia untuk pendaftaran.")
 
 # ==============================================================
-# INFORMASI PERSYARATAN JABATAN
+# INFORMASI PEMETAAN JABATAN
 # ==============================================================
-st.subheader("📋 Persyaratan Jabatan Kerja")
+st.subheader("📋 Ringkasan Pemetaan Jabatan Kerja")
 st.markdown("""
 <div class="kategori-ahli">
     <h4>🟡 Kualifikasi Ahli (Jenjang 9, 8, 7)</h4>
-    <p>Persyaratan untuk jenjang tertinggi dengan latar belakang pendidikan tinggi hingga doktor</p>
+    <p>Untuk jabatan yang membutuhkan keahlian tingkat tinggi, perencanaan, dan pengambilan keputusan strategis.</p>
 </div>
 <div class="kategori-teknis">
     <h4>🔵 Kualifikasi Teknis / Analis (Jenjang 6, 5, 4)</h4>
-    <p>Persyaratan untuk tenaga teknis dengan latar belakang D1 hingga S1</p>
+    <p>Untuk jabatan teknis, pengujian, analisis, dan dukungan pelaksanaan pekerjaan.</p>
 </div>
 <div class="kategori-operator">
     <h4>🟢 Kualifikasi Operator (Jenjang 3, 2, 1)</h4>
-    <p>Persyaratan untuk tenaga pelaksana dengan latar belakang dasar hingga D1/SMK</p>
+    <p>Untuk jabatan pelaksana lapangan, pengoperasian alat, dan pekerjaan dasar konstruksi.</p>
 </div>
 """, unsafe_allow_html=True)
 
