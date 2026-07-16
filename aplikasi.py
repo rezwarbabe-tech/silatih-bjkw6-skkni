@@ -316,7 +316,4 @@ if peran == "Pengelola":
 
         if tombol_simpan:
             berhasil = simpan_pelatihan({
-                "id_jabatan": data_jabatan["id_jabatan"],
-                "jabatan_kerja": data_jabatan["jabatan_kerja"],
-                "klasifikasi": data_jabatan["klasifikasi"],
-                "sub_klasifikasi": data_jabatan
+                "id_jabatan": data_jabatan["id_jabatan
