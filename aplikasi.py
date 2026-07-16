@@ -4847,8 +4847,6 @@ if 'daftar_pendaftaran' not in st.session_state:
 if 'peserta_login' not in st.session_state:
     st.session_state.peserta_login = None
 # --- AKHIR SISIPAN ---
-
-
 # --- FUNGSI BANTUAN & VALIDASI ---
 def validasi_nik(nik):
 # ==============================================
