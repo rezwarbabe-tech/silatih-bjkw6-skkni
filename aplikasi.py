@@ -4840,7 +4840,17 @@ else:
         st.session_state.nama_pengelola = ""
         st.session_state.menu_aktif = "🏠 Halaman Utama"
         st.rerun()
+# --- DATA PESERTA & PENDAFTARAN ---
+if 'daftar_pendaftaran' not in st.session_state:
+    st.session_state.daftar_pendaftaran = []
 
+if 'peserta_login' not in st.session_state:
+    st.session_state.peserta_login = None
+# --- AKHIR SISIPAN ---
+
+
+# --- FUNGSI BANTUAN & VALIDASI ---
+def validasi_nik(nik):
 # ==============================================
 # 5. ISI HALAMAN SESUAI MENU YANG DIPILIH
 # ==============================================
