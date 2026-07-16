@@ -290,8 +290,8 @@ if peran == "Pengelola":
     # Ambil data lengkap jabatan yang dipilih
     data_jabatan = next(j for j in daftar_jabatan if jabatan_terpilih_teks.startswith(j["id_jabatan"]))
 
-    # Tampilkan data otomatis sesuai master data
-    st.markdown("### 📋 Data Jabatan (Terpetakan Otomatis dari Master Data)")
+    # Tampilkan data otomatis sesuai master data (judul sudah diganti)
+    st.markdown("### 📋 Data Jabatan Kerja Sesuai SKKNI")
     col1, col2 = st.columns(2)
     with col1:
         st.info(f"**Kode & Klasifikasi**: {data_jabatan['kode_klasifikasi']} - {data_jabatan['klasifikasi']}")
@@ -312,4 +312,11 @@ if peran == "Pengelola":
         tanggal_pelaksanaan = st.date_input("Tanggal Pelaksanaan")
         lokasi = st.text_input("Lokasi Pelatihan")
         kuota = st.number_input("Kuota Peserta", min_value=1, value=30)
-        tombol_simpan = st.form
+        tombol_simpan = st.form_submit_button("💾 Simpan Pelatihan")
+
+        if tombol_simpan:
+            berhasil = simpan_pelatihan({
+                "id_jabatan": data_jabatan["id_jabatan"],
+                "jabatan_kerja": data_jabatan["jabatan_kerja"],
+                "klasifikasi": data_jabatan["klasifikasi"],
+                "sub_klasifikasi": data_jabatan
