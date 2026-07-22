@@ -11,7 +11,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Gaya tampilan
 st.markdown("""
 <style>
     .stApp {max-width: 100%; padding: 1rem 1.2rem;}
@@ -24,7 +23,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ====================== INISIALISASI PENYIMPANAN ======================
+# ====================== INISIALISASI DATA ======================
 if "peran" not in st.session_state:
     st.session_state.peran = None
 if "daftar_pelatihan" not in st.session_state:
@@ -32,35 +31,26 @@ if "daftar_pelatihan" not in st.session_state:
 if "daftar_pendaftar" not in st.session_state:
     st.session_state.daftar_pendaftar = []
 
-# ====================== DATA JABATAN & PERSYARATAN KUALIFIKASI ======================
-data_jabatan = [
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI101015", "nama_jabatan": "Ahli Utama Bidang Keahlian Teknik Sumber Daya Air", "acuan": "SKKNI 124-2021"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI101014", "nama_jabatan": "Ahli Madya Bidang Keahlian Teknik Sumber Daya Air", "acuan": "SKKNI 124-2021"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI101013", "nama_jabatan": "Ahli Muda Bidang Keahlian Teknik Sumber Daya Air", "acuan": "SKKNI 124-2021"},
-    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "ME063096", "nama_jabatan": "Operator Bulldozer", "acuan": "SKK Khusus Reg.27-2022"},
-    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "ME063097", "nama_jabatan": "Operator Pemula Bulldozer", "acuan": "SKK Khusus Reg.27-2022"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AR011001", "nama_jabatan": "Arsitek Utama", "acuan": "SKKNI 196-2021"},
-]
-
+# ====================== PERSYARATAN KUALIFIKASI LENGKAP JENJANG 1-9 ======================
 syarat_kualifikasi = {
     "9": [
-        "Doktor/Doktor Terapan/Pendidikan Spesialis_2: Minimal 0 Tahun",
-        "S2/S2 Terapan/Pendidikan Spesialis_1: Minimal 4 Tahun",
+        "Doktor/Doktor Terapan: Minimal 0 Tahun",
+        "S2/S2 Terapan: Minimal 4 Tahun",
         "Pendidikan Profesi: Minimal 7 Tahun",
-        "S1/S1 Terapan/D4 Terapan: Minimal 8 Tahun"
+        "S1/S1 Terapan/D4: Minimal 8 Tahun"
     ],
     "8": [
-        "Magister/Magister Terapan/S2/S2 Terapan/Pendidikan Spesialis_1: Minimal 0 Tahun",
+        "S2/S2 Terapan: Minimal 0 Tahun",
         "Pendidikan Profesi: Minimal 5 Tahun",
-        "S1/S1 Terapan/D4 Terapan: Minimal 6 Tahun"
+        "S1/S1 Terapan/D4: Minimal 6 Tahun"
     ],
     "7": [
         "Pendidikan Profesi: Minimal 0 Tahun",
-        "S1/S1 Terapan/D4 Terapan (Fresh Graduate): Minimal 0 Tahun",
-        "S1/S1 Terapan/D4 Terapan: Minimal 2 Tahun"
+        "S1/S1 Terapan/D4 (Fresh Graduate): Minimal 0 Tahun",
+        "S1/S1 Terapan/D4: Minimal 2 Tahun"
     ],
     "6": [
-        "S1/S1 Terapan/D4 Terapan: Minimal 0 Tahun",
+        "S1/S1 Terapan/D4: Minimal 0 Tahun",
         "D3: Minimal 4 Tahun",
         "D2: Minimal 8 Tahun",
         "D1: Minimal 12 Tahun"
@@ -95,150 +85,140 @@ syarat_kualifikasi = {
     ]
 }
 
-# ====================== HALAMAN UTAMA / LOGIN ======================
+# ====================== DATA JABATAN LENGKAP ======================
+data_jabatan = [
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "AHLI", "jenjang": 9, "nama_jabatan": "Ahli Utama Teknik Sumber Daya Air"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "AHLI", "jenjang": 8, "nama_jabatan": "Ahli Madya Teknik Sumber Daya Air"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "AHLI", "jenjang": 7, "nama_jabatan": "Ahli Muda Teknik Sumber Daya Air"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "TEKNISI", "jenjang": 6, "nama_jabatan": "Pengawas Pengeboran Air Tanah"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "TEKNISI", "jenjang": 5, "nama_jabatan": "Pelaksana Pengeboran Air Tanah"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "TEKNISI", "jenjang": 4, "nama_jabatan": "Asisten Pelaksana Pengeboran"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 3, "nama_jabatan": "Operator Bulldozer"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 2, "nama_jabatan": "Operator Pemula Bulldozer"},
+    {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Arsitektur Lanskap", "kualifikasi": "OPERATOR", "jenjang": 1, "nama_jabatan": "Tukang Taman"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 9, "nama_jabatan": "Arsitek Utama"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "TEKNISI", "jenjang": 6, "nama_jabatan": "Pengawas Lapangan Arsitektur"}
+]
+
+# ====================== HALAMAN UTAMA LOGIN ======================
 if st.session_state.peran is None:
     st.title("🎓 siLATIH - Sistem Pelatihan Terintegrasi")
     st.divider()
-    st.subheader("Silakan pilih akses masuk:")
-    
+    st.subheader("Pilih Akses Masuk:")
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("🔧 Masuk sebagai Pengelola / Admin", use_container_width=True):
+        if st.button("🔧 Pengelola / Admin", use_container_width=True):
             st.session_state.peran = "admin"
             st.rerun()
     with col2:
-        if st.button("👤 Masuk sebagai Peserta", use_container_width=True):
+        if st.button("👤 Peserta", use_container_width=True):
             st.session_state.peran = "peserta"
             st.rerun()
 
-# ====================== DASHBOARD ADMIN / PENGELOLA ======================
+# ====================== DASHBOARD ADMIN ======================
 elif st.session_state.peran == "admin":
-    st.title("🔧 Dashboard Pengelola Pelatihan")
-    if st.button("🔙 Kembali ke Halaman Utama"):
+    st.title("🔧 Dashboard Pengelola")
+    if st.button("🔙 Kembali"):
         st.session_state.peran = None
         st.rerun()
     st.divider()
 
-    tab1, tab2 = st.tabs(["📝 Buat Pelatihan Baru", "📋 Daftar Pendaftar"])
+    tab1, tab2 = st.tabs(["📝 Buat Pelatihan", "📋 Pendaftar"])
 
     with tab1:
-        st.subheader("Isi Data & Persyaratan Pelatihan")
-        
+        st.subheader("Data Pelatihan")
         nama_pelatihan = st.text_input("Nama Pelatihan")
-        tanggal_pelatihan = st.date_input("Tanggal Pelaksanaan")
-        lokasi = st.text_input("Lokasi / Tautan Pelatihan")
-        
-        st.subheader("📌 Persyaratan Umum (Wajib Bagi Semua Peserta)")
+        tanggal = st.date_input("Tanggal Pelaksanaan")
+        lokasi = st.text_input("Lokasi/Tautan")
+
+        st.subheader("📌 Persyaratan Umum")
         syarat_umum = st.text_area(
-            "Daftar Persyaratan Umum",
-            value="1. Fotokopi KTP yang masih berlaku\n2. Fotokopi Ijazah Terakhir yang dilegalisir\n3. Pas foto berwarna ukuran 4x6 cm latar belakang merah/biru\n4. Surat keterangan sehat\n5. Surat tugas dari instansi (jika diperlukan)",
-            height=150
+            "Daftar Persyaratan",
+            value="1. KTP Asli & Fotokopi\n2. Ijazah Terakhir Dilegalisir\n3. Pas Foto 4x6\n4. Surat Keterangan Sehat",
+            height=120
         )
+
+        st.subheader("📌 Persyaratan Jabatan")
+        klasifikasi_pilih = st.selectbox("Klasifikasi", sorted({j["klasifikasi"] for j in data_jabatan}))
+        subklasifikasi_pilih = st.selectbox("Subklasifikasi", sorted({j["subklasifikasi"] for j in data_jabatan if j["klasifikasi"] == klasifikasi_pilih}))
+        jabatan_list = [f"{j['nama_jabatan']} (Jenjang {j['jenjang']})" for j in data_jabatan if j["klasifikasi"] == klasifikasi_pilih and j["subklasifikasi"] == subklasifikasi_pilih]
+        jabatan_pilih = st.selectbox("Jabatan", jabatan_list)
+        jenjang = next(j["jenjang"] for j in data_jabatan if f"{j['nama_jabatan']} (Jenjang {j['jenjang']})" == jabatan_pilih)
         
-        st.subheader("📌 Persyaratan Jabatan & Kualifikasi")
-        klasifikasi_pilih = st.selectbox("Pilih Klasifikasi", list({j["klasifikasi"] for j in data_jabatan}))
-        subklasifikasi_pilih = st.selectbox("Pilih Subklasifikasi", list({j["subklasifikasi"] for j in data_jabatan if j["klasifikasi"] == klasifikasi_pilih}))
-        jabatan_pilih = st.selectbox("Pilih Jabatan", [f"{j['nama_jabatan']} (Jenjang {j['jenjang']})" for j in data_jabatan if j["klasifikasi"] == klasifikasi_pilih and j["subklasifikasi"] == subklasifikasi_pilih])
-        
-        jenjang_terpilih = next(j["jenjang"] for j in data_jabatan if f"{j['nama_jabatan']} (Jenjang {j['jenjang']})" == jabatan_pilih)
-        st.info(f"Persyaratan Kualifikasi Jenjang {jenjang_terpilih}:")
-        for s in syarat_kualifikasi[str(jenjang_terpilih)]:
+        st.info(f"✅ Syarat Kualifikasi Jenjang {jenjang}:")
+        for s in syarat_kualifikasi[str(jenjang)]:
             st.write(f"- {s}")
-        
+
         if st.button("✅ Simpan Pelatihan", type="primary"):
-            if nama_pelatihan == "":
-                st.error("Nama pelatihan tidak boleh kosong!")
-            else:
-                pelatihan_baru = {
+            if nama_pelatihan:
+                pelatihan = {
                     "id": str(uuid.uuid4())[:8].upper(),
                     "nama": nama_pelatihan,
-                    "tanggal": tanggal_pelatihan.strftime("%d-%m-%Y"),
+                    "tanggal": tanggal.strftime("%d-%m-%Y"),
                     "lokasi": lokasi,
                     "syarat_umum": syarat_umum,
                     "jabatan": jabatan_pilih,
-                    "jenjang": jenjang_terpilih,
-                    "syarat_kualifikasi": syarat_kualifikasi[str(jenjang_terpilih)]
+                    "jenjang": jenjang,
+                    "syarat_khusus": syarat_kualifikasi[str(jenjang)]
                 }
-                st.session_state.daftar_pelatihan.append(pelatihan_baru)
-                st.success("Pelatihan berhasil dibuat dan disimpan!")
+                st.session_state.daftar_pelatihan.append(pelatihan)
+                st.success("Pelatihan berhasil disimpan!")
+            else:
+                st.error("Nama pelatihan wajib diisi!")
 
     with tab2:
-        st.subheader("Daftar Pendaftar Semua Pelatihan")
-        if len(st.session_state.daftar_pendaftar) > 0:
-            df = pd.DataFrame(st.session_state.daftar_pendaftar)
-            st.dataframe(df, use_container_width=True)
-            
-            csv = df.to_csv(index=False).encode('utf-8')
-            st.download_button(
-                "📥 Unduh Data Pendaftar (CSV)",
-                data=csv,
-                file_name=f"daftar_pendaftar_{datetime.now().strftime('%Y%m%d')}.csv",
-                mime="text/csv"
-            )
+        st.subheader("Daftar Pendaftar")
+        if st.session_state.daftar_pendaftar:
+            st.dataframe(pd.DataFrame(st.session_state.daftar_pendaftar), use_container_width=True)
+            st.download_button("📥 Unduh CSV", pd.DataFrame(st.session_state.daftar_pendaftar).to_csv(index=False).encode("utf-8"), "daftar_pendaftar.csv")
         else:
-            st.info("Belum ada peserta yang mendaftar.")
+            st.info("Belum ada pendaftar.")
 
 # ====================== DASHBOARD PESERTA ======================
 elif st.session_state.peran == "peserta":
-    st.title("👤 Dashboard Peserta Pelatihan")
-    if st.button("🔙 Kembali ke Halaman Utama"):
+    st.title("👤 Dashboard Peserta")
+    if st.button("🔙 Kembali"):
         st.session_state.peran = None
         st.rerun()
     st.divider()
 
-    if len(st.session_state.daftar_pelatihan) == 0:
-        st.warning("Belum ada pelatihan yang dibuka oleh pengelola. Silakan cek kembali nanti.")
+    if not st.session_state.daftar_pelatihan:
+        st.warning("Belum ada pelatihan dibuka.")
     else:
-        pilihan_pelatihan = st.selectbox("Pilih Pelatihan yang Diikuti", [p["nama"] for p in st.session_state.daftar_pelatihan])
-        data_pilih = next(p for p in st.session_state.daftar_pelatihan if p["nama"] == pilihan_pelatihan)
-        
-        st.subheader("📋 Informasi & Persyaratan Lengkap")
-        st.info(f"**Pelatihan:** {data_pilih['nama']}\n**Tanggal:** {data_pilih['tanggal']}\n**Lokasi:** {data_pilih['lokasi']}")
-        
-        with st.expander("📌 Persyaratan Umum"):
-            st.markdown(data_pilih["syarat_umum"])
-        with st.expander("📌 Persyaratan Jabatan & Kualifikasi"):
-            st.write(f"**Jabatan:** {data_pilih['jabatan']}")
-            st.write("**Syarat Pendidikan & Pengalaman:**")
-            for s in data_pilih["syarat_kualifikasi"]:
+        pilih = st.selectbox("Pilih Pelatihan", [p["nama"] for p in st.session_state.daftar_pelatihan])
+        data = next(p for p in st.session_state.daftar_pelatihan if p["nama"] == pilih)
+
+        st.subheader("📋 Informasi & Syarat Lengkap")
+        st.info(f"**Tanggal:** {data['tanggal']} | **Lokasi:** {data['lokasi']}")
+        with st.expander("Persyaratan Umum"):
+            st.markdown(data["syarat_umum"])
+        with st.expander("Persyaratan Jabatan & Kualifikasi"):
+            st.write(f"**Jabatan:** {data['jabatan']}")
+            for s in data["syarat_khusus"]:
                 st.write(f"- {s}")
-        
-        st.subheader("📝 Isi Data & Unggah Persyaratan")
-        nama = st.text_input("Nama Lengkap Sesuai KTP")
+
+        st.subheader("📝 Isi Pendaftaran")
+        nama = st.text_input("Nama Lengkap")
         nik = st.text_input("NIK")
-        alamat = st.text_area("Alamat Lengkap")
-        no_hp = st.text_input("Nomor HP / WhatsApp")
+        hp = st.text_input("No. HP/WA")
         pendidikan = st.text_input("Pendidikan Terakhir")
-        pengalaman = st.number_input("Lama Pengalaman Kerja (Tahun)", min_value=0, step=1)
-        
-        st.subheader("📎 Unggah Berkas Persyaratan")
-        ktp = st.file_uploader("Scan / Foto KTP", type=["jpg","jpeg","png","pdf"])
-        ijazah = st.file_uploader("Scan / Foto Ijazah Terakhir", type=["jpg","jpeg","png","pdf"])
-        foto = st.file_uploader("Pas Foto Terbaru", type=["jpg","jpeg","png"])
-        berkas_lain = st.file_uploader("Berkas Pendukung Lainnya", type=["jpg","jpeg","png","pdf"], accept_multiple_files=True)
-        
-        setuju = st.checkbox("Saya menyatakan data dan berkas yang diunggah benar dan memenuhi persyaratan di atas")
-        
-        if st.button("✅ Kirim Pendaftaran", type="primary"):
-            if nama == "" or nik == "" or not setuju:
-                st.error("Lengkapi data wajib dan centang persetujuan terlebih dahulu!")
-            else:
-                nomor_daftar = f"REG-{datetime.now().strftime('%Y%m%d')}-{str(uuid.uuid4())[:4].upper()}"
-                pendaftar_baru = {
-                    "Nomor Pendaftaran": nomor_daftar,
-                    "Waktu Daftar": datetime.now().strftime("%d-%m-%Y %H:%M"),
-                    "Nama Pelatihan": pilihan_pelatihan,
-                    "Nama Lengkap": nama,
-                    "NIK": nik,
-                    "Alamat": alamat,
-                    "No HP": no_hp,
-                    "Pendidikan": pendidikan,
-                    "Pengalaman (Tahun)": pengalaman,
-                    "KTP": "Terunggah" if ktp else "Belum",
-                    "Ijazah": "Terunggah" if ijazah else "Belum",
-                    "Pas Foto": "Terunggah" if foto else "Belum",
-                    "Berkas Lain": "Terunggah" if berkas_lain else "Belum"
-                }
-                st.session_state.daftar_pendaftar.append(pendaftar_baru)
-                st.success(f"🎉 Pendaftaran berhasil! Nomor Anda: **{nomor_daftar}**")
-                st.info("Simpan nomor ini untuk mengetahui hasil seleksi selanjutnya.")
+        pengalaman = st.number_input("Lama Pengalaman (Tahun)", min_value=0)
+
+        st.subheader("📎 Unggah Berkas")
+        ktp = st.file_uploader("KTP", type=["jpg","png","pdf"])
+        ijazah = st.file_uploader("Ijazah", type=["jpg","png","pdf"])
+        foto = st.file_uploader("Pas Foto", type=["jpg","png"])
+
+        if st.checkbox("Data yang saya kirim sudah benar") and st.button("✅ Kirim Pendaftaran", type="primary"):
+            nomor = f"REG-{datetime.now().strftime('%Y%m%d')}-{str(uuid.uuid4())[:4].upper()}"
+            st.session_state.daftar_pendaftar.append({
+                "No Daftar": nomor,
+                "Pelatihan": pilih,
+                "Nama": nama,
+                "NIK": nik,
+                "HP": hp,
+                "Pendidikan": pendidikan,
+                "Pengalaman": pengalaman,
+                "Berkas Lengkap": "Ya" if ktp and ijazah and foto else "Tidak"
+            })
+            st.success(f"🎉 Pendaftaran Berhasil! Nomor: {nomor}")
