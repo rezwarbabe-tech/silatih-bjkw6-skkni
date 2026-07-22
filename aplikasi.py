@@ -157,8 +157,7 @@ data_jabatan = [
 # ==============================================================
 data_jabatan = [
 # --- ISI SEMUA DATA MEKANIKAL ANDA DI SINI ---
-{"klasifikasi": "MEKANIKAL", ... , "nama_jabatan": "Operator Dump Truck", "acuan": "SKKNI 132-2015"},
-
+{"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "ME063027", "nama_jabatan": "Operator Dump Truck", "acuan": "SKKNI 132-2015"},
 # ==============================================================
 # KLASIFIKASI: MEKANIKAL (ME)
 # ==============================================================
