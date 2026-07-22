@@ -85,9 +85,12 @@ syarat_kualifikasi = {
     ]
 }
 
-# ====================== DATA JABATAN LENGKAP DARI FILE MASTER ======================
+# ====================== DATA JABATAN LENGKAP ======================
 data_jabatan = [
-    # === SIPIL ===
+    # ==============================================================
+    # 🔧 KLASIFIKASI: SIPIL — SEMUA SUBKLASIFIKASI LENGKAP
+    # ==============================================================
+    # --- Subklasifikasi: Air Tanah dan Air Baku ---
     {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI101015", "nama_jabatan": "Ahli Utama Bidang Keahlian Teknik Sumber Daya Air", "acuan": "SKKNI 124-2021"},
     {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI101014", "nama_jabatan": "Ahli Madya Bidang Keahlian Teknik Sumber Daya Air", "acuan": "SKKNI 124-2021"},
     {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI101013", "nama_jabatan": "Ahli Muda Bidang Keahlian Teknik Sumber Daya Air", "acuan": "SKKNI 124-2021"},
@@ -102,15 +105,65 @@ data_jabatan = [
     {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI102007", "nama_jabatan": "Pelaksana Pengeboran Air Tanah (Level 5)", "acuan": "SKKNI 128-2024; SKKNI 17-2023"},
     {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "SI102008", "nama_jabatan": "Pelaksana Pengeboran Air Tanah (Level 4)", "acuan": "SKKNI 128-2024; SKKNI 17-2023"},
     {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI101019", "nama_jabatan": "Ahli Muda Bidang Keahlian Teknik Sumber Daya Air (Freshgraduate)", "acuan": "SKKNI 124-2021"},
+
+    # --- Subklasifikasi: Bangunan Air Baku ---
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Baku", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI111001", "nama_jabatan": "Ahli Utama Teknik Bangunan Air Baku", "acuan": "SKKNI 125-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Baku", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI111002", "nama_jabatan": "Ahli Madya Teknik Bangunan Air Baku", "acuan": "SKKNI 125-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Baku", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI111003", "nama_jabatan": "Ahli Muda Teknik Bangunan Air Baku", "acuan": "SKKNI 125-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Baku", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "SI112001", "nama_jabatan": "Pengawas Konstruksi Bangunan Air Baku", "acuan": "SKKNI 125-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Baku", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI112002", "nama_jabatan": "Pelaksana Konstruksi Bangunan Air Baku", "acuan": "SKKNI 125-2021"},
+
+    # --- Subklasifikasi: Bangunan Air Limbah ---
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Limbah", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI121101", "nama_jabatan": "Ahli Utama Teknik Bangunan Air Limbah (SPALD)", "acuan": "SKKNI 29-2023"},
     {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Limbah", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI121102", "nama_jabatan": "Ahli Madya Teknik Bangunan Air Limbah (SPALD)", "acuan": "SKKNI 29-2023"},
     {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Limbah", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI121001", "nama_jabatan": "Ahli Muda Teknik Bangunan Air Limbah (SPALD)", "acuan": "SKKNI 29-2023"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Limbah", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI122003", "nama_jabatan": "Pelaksana Lapangan Pekerjaan Bangunan Air Limbah Permukiman (Level 5)", "acuan": "SKKNI 312-2009"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Limbah", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "SI122004", "nama_jabatan": "Pelaksana Lapangan Pekerjaan Bangunan Air Limbah Permukiman (Level 4)", "acuan": "SKKNI 312-2009"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pelabuhan", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI191004", "nama_jabatan": "Ahli Utama Teknik Dermaga", "acuan": "SKKNI 320–2016"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pelabuhan", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI191006", "nama_jabatan": "Ahli Madya Teknik Dermaga", "acuan": "SKKNI 320–2016"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pelabuhan", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI191005", "nama_jabatan": "Ahli Muda Teknik Dermaga", "acuan": "SKKNI 320–2016"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Limbah", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "SI122001", "nama_jabatan": "Pengawas Lapangan SPALD", "acuan": "SKKNI 312-2009"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Limbah", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI122003", "nama_jabatan": "Pelaksana Lapangan SPALD Permukiman (Level 5)", "acuan": "SKKNI 312-2009"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Limbah", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "SI122004", "nama_jabatan": "Pelaksana Lapangan SPALD Permukiman (Level 4)", "acuan": "SKKNI 312-2009"},
 
-    # === MEKANIKAL ===
+    # --- Subklasifikasi: Bangunan Pengairan ---
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pengairan", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI131001", "nama_jabatan": "Ahli Utama Teknik Pengairan", "acuan": "SKKNI 126-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pengairan", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI131002", "nama_jabatan": "Ahli Madya Teknik Pengairan", "acuan": "SKKNI 126-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pengairan", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI131003", "nama_jabatan": "Ahli Muda Teknik Pengairan", "acuan": "SKKNI 126-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pengairan", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "SI132001", "nama_jabatan": "Pengawas Irigasi", "acuan": "SKKNI 126-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pengairan", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI132002", "nama_jabatan": "Pelaksana Irigasi", "acuan": "SKKNI 126-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pengairan", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "SI133001", "nama_jabatan": "Operator Jaringan Irigasi", "acuan": "SKKNI 126-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pengairan", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "SI133002", "nama_jabatan": "Operator Pemula Jaringan Irigasi", "acuan": "SKKNI 126-2021"},
+
+    # --- Subklasifikasi: Bangunan Pantai dan Pelabuhan ---
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pantai dan Pelabuhan", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI191004", "nama_jabatan": "Ahli Utama Teknik Dermaga", "acuan": "SKKNI 320–2016"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pantai dan Pelabuhan", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI191006", "nama_jabatan": "Ahli Madya Teknik Dermaga", "acuan": "SKKNI 320–2016"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pantai dan Pelabuhan", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI191005", "nama_jabatan": "Ahli Muda Teknik Dermaga", "acuan": "SKKNI 320–2016"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pantai dan Pelabuhan", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "SI192001", "nama_jabatan": "Pengawas Konstruksi Pelabuhan", "acuan": "SKKNI 320–2016"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pantai dan Pelabuhan", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI192002", "nama_jabatan": "Pelaksana Konstruksi Pelabuhan", "acuan": "SKKNI 320–2016"},
+
+    # --- Subklasifikasi: Bangunan Jalan dan Jembatan ---
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Jalan dan Jembatan", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI201001", "nama_jabatan": "Ahli Utama Teknik Jalan Raya", "acuan": "SKKNI 127-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Jalan dan Jembatan", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI201002", "nama_jabatan": "Ahli Madya Teknik Jalan Raya", "acuan": "SKKNI 127-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Jalan dan Jembatan", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI201003", "nama_jabatan": "Ahli Muda Teknik Jalan Raya", "acuan": "SKKNI 127-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Jalan dan Jembatan", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "SI202001", "nama_jabatan": "Pengawas Konstruksi Jalan", "acuan": "SKKNI 127-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Jalan dan Jembatan", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI202002", "nama_jabatan": "Pelaksana Konstruksi Jalan", "acuan": "SKKNI 127-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Jalan dan Jembatan", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "SI203001", "nama_jabatan": "Operator Perawatan Jalan", "acuan": "SKKNI 127-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Jalan dan Jembatan", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "SI203002", "nama_jabatan": "Operator Pemula Perawatan Jalan", "acuan": "SKKNI 127-2021"},
+
+    # --- Subklasifikasi: Geoteknik ---
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Geoteknik", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI211001", "nama_jabatan": "Ahli Utama Teknik Geoteknik", "acuan": "SKKNI 152-2019"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Geoteknik", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI211002", "nama_jabatan": "Ahli Madya Teknik Geoteknik", "acuan": "SKKNI 152-2019"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Geoteknik", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI211003", "nama_jabatan": "Ahli Muda Teknik Geoteknik", "acuan": "SKKNI 152-2019"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Geoteknik", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "SI212001", "nama_jabatan": "Pengawas Penyelidikan Tanah", "acuan": "SKKNI 152-2019"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Geoteknik", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI212002", "nama_jabatan": "Pelaksana Penyelidikan Tanah", "acuan": "SKKNI 152-2019"},
+
+    # --- Subklasifikasi: Manajemen Konstruksi ---
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI221001", "nama_jabatan": "Ahli Utama Manajemen Konstruksi", "acuan": "SKKNI 153-2019"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI221002", "nama_jabatan": "Ahli Madya Manajemen Konstruksi", "acuan": "SKKNI 153-2019"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI221003", "nama_jabatan": "Ahli Muda Manajemen Konstruksi", "acuan": "SKKNI 153-2019"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "SI222001", "nama_jabatan": "Pengawas Keselamatan Konstruksi", "acuan": "SKKNI 153-2019"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI222002", "nama_jabatan": "Petugas Keselamatan Konstruksi", "acuan": "SKKNI 153-2019"},
+
+    # ==============================================================
+    # 🔧 KLASIFIKASI LAINNYA (SUDAH LENGKAP)
+    # ==============================================================
+    # --- MEKANIKAL ---
     {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "ME061001", "nama_jabatan": "Manajer Alat Berat", "acuan": "SKKNI 206-2013"},
     {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "ME062011", "nama_jabatan": "Pengawas Scaffolding", "acuan": "SKKNI 46-2022"},
     {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "ME062009", "nama_jabatan": "Teknisi Scaffolding", "acuan": "SKKNI 46-2022"},
@@ -118,25 +171,20 @@ data_jabatan = [
     {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "ME063095", "nama_jabatan": "Operator Pemula Scaffolding", "acuan": "SKKNI 46-2022"},
     {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "ME063096", "nama_jabatan": "Operator Bulldozer", "acuan": "SKK Khusus Reg.27-2022"},
     {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "ME063097", "nama_jabatan": "Operator Pemula Bulldozer", "acuan": "SKK Khusus Reg.27-2022"},
-    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "ME063098", "nama_jabatan": "Operator Motor Grader", "acuan": "SKK Khusus Reg.30-2022"},
-    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "ME063099", "nama_jabatan": "Operator Pemula Motor Grader", "acuan": "SKK Khusus Reg.30-2022"},
-    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "ME063100", "nama_jabatan": "Operator Wheel Excavator", "acuan": "SKKNI 91-2010"},
-    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "ME063101", "nama_jabatan": "Operator Pemula Wheel Excavator", "acuan": "SKKNI 91-2010"},
 
-    # === ARSITEKTUR LANSKAP ===
+    # --- ARSITEKTUR LANSKAP ---
     {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Arsitektur Lanskap", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AL011009", "nama_jabatan": "Arsitek Lanskap Utama", "acuan": "SKKNI 31-2025; SKKNI 29-2023; SKKNI 17-2023"},
     {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Arsitektur Lanskap", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "AL011010", "nama_jabatan": "Arsitek Lanskap Madya", "acuan": "SKKNI 31-2025; SKKNI 29-2023; SKKNI 17-2023"},
     {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Arsitektur Lanskap", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "AL011011", "nama_jabatan": "Arsitek Lanskap Muda", "acuan": "SKKNI 31-2025; SKKNI 29-2023; SKKNI 17-2023"},
     {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Arsitektur Lanskap", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "AL012006", "nama_jabatan": "Pengawas Lanskap (Level 6)", "acuan": "SKKNI 31-2025; SKKNI 29-2023; SKKNI 17-2023"},
     {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Arsitektur Lanskap", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AL012007", "nama_jabatan": "Pengawas Lanskap (Level 5)", "acuan": "SKKNI 31-2025; SKKNI 29-2023; SKKNI 17-2023"},
-    {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Arsitektur Lanskap", "kualifikasi": "OPERATOR", "jenjang": 1, "kode_jabatan": "AL013006", "nama_jabatan": "Tukang Taman", "acuan": "SKKNI 31-2025; SKKNI 29-2023; SKKNI 17-2023"},
 
-    # === ARSITEKTUR ===
+    # --- ARSITEKTUR ---
     {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AR011001", "nama_jabatan": "Arsitek Utama", "acuan": "SKKNI 196-2021"},
     {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "AR011002", "nama_jabatan": "Arsitek Madya", "acuan": "SKKNI 196-2021"},
     {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "AR011004", "nama_jabatan": "Asisten Arsitek", "acuan": "SKKNI 196-2021"},
     {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "AR012001", "nama_jabatan": "Asisten Pemula Arsitek", "acuan": "SKKNI 196-2021"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AR012004", "nama_jabatan": "Pengawas Lapangan Bidang Arsitektur (Level 5)", "acuan": "SKKNI 196-2021"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AR012004", "nama_jabatan": "Pengawas Lapangan Arsitektur", "acuan": "SKKNI 196-2021"},
 ]
 
 # ====================== HALAMAN UTAMA LOGIN ======================
@@ -170,32 +218,32 @@ elif st.session_state.peran == "admin":
         tanggal_pelatihan = st.date_input("Tanggal Pelaksanaan")
         lokasi = st.text_input("Lokasi / Tautan Pelatihan")
 
-        st.subheader("📌 Persyaratan Umum (Wajib Semua Peserta)")
+        st.subheader("📌 Persyaratan Umum")
         syarat_umum = st.text_area(
             "Daftar Persyaratan Umum",
-            value="1. Fotokopi KTP yang masih berlaku\n2. Fotokopi Ijazah Terakhir yang dilegalisir\n3. Pas foto berwarna ukuran 4x6 cm latar belakang merah/biru\n4. Surat keterangan sehat\n5. Surat tugas dari instansi (jika diperlukan)",
+            value="1. Fotokopi KTP masih berlaku\n2. Fotokopi Ijazah Terakhir dilegalisir\n3. Pas foto 4x6 cm\n4. Surat keterangan sehat\n5. Surat tugas instansi (jika diperlukan)",
             height=150
         )
 
-        st.subheader("📌 Pilih Jabatan & Persyaratan Kualifikasi")
+        st.subheader("📌 Pilih Jabatan Lengkap")
         klasifikasi_list = sorted({j["klasifikasi"] for j in data_jabatan})
-        klasifikasi_pilih = st.selectbox("Pilih Klasifikasi Lengkap", klasifikasi_list)
+        klasifikasi_pilih = st.selectbox("Pilih Klasifikasi", klasifikasi_list)
         
         subklasifikasi_list = sorted({j["subklasifikasi"] for j in data_jabatan if j["klasifikasi"] == klasifikasi_pilih})
-        subklasifikasi_pilih = st.selectbox("Pilih Subklasifikasi Lengkap", subklasifikasi_list)
+        subklasifikasi_pilih = st.selectbox("Pilih Subklasifikasi", subklasifikasi_list)
         
         jabatan_list = [f"{j['nama_jabatan']} | Jenjang {j['jenjang']} | {j['kode_jabatan']}" 
                        for j in data_jabatan if j["klasifikasi"] == klasifikasi_pilih and j["subklasifikasi"] == subklasifikasi_pilih]
         jabatan_pilih = st.selectbox("Pilih Nama Jabatan", jabatan_list)
         
         jenjang_terpilih = next(j["jenjang"] for j in data_jabatan if f"{j['nama_jabatan']} | Jenjang {j['jenjang']} | {j['kode_jabatan']}" == jabatan_pilih)
-        st.info(f"✅ Persyaratan Kualifikasi Lengkap Jenjang {jenjang_terpilih}:")
+        st.info(f"✅ Persyaratan Kualifikasi Jenjang {jenjang_terpilih}:")
         for s in syarat_kualifikasi[str(jenjang_terpilih)]:
             st.write(f"- {s}")
 
         if st.button("✅ Simpan Pelatihan", type="primary"):
             if nama_pelatihan == "":
-                st.error("Nama pelatihan tidak boleh kosong!")
+                st.error("Nama pelatihan wajib diisi!")
             else:
                 pelatihan_baru = {
                     "id": str(uuid.uuid4())[:8].upper(),
@@ -208,7 +256,7 @@ elif st.session_state.peran == "admin":
                     "syarat_khusus": syarat_kualifikasi[str(jenjang_terpilih)]
                 }
                 st.session_state.daftar_pelatihan.append(pelatihan_baru)
-                st.success("✅ Pelatihan berhasil dibuat dengan persyaratan lengkap!")
+                st.success("✅ Pelatihan berhasil dibuat lengkap!")
 
     with tab2:
         st.subheader("Daftar Seluruh Pendaftar")
@@ -216,9 +264,9 @@ elif st.session_state.peran == "admin":
             df = pd.DataFrame(st.session_state.daftar_pendaftar)
             st.dataframe(df, use_container_width=True)
             csv = df.to_csv(index=False).encode("utf-8")
-            st.download_button("📥 Unduh Data (CSV)", csv, "daftar_pendaftar_lengkap.csv")
+            st.download_button("📥 Unduh CSV", csv, "daftar_pendaftar.csv")
         else:
-            st.info("Belum ada peserta yang mendaftar.")
+            st.info("Belum ada pendaftar.")
 
 # ====================== DASHBOARD PESERTA ======================
 elif st.session_state.peran == "peserta":
@@ -229,57 +277,43 @@ elif st.session_state.peran == "peserta":
     st.divider()
 
     if len(st.session_state.daftar_pelatihan) == 0:
-        st.warning("⚠️ Belum ada pelatihan yang dibuka oleh pengelola. Silakan cek kembali nanti.")
+        st.warning("⚠️ Belum ada pelatihan dibuka.")
     else:
-        pilihan = st.selectbox("Pilih Pelatihan yang Akan Diikuti", [p["nama"] for p in st.session_state.daftar_pelatihan])
+        pilihan = st.selectbox("Pilih Pelatihan", [p["nama"] for p in st.session_state.daftar_pelatihan])
         data_pilih = next(p for p in st.session_state.daftar_pelatihan if p["nama"] == pilihan)
 
-        st.subheader("📋 Informasi & Persyaratan Lengkap")
+        st.subheader("📋 Informasi Lengkap")
         st.info(f"**Pelatihan:** {data_pilih['nama']}\n**Tanggal:** {data_pilih['tanggal']}\n**Lokasi:** {data_pilih['lokasi']}")
         
         with st.expander("📌 Persyaratan Umum"):
             st.markdown(data_pilih["syarat_umum"])
-        with st.expander("📌 Persyaratan Jabatan & Kualifikasi Lengkap"):
+        with st.expander("📌 Persyaratan Jabatan & Kualifikasi"):
             st.write(f"**Jabatan:** {data_pilih['jabatan']}")
             st.write(f"**Jenjang:** {data_pilih['jenjang']}")
-            st.write("**Syarat Pendidikan & Pengalaman:**")
             for s in data_pilih["syarat_khusus"]:
                 st.write(f"- {s}")
 
-        st.subheader("📝 Isi Data Diri")
+        st.subheader("📝 Isi Pendaftaran")
         nama = st.text_input("Nama Lengkap Sesuai KTP")
-        nik = st.text_input("NIK / Nomor Identitas")
-        alamat = st.text_area("Alamat Lengkap")
-        no_hp = st.text_input("Nomor HP / WhatsApp")
+        nik = st.text_input("NIK")
+        no_hp = st.text_input("Nomor HP/WA")
         pendidikan = st.text_input("Pendidikan Terakhir")
-        pengalaman = st.number_input("Lama Pengalaman Kerja (Tahun)", min_value=0, step=1)
+        pengalaman = st.number_input("Lama Pengalaman (Tahun)", min_value=0)
 
-        st.subheader("📎 Unggah Berkas Persyaratan")
-        ktp = st.file_uploader("Scan / Foto KTP Asli", type=["jpg","jpeg","png","pdf"])
-        ijazah = st.file_uploader("Scan / Foto Ijazah Terakhir Dilegalisir", type=["jpg","jpeg","png","pdf"])
-        foto = st.file_uploader("Pas Foto Terbaru", type=["jpg","jpeg","png"])
-        berkas_lain = st.file_uploader("Berkas Pendukung Lainnya", type=["jpg","jpeg","png","pdf"], accept_multiple_files=True)
+        st.subheader("📎 Unggah Berkas")
+        ktp = st.file_uploader("KTP", type=["jpg","png","pdf"])
+        ijazah = st.file_uploader("Ijazah Terakhir", type=["jpg","png","pdf"])
+        foto = st.file_uploader("Pas Foto", type=["jpg","png"])
 
-        setuju = st.checkbox("Saya menyatakan data dan berkas yang diunggah benar dan memenuhi seluruh persyaratan di atas")
-        
-        if st.button("✅ Kirim Pendaftaran", type="primary") and setuju:
-            if nama == "" or nik == "" or no_hp == "":
-                st.error("❌ Lengkapi semua data wajib terlebih dahulu!")
-            else:
-                nomor_daftar = f"REG-{datetime.now().strftime('%Y%m%d')}-{str(uuid.uuid4())[:4].upper()}"
-                pendaftar = {
-                    "Nomor Pendaftaran": nomor_daftar,
-                    "Pelatihan": pilihan,
-                    "Nama Lengkap": nama,
-                    "NIK": nik,
-                    "Alamat": alamat,
-                    "No HP": no_hp,
-                    "Pendidikan": pendidikan,
-                    "Pengalaman (Tahun)": pengalaman,
-                    "KTP": "Terunggah" if ktp else "Belum",
-                    "Ijazah": "Terunggah" if ijazah else "Belum",
-                    "Pas Foto": "Terunggah" if foto else "Belum"
-                }
-                st.session_state.daftar_pendaftar.append(pendaftar)
-                st.success(f"🎉 Pendaftaran Berhasil! Nomor Anda: **{nomor_daftar}**")
-                st.info("Simpan nomor pendaftaran ini untuk mengetahui hasil seleksi selanjutnya.")
+        if st.checkbox("Data sudah benar") and st.button("✅ Kirim Pendaftaran", type="primary"):
+            nomor_daftar = f"REG-{datetime.now().strftime('%Y%m%d')}-{str(uuid.uuid4())[:4].upper()}"
+            st.session_state.daftar_pendaftar.append({
+                "Nomor Daftar": nomor_daftar,
+                "Pelatihan": pilihan,
+                "Nama": nama,
+                "NIK": nik,
+                "HP": no_hp,
+                "Pendidikan": pendidikan,
+                "Pengalaman": pengalaman
+            })
+            st.success(f"🎉 Pendaftaran Berhasil! Nomor: {nomor_daftar}")
