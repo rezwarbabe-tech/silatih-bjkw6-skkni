@@ -254,7 +254,8 @@ data_jabatan = [
     {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Pelaksanaan Lanskap", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "AL022002", "nama_jabatan": "Pelaksana Konstruksi Lanskap", "acuan": "SKKNI 197-2021"},
     {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Pemeliharaan Lanskap", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "AL033001", "nama_jabatan": "Teknisi Taman", "acuan": "SKKNI 197-2021"},
     {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Pemeliharaan Lanskap", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "AL033002", "nama_jabatan": "Pekerja Taman Pemula", "acuan": "SKKNI 197-2021"},
-# ====================== HALAMAN UTAMA LOGIN ======================
+]
+    # ====================== HALAMAN UTAMA LOGIN ======================
 if st.session_state.peran is None:
     st.title("🎓 siLATIH - Sistem Pelatihan Terintegrasi")
     st.divider()
