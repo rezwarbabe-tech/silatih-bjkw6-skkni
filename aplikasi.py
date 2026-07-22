@@ -87,7 +87,10 @@ syarat_kualifikasi = {
 
 # ====================== DATA JABATAN LENGKAP DARI FILE MASTER ======================
 data_jabatan = [
-    # === SIPIL ===
+     # ==============================================================
+    # 🏗️ KLASIFIKASI: SIPIL — SESUAI FILE MASTER DATA JABKER.XLSX
+    # ==============================================================
+    # --- Subklasifikasi: Air Tanah dan Air Baku ---
     {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI101015", "nama_jabatan": "Ahli Utama Bidang Keahlian Teknik Sumber Daya Air", "acuan": "SKKNI 124-2021"},
     {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI101014", "nama_jabatan": "Ahli Madya Bidang Keahlian Teknik Sumber Daya Air", "acuan": "SKKNI 124-2021"},
     {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI101013", "nama_jabatan": "Ahli Muda Bidang Keahlian Teknik Sumber Daya Air", "acuan": "SKKNI 124-2021"},
@@ -102,13 +105,60 @@ data_jabatan = [
     {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI102007", "nama_jabatan": "Pelaksana Pengeboran Air Tanah (Level 5)", "acuan": "SKKNI 128-2024; SKKNI 17-2023"},
     {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "SI102008", "nama_jabatan": "Pelaksana Pengeboran Air Tanah (Level 4)", "acuan": "SKKNI 128-2024; SKKNI 17-2023"},
     {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI101019", "nama_jabatan": "Ahli Muda Bidang Keahlian Teknik Sumber Daya Air (Freshgraduate)", "acuan": "SKKNI 124-2021"},
+
+    # --- Subklasifikasi: Bangunan Air Baku ---
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Baku", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI111001", "nama_jabatan": "Ahli Utama Teknik Bangunan Air Baku", "acuan": "SKKNI 125-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Baku", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI111002", "nama_jabatan": "Ahli Madya Teknik Bangunan Air Baku", "acuan": "SKKNI 125-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Baku", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI111003", "nama_jabatan": "Ahli Muda Teknik Bangunan Air Baku", "acuan": "SKKNI 125-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Baku", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "SI112001", "nama_jabatan": "Pengawas Konstruksi Bangunan Air Baku", "acuan": "SKKNI 125-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Baku", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI112002", "nama_jabatan": "Pelaksana Konstruksi Bangunan Air Baku", "acuan": "SKKNI 125-2021"},
+
+    # --- Subklasifikasi: Bangunan Air Limbah ---
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Limbah", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI121101", "nama_jabatan": "Ahli Utama Teknik Bangunan Air Limbah (SPALD)", "acuan": "SKKNI 29-2023"},
     {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Limbah", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI121102", "nama_jabatan": "Ahli Madya Teknik Bangunan Air Limbah (SPALD)", "acuan": "SKKNI 29-2023"},
     {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Limbah", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI121001", "nama_jabatan": "Ahli Muda Teknik Bangunan Air Limbah (SPALD)", "acuan": "SKKNI 29-2023"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Limbah", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI122003", "nama_jabatan": "Pelaksana Lapangan Pekerjaan Bangunan Air Limbah Permukiman (Level 5)", "acuan": "SKKNI 312-2009"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Limbah", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "SI122004", "nama_jabatan": "Pelaksana Lapangan Pekerjaan Bangunan Air Limbah Permukiman (Level 4)", "acuan": "SKKNI 312-2009"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pelabuhan", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI191004", "nama_jabatan": "Ahli Utama Teknik Dermaga", "acuan": "SKKNI 320–2016"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pelabuhan", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI191006", "nama_jabatan": "Ahli Madya Teknik Dermaga", "acuan": "SKKNI 320–2016"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pelabuhan", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI191005", "nama_jabatan": "Ahli Muda Teknik Dermaga", "acuan": "SKKNI 320–2016"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Limbah", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "SI122001", "nama_jabatan": "Pengawas Lapangan SPALD", "acuan": "SKKNI 312-2009"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Limbah", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI122003", "nama_jabatan": "Pelaksana Lapangan SPALD Permukiman (Level 5)", "acuan": "SKKNI 312-2009"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Air Limbah", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "SI122004", "nama_jabatan": "Pelaksana Lapangan SPALD Permukiman (Level 4)", "acuan": "SKKNI 312-2009"},
+
+    # --- Subklasifikasi: Bangunan Pengairan ---
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pengairan", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI131001", "nama_jabatan": "Ahli Utama Teknik Pengairan", "acuan": "SKKNI 126-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pengairan", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI131002", "nama_jabatan": "Ahli Madya Teknik Pengairan", "acuan": "SKKNI 126-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pengairan", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI131003", "nama_jabatan": "Ahli Muda Teknik Pengairan", "acuan": "SKKNI 126-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pengairan", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "SI132001", "nama_jabatan": "Pengawas Irigasi", "acuan": "SKKNI 126-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pengairan", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI132002", "nama_jabatan": "Pelaksana Irigasi", "acuan": "SKKNI 126-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pengairan", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "SI133001", "nama_jabatan": "Operator Jaringan Irigasi", "acuan": "SKKNI 126-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pengairan", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "SI133002", "nama_jabatan": "Operator Pemula Jaringan Irigasi", "acuan": "SKKNI 126-2021"},
+
+    # --- Subklasifikasi: Bangunan Pantai dan Pelabuhan ---
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pantai dan Pelabuhan", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI191004", "nama_jabatan": "Ahli Utama Teknik Dermaga", "acuan": "SKKNI 320–2016"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pantai dan Pelabuhan", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI191006", "nama_jabatan": "Ahli Madya Teknik Dermaga", "acuan": "SKKNI 320–2016"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pantai dan Pelabuhan", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI191005", "nama_jabatan": "Ahli Muda Teknik Dermaga", "acuan": "SKKNI 320–2016"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pantai dan Pelabuhan", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "SI192001", "nama_jabatan": "Pengawas Konstruksi Pelabuhan", "acuan": "SKKNI 320–2016"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Pantai dan Pelabuhan", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI192002", "nama_jabatan": "Pelaksana Konstruksi Pelabuhan", "acuan": "SKKNI 320–2016"},
+
+    # --- Subklasifikasi: Bangunan Jalan dan Jembatan ---
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Jalan dan Jembatan", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI201001", "nama_jabatan": "Ahli Utama Teknik Jalan Raya", "acuan": "SKKNI 127-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Jalan dan Jembatan", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI201002", "nama_jabatan": "Ahli Madya Teknik Jalan Raya", "acuan": "SKKNI 127-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Jalan dan Jembatan", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI201003", "nama_jabatan": "Ahli Muda Teknik Jalan Raya", "acuan": "SKKNI 127-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Jalan dan Jembatan", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "SI202001", "nama_jabatan": "Pengawas Konstruksi Jalan", "acuan": "SKKNI 127-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Jalan dan Jembatan", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI202002", "nama_jabatan": "Pelaksana Konstruksi Jalan", "acuan": "SKKNI 127-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Jalan dan Jembatan", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "SI203001", "nama_jabatan": "Operator Perawatan Jalan", "acuan": "SKKNI 127-2021"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Jalan dan Jembatan", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "SI203002", "nama_jabatan": "Operator Pemula Perawatan Jalan", "acuan": "SKKNI 127-2021"},
+
+    # --- Subklasifikasi: Geoteknik ---
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Geoteknik", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI211001", "nama_jabatan": "Ahli Utama Teknik Geoteknik", "acuan": "SKKNI 152-2019"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Geoteknik", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI211002", "nama_jabatan": "Ahli Madya Teknik Geoteknik", "acuan": "SKKNI 152-2019"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Geoteknik", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI211003", "nama_jabatan": "Ahli Muda Teknik Geoteknik", "acuan": "SKKNI 152-2019"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Geoteknik", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "SI212001", "nama_jabatan": "Pengawas Penyelidikan Tanah", "acuan": "SKKNI 152-2019"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Geoteknik", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI212002", "nama_jabatan": "Pelaksana Penyelidikan Tanah", "acuan": "SKKNI 152-2019"},
+
+    # --- Subklasifikasi: Manajemen Konstruksi ---
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI221001", "nama_jabatan": "Ahli Utama Manajemen Konstruksi", "acuan": "SKKNI 153-2019"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI221002", "nama_jabatan": "Ahli Madya Manajemen Konstruksi", "acuan": "SKKNI 153-2019"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI221003", "nama_jabatan": "Ahli Muda Manajemen Konstruksi", "acuan": "SKKNI 153-2019"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "SI222001", "nama_jabatan": "Pengawas Keselamatan Konstruksi", "acuan": "SKKNI 153-2019"},
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI222002", "nama_jabatan": "Petugas Keselamatan Konstruksi", "acuan": "SKKNI 153-2019"}
 
     # === MEKANIKAL ===
     {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "ME061001", "nama_jabatan": "Manajer Alat Berat", "acuan": "SKKNI 206-2013"},
