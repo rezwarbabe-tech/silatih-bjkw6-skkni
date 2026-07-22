@@ -237,8 +237,23 @@ data_jabatan = [
 
     # --- Subklasifikasi: Desain Interior ---
     {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Desain Interior", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AR021001", "nama_jabatan": "Desainer Interior Utama", "acuan": "SKKNI 211-2022"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Desain Interior", "kualifikasi": "AHLI", "jenjang": 8, "kode
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Desain Interior", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "AR021002", "nama_jabatan": "Desainer Interior Madya", "acuan": "SKKNI 211-2022"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Desain Interior", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "AR021003", "nama_jabatan": "Desainer Interior Muda", "acuan": "SKKNI 211-2022"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Desain Interior", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "AR022001", "nama_jabatan": "Asisten Desain Interior", "acuan": "SKKNI 211-2022"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Desain Interior", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AR022002", "nama_jabatan": "Pengawas Pemasangan Interior", "acuan": "SKKNI 211-2022"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Desain Interior", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "AR022003", "nama_jabatan": "Pelaksana Pemasangan Interior", "acuan": "SKKNI 211-2022"},
 
+    # ==============================================================
+    # 🌳 KLASIFIKASI: ARSITEKTUR LANSKAP — LENGKAP
+    # ==============================================================
+    {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Perencanaan Lanskap", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AL011001", "nama_jabatan": "Arsitek Lanskap Utama", "acuan": "SKKNI 197-2021"},
+    {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Perencanaan Lanskap", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "AL011002", "nama_jabatan": "Arsitek Lanskap Madya", "acuan": "SKKNI 197-2021"},
+    {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Perencanaan Lanskap", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "AL011003", "nama_jabatan": "Arsitek Lanskap Muda", "acuan": "SKKNI 197-2021"},
+    {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Perencanaan Lanskap", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "AL012001", "nama_jabatan": "Asisten Arsitek Lanskap", "acuan": "SKKNI 197-2021"},
+    {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Pelaksanaan Lanskap", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AL022001", "nama_jabatan": "Pengawas Konstruksi Lanskap", "acuan": "SKKNI 197-2021"},
+    {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Pelaksanaan Lanskap", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "AL022002", "nama_jabatan": "Pelaksana Konstruksi Lanskap", "acuan": "SKKNI 197-2021"},
+    {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Pemeliharaan Lanskap", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "AL033001", "nama_jabatan": "Teknisi Taman", "acuan": "SKKNI 197-2021"},
+    {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Pemeliharaan Lanskap", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "AL033002", "nama_jabatan": "Pekerja Taman Pemula", "acuan": "SKKNI 197-2021"},
 # ====================== HALAMAN UTAMA LOGIN ======================
 if st.session_state.peran is None:
     st.title("🎓 siLATIH - Sistem Pelatihan Terintegrasi")
