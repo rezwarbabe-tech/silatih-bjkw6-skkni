@@ -89,9 +89,9 @@ syarat_kualifikasi = {
 
 # ====================== DATA JABATAN LENGKAP SESUAI DOKUMEN ======================
 data_jabatan = [
-    ==============================================================
-🔧 KLASIFIKASI: MEKANIKAL (ME)
-==============================================================
+# ==============================================================
+# KLASIFIKASI: MEKANIKAL (ME)
+# ==============================================================
 {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "ME061001", "nama_jabatan": "Manajer Alat Berat", "acuan": "SKKNI 206-2013"},
 {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "ME062011", "nama_jabatan": "Pengawas Scaffolding", "acuan": "SKKNI 46-2022"},
 {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "ME062009", "nama_jabatan": "Teknisi Scaffolding", "acuan": "SKKNI 46-2022"},
