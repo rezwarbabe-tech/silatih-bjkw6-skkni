@@ -160,17 +160,38 @@ data_jabatan = [
     {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "SI222001", "nama_jabatan": "Pengawas Keselamatan Konstruksi", "acuan": "SKKNI 153-2019"},
     {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI222002", "nama_jabatan": "Petugas Keselamatan Konstruksi", "acuan": "SKKNI 153-2019"},
 
+   # ==============================================================
+    # 🔧 KLASIFIKASI: MEKANIKAL — LENGKAP
     # ==============================================================
-    # 🔧 KLASIFIKASI LAINNYA (SUDAH LENGKAP)
-    # ==============================================================
-    # --- MEKANIKAL ---
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "ME061002", "nama_jabatan": "Ahli Utama Teknik Alat Berat", "acuan": "SKKNI 206-2013"},
     {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "ME061001", "nama_jabatan": "Manajer Alat Berat", "acuan": "SKKNI 206-2013"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "ME061003", "nama_jabatan": "Ahli Muda Teknik Alat Berat", "acuan": "SKKNI 206-2013"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "ME062001", "nama_jabatan": "Pengawas Perawatan Alat Berat", "acuan": "SKKNI 206-2013"},
     {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "ME062011", "nama_jabatan": "Pengawas Scaffolding", "acuan": "SKKNI 46-2022"},
     {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "ME062009", "nama_jabatan": "Teknisi Scaffolding", "acuan": "SKKNI 46-2022"},
     {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "ME063094", "nama_jabatan": "Operator Scaffolding", "acuan": "SKKNI 46-2022"},
     {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "ME063095", "nama_jabatan": "Operator Pemula Scaffolding", "acuan": "SKKNI 46-2022"},
     {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "ME063096", "nama_jabatan": "Operator Bulldozer", "acuan": "SKK Khusus Reg.27-2022"},
     {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "ME063097", "nama_jabatan": "Operator Pemula Bulldozer", "acuan": "SKK Khusus Reg.27-2022"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Mekanika Umum", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "ME011001", "nama_jabatan": "Ahli Utama Teknik Mekanika", "acuan": "SKKNI 149-2019"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Mekanika Umum", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "ME011002", "nama_jabatan": "Ahli Madya Teknik Mekanika", "acuan": "SKKNI 149-2019"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Mekanika Umum", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "ME011003", "nama_jabatan": "Ahli Muda Teknik Mekanika", "acuan": "SKKNI 149-2019"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Pemesinan", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "ME021001", "nama_jabatan": "Ahli Utama Teknik Pemesinan", "acuan": "SKKNI 07-2023"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Pemesinan", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "ME021002", "nama_jabatan": "Ahli Madya Teknik Pemesinan", "acuan": "SKKNI 07-2023"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Pengelasan", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "ME031001", "nama_jabatan": "Ahli Utama Teknik Pengelasan", "acuan": "SKKNI 11-2023"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Pengelasan", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "ME031002", "nama_jabatan": "Ahli Madya Teknik Pengelasan", "acuan": "SKKNI 11-2023"},
+
+    # ==============================================================
+    # 🏛️ KLASIFIKASI: ARSITEKTUR — SUDAH LENGKAP SEMUA SUBKLASIFIKASI
+    # ==============================================================
+    # --- Subklasifikasi: Arsitektural ---
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AR011001", "nama_jabatan": "Arsitek Utama", "acuan": "SKKNI 196-2021"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "AR011002", "nama_jabatan": "Arsitek Madya", "acuan": "SKKNI 196-2021"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "AR011004", "nama_jabatan": "Asisten Arsitek", "acuan": "SKKNI 196-2021"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "AR012001", "nama_jabatan": "Asisten Pemula Arsitek", "acuan": "SKKNI 196-2021"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AR012004", "nama_jabatan": "Pengawas Lapangan Arsitektur", "acuan": "SKKNI 196-2021"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "AR012005", "nama_jabatan": "Pelaksana Gambar Kerja Arsitektur", "acuan": "SKKNI 196-2021"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 3, "kode_jabatan": "AR012006", "nama_jabatan": "Operator Pembuatan Gambar Arsitektur", "acuan": "SKKNI 196-2021"},
 
     # --- ARSITEKTUR LANSKAP ---
     {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Arsitektur Lanskap", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AL011009", "nama_jabatan": "Arsitek Lanskap Utama", "acuan": "SKKNI 31-2025; SKKNI 29-2023; SKKNI 17-2023"},
