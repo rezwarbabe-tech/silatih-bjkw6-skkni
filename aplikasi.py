@@ -1,277 +1,159 @@
-import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
-import { Award, Plus, Search } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import streamlit as st
+import pandas as pd
+from datetime import datetime
 
-export default function Certificates() {
-  const [certificates, setCertificates] = useState([]);
-  const [trainings, setTrainings] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({
-    training_id: "",
-    participant_name: "",
-    certificate_number: "",
-    issue_date: "",
-    training_title: "",
-    status: "Draft"
-  });
-  const [search, setSearch] = useState("");
-  const { toast } = useToast();
+# === Konfigurasi Halaman ===
+st.set_page_config(page_title="Sertifikat Pelatihan", page_icon="📜", layout="wide")
 
-  const load = async () => {
-    try {
-      setLoading(true);
-      const [certRes, trainRes] = await Promise.allSettled([
-        base44.entities.Certificate.list("-created_date", 50),
-        base44.entities.Training.list("-created_date", 50)
-      ]);
+# === Simulasi Koneksi ke API Base44 ===
+# Ganti bagian ini dengan pemanggilan API asli kamu
+@st.cache_data(ttl=10)
+def muat_sertifikat():
+    try:
+        # Ganti dengan: return base44.entities.Certificate.list("-created_date", 50)
+        return st.session_state.get("sertifikat_data", [])
+    except Exception as e:
+        st.error(f"Gagal memuat sertifikat: {e}")
+        return []
 
-      if (certRes.status === "fulfilled") {
-        setCertificates(certRes.value || []);
-      } else {
-        toast({
-          title: "Peringatan",
-          description: "Gagal memuat daftar sertifikat",
-          variant: "destructive"
-        });
-        setCertificates([]);
-      }
+@st.cache_data(ttl=10)
+def muat_pelatihan():
+    try:
+        # Ganti dengan: return base44.entities.Training.list("-created_date", 50)
+        return st.session_state.get("pelatihan_data", [])
+    except Exception as e:
+        st.error(f"Gagal memuat pelatihan: {e}")
+        return []
 
-      if (trainRes.status === "fulfilled") {
-        setTrainings(trainRes.value || []);
-      } else {
-        toast({
-          title: "Peringatan",
-          description: "Gagal memuat daftar pelatihan",
-          variant: "destructive"
-        });
-        setTrainings([]);
-      }
-    } catch (err) {
-      toast({
-        title: "Kesalahan",
-        description: err?.message || "Terjadi kesalahan saat mengambil data",
-        variant: "destructive"
-      });
-      setCertificates([]);
-      setTrainings([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+def simpan_sertifikat(data):
+    try:
+        # Ganti dengan: await base44.entities.Certificate.create(data)
+        if "sertifikat_data" not in st.session_state:
+            st.session_state["sertifikat_data"] = []
+        data["id"] = len(st.session_state["sertifikat_data"]) + 1
+        st.session_state["sertifikat_data"].append(data)
+        st.cache_data.clear()
+        return True
+    except Exception as e:
+        st.error(f"Gagal menyimpan: {e}")
+        return False
 
-  useEffect(() => {
-    load();
-  }, []);
+def ubah_status(id_sertifikat, status_baru):
+    try:
+        # Ganti dengan: await base44.entities.Certificate.update(id_sertifikat, {"status": status_baru})
+        for sertif in st.session_state["sertifikat_data"]:
+            if sertif["id"] == id_sertifikat:
+                sertif["status"] = status_baru
+                break
+        st.cache_data.clear()
+        return True
+    except Exception as e:
+        st.error(f"Gagal mengubah status: {e}")
+        return False
 
-  const handleSave = async () => {
-    try {
-      if (!form.training_id) throw new Error("Silakan pilih pelatihan terlebih dahulu");
-      if (!form.participant_name.trim()) throw new Error("Nama peserta tidak boleh kosong");
-      if (!form.certificate_number.trim()) throw new Error("Nomor sertifikat tidak boleh kosong");
-      if (!form.issue_date) throw new Error("Tanggal terbit wajib diisi");
+# === Inisialisasi Data Contoh ===
+if "pelatihan_data" not in st.session_state:
+    st.session_state["pelatihan_data"] = [
+        {"id": "1", "title": "Pelatihan Dasar Keselamatan Kerja"},
+        {"id": "2", "title": "Pelatihan Manajemen Proyek"},
+        {"id": "3", "title": "Pelatihan Pengolahan Data"}
+    ]
+if "sertifikat_data" not in st.session_state:
+    st.session_state["sertifikat_data"] = [
+        {
+            "id": 1,
+            "training_id": "1",
+            "participant_name": "Budi Santoso",
+            "certificate_number": "SERT-2026-001",
+            "issue_date": "2026-07-20",
+            "training_title": "Pelatihan Dasar Keselamatan Kerja",
+            "status": "Draft"
+        }
+    ]
 
-      const selectedTraining = trainings.find(t => t.id === form.training_id);
-      if (!selectedTraining) throw new Error("Data pelatihan tidak ditemukan, silakan muat ulang halaman");
+# === Tampilan Utama ===
+st.title("📜 Sertifikat Terbit")
+st.subheader("Kelola penerbitan sertifikat pelatihan")
 
-      await base44.entities.Certificate.create({
-        ...form,
-        training_title: selectedTraining.title
-      });
+# Tombol Tambah & Pencarian
+col_tombol, col_cari = st.columns([1, 2])
+with col_tombol:
+    tombol_tambah = st.button("➕ Terbitkan Sertifikat Baru", type="primary")
+with col_cari:
+    kata_kunci = st.text_input("🔍 Cari nama peserta", placeholder="Ketik nama peserta...")
 
-      toast({ title: "Sertifikat berhasil diterbitkan" });
-      setShowForm(false);
-      setForm({
-        training_id: "",
-        participant_name: "",
-        certificate_number: "",
-        issue_date: "",
-        training_title: "",
-        status: "Draft"
-      });
-      load();
-    } catch (err) {
-      toast({
-        title: "Gagal menyimpan",
-        description: err?.message || "Terjadi kesalahan saat menyimpan data",
-        variant: "destructive"
-      });
-    }
-  };
+# === Form Tambah Sertifikat ===
+if tombol_tambah:
+    with st.expander("Formulir Penerbitan Sertifikat", expanded=True):
+        pelatihan_list = muat_pelatihan()
+        if not pelatihan_list:
+            st.warning("Data pelatihan belum tersedia!")
+        else:
+            with st.form("form_sertifikat"):
+                pilihan_pelatihan = st.selectbox(
+                    "Pilih Pelatihan *",
+                    options=[p["id"] for p in pelatihan_list],
+                    format_func=lambda x: next((p["title"] for p in pelatihan_list if p["id"] == x), x)
+                )
+                nama_peserta = st.text_input("Nama Lengkap Peserta *")
+                nomor_sertifikat = st.text_input("Nomor Sertifikat *")
+                tanggal_terbit = st.date_input("Tanggal Terbit *", value=datetime.today())
 
-  const updateStatus = async (id, status) => {
-    try {
-      await base44.entities.Certificate.update(id, { status });
-      toast({ title: `Status berhasil diubah ke: ${status}` });
-      load();
-    } catch (err) {
-      toast({
-        title: "Gagal mengubah status",
-        description: err?.message || "Terjadi kesalahan saat memperbarui data",
-        variant: "destructive"
-      });
-    }
-  };
+                if st.form_submit_button("💾 Simpan & Terbitkan"):
+                    if not all([pilihan_pelatihan, nama_peserta.strip(), nomor_sertifikat.strip(), tanggal_terbit]):
+                        st.error("Semua kolom bertanda * wajib diisi!")
+                    else:
+                        pelatihan_terpilih = next((p for p in pelatihan_list if p["id"] == pilihan_pelatihan), None)
+                        data_baru = {
+                            "training_id": pilihan_pelatihan,
+                            "participant_name": nama_peserta.strip(),
+                            "certificate_number": nomor_sertifikat.strip(),
+                            "issue_date": tanggal_terbit.strftime("%Y-%m-%d"),
+                            "training_title": pelatihan_terpilih["title"] if pelatihan_terpilih else "",
+                            "status": "Draft"
+                        }
+                        if simpan_sertifikat(data_baru):
+                            st.success("✅ Sertifikat berhasil ditambahkan!")
+                            st.rerun()
 
-  const statusColors = {
-    "Draft": "bg-gray-100 text-gray-600",
-    "Terbit": "bg-green-100 text-green-700",
-    "Dikirim": "bg-blue-100 text-blue-700"
-  };
+# === Tampilan Daftar Sertifikat ===
+st.divider()
+data_sertifikat = muat_sertifikat()
 
-  const filtered = certificates.filter(c => {
-    const namaPeserta = String(c?.participant_name || "").toLowerCase();
-    const kataKunci = search.trim().toLowerCase();
-    return kataKunci === "" || namaPeserta.includes(kataKunci);
-  });
+# Filter data
+if kata_kunci:
+    data_terfilter = [
+        s for s in data_sertifikat
+        if kata_kunci.lower() in str(s.get("participant_name", "")).lower()
+    ]
+else:
+    data_terfilter = data_sertifikat
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-heading font-bold">Sertifikat Terbit</h1>
-          <p className="text-muted-foreground text-sm">Kelola penerbitan sertifikat pelatihan</p>
-        </div>
-        <Button onClick={() => setShowForm(true)}>
-          <Plus className="w-4 h-4 mr-2" /> Terbitkan Sertifikat
-        </Button>
-      </div>
-
-      <div className="relative max-w-md">
-        <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          placeholder="Cari nama peserta..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-9"
-        />
-      </div>
-
-      <div className="space-y-3">
-        {filtered.length > 0 ? (
-          filtered.map((c) => (
-            <Card key={c.id} className="border-none shadow-sm">
-              <CardContent className="p-4 flex items-center gap-4 flex-wrap">
-                <div className="w-10 h-10 rounded-lg bg-orange-100 flex items-center justify-center shrink-0">
-                  <Award className="w-5 h-5 text-orange-700" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm">{c?.participant_name || "Peserta Tidak Diketahui"}</p>
-                  <p className="text-xs text-muted-foreground">
-                    No: {c?.certificate_number || "-"} | {c?.training_title || "-"}
-                  </p>
-                  <p className="text-[10px] text-muted-foreground">
-                    Terbit: {c?.issue_date ? new Date(c.issue_date).toLocaleDateString("id-ID") : "-"}
-                  </p>
-                </div>
-                <Badge className={`text-[10px] ${statusColors[c?.status] || "bg-gray-100 text-gray-600"}`}>
-                  {c?.status || "Draft"}
-                </Badge>
-                <div className="flex gap-1">
-                  {c?.status === "Draft" && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => updateStatus(c.id, "Terbit")}
-                      className="text-xs"
-                    >
-                      Terbitkan
-                    </Button>
-                  )}
-                  {c?.status === "Terbit" && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => updateStatus(c.id, "Dikirim")}
-                      className="text-xs"
-                    >
-                      Kirim
-                    </Button>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <div className="text-center py-12 text-muted-foreground">
-            <Award className="w-12 h-12 mx-auto mb-3 opacity-30" />
-            <p className="text-sm">
-              {search ? "Tidak ada sertifikat yang cocok dengan kata kunci pencarian" : "Belum ada sertifikat yang diterbitkan"}
-            </p>
-          </div>
-        )}
-      </div>
-
-      <Dialog open={showForm} onOpenChange={setShowForm}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="font-heading">Terbitkan Sertifikat Baru</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 mt-4">
-            <div>
-              <Label>Pilih Pelatihan *</Label>
-              <Select
-                value={form.training_id}
-                onValueChange={(v) => setForm((f) => ({ ...f, training_id: v }))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Pilih pelatihan dari daftar" />
-                </SelectTrigger>
-                <SelectContent>
-                  {trainings.map((t) => (
-                    <SelectItem key={t.id} value={t.id}>
-                      {t.title}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>Nama Lengkap Peserta *</Label>
-              <Input
-                value={form.participant_name}
-                onChange={(e) => setForm((f) => ({ ...f, participant_name: e.target.value }))}
-                placeholder="Masukkan nama peserta"
-              />
-            </div>
-            <div>
-              <Label>Nomor Sertifikat *</Label>
-              <Input
-                value={form.certificate_number}
-                onChange={(e) => setForm((f) => ({ ...f, certificate_number: e.target.value }))}
-                placeholder="Contoh: SERT-2026-001"
-              />
-            </div>
-            <div>
-              <Label>Tanggal Terbit *</Label>
-              <Input
-                type="date"
-                value={form.issue_date}
-                onChange={(e) => setForm((f) => ({ ...f, issue_date: e.target.value }))}
-              />
-            </div>
-            <Button onClick={handleSave} className="w-full mt-2">
-              Simpan & Terbitkan
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-}
+if not data_terfilter:
+    st.info("ℹ️ " + ("Tidak ada sertifikat yang cocok dengan pencarian" if kata_kunci else "Belum ada sertifikat yang diterbitkan"))
+else:
+    st.subheader(f"Ditemukan {len(data_terfilter)} sertifikat")
+    for sertif in data_terfilter:
+        with st.container(border=True):
+            col1, col2, col3, col4 = st.columns([3, 1, 1, 1])
+            with col1:
+                st.markdown(f"**{sertif.get('participant_name', 'Peserta Tidak Diketahui')}**")
+                st.caption(f"No: {sertif.get('certificate_number', '-')} | {sertif.get('training_title', '-')}")
+                st.caption(f"Terbit: {sertif.get('issue_date', '-')}")
+            with col2:
+                status = sertif.get("status", "Draft")
+                warna_status = {"Draft": "🟤 Draft", "Terbit": "🟢 Terbit", "Dikirim": "🔵 Dikirim"}.get(status, status)
+                st.info(warna_status)
+            with col3:
+                if status == "Draft":
+                    if st.button(f"Terbitkan", key=f"terbit_{sertif['id']}", type="primary"):
+                        if ubah_status(sertif["id"], "Terbit"):
+                            st.success("Status diubah menjadi Terbit")
+                            st.rerun()
+                elif status == "Terbit":
+                    if st.button(f"Kirim", key=f"kirim_{sertif['id']}", type="primary"):
+                        if ubah_status(sertif["id"], "Dikirim"):
+                            st.success("Status diubah menjadi Dikirim")
+                            st.rerun()
+            with col4:
+                st.empty()
