@@ -313,8 +313,7 @@ data_jabatan = [
 {"klasifikasi": "ARSITEKTUR LANSKAP, TEKNIK ILUMINASI, DESAIN INTERIOR", "subklasifikasi": "Desain Interior", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "AL031009", "nama_jabatan": "Ahli Muda Manajemen Interior", "acuan": "SKKNI 17-2024; SKKNI 308-2013; SKKNI 17-2023"},
 {"klasifikasi": "ARSITEKTUR LANSKAP, TEKNIK ILUMINASI, DESAIN INTERIOR", "subklasifikasi": "Desain Interior", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "AL032005", "nama_jabatan": "Pengawas Pekerjaan Interior (Level 6)", "acuan": "SKKNI 342-2013"},
 {"klasifikasi": "ARSITEKTUR LANSKAP, TEKNIK ILUMINASI, DESAIN INTERIOR", "subklasifikasi": "Desain Interior", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AL032006", "nama_jabatan": "Pengawas Pekerjaan Interior (Level 5)", "acuan": "SKKNI 342-2013"},
-{"klasifikasi": "ARSITEKTUR LANSKAP, TEKNIK ILUMINASI, DESAIN INTERIOR", "subklasifikasi": "Desain Interior", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AL032007", "nama_jabatan": "Pelaksana Pekerjaan Interior (Level 5)", "acuan": "SKKNI 308-2013"}
-]
+{"klasifikasi": "ARSITEKTUR LANSKAP, TEKNIK ILUMINASI, DESAIN INTERIOR", "subklasifikasi": "Desain Interior", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AL032007", "nama_jabatan": "Pelaksana Pekerjaan Interior (Level 5)", "acuan": "SKKNI 308-2013"}]
 
     # ==============================================================
     # 🏛️ KLASIFIKASI: ARSITEKTUR (AR)
