@@ -150,7 +150,7 @@ data_jabatan = [
 {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "ME063138", "nama_jabatan": "Mekanik Hidrolik Alat Berat Pemula", "acuan": "SKKNI 88-2010"},
 {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "ME063140", "nama_jabatan": "Mekanik Engine Alat Berat", "acuan": "SKKNI 235-2023"},
 {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "ME063139", "nama_jabatan": "Mekanik Engine Alat Berat Pemula", "acuan": "SKKNI 235-2023"},
-{"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "ME063027", "nama_jabatan": "Operator Dump Truck", "acuan": "SKKNI 132-2015"}
+{"klasifikasi": "MEKANIKAL", "subklasifikasi": "Alat Berat", "kualifikasi": "OPERATOR", "jenjang": 2, "kode_jabatan": "ME063027", "nama_jabatan": "Operator Dump Truck", "acuan": "SKKNI 132-2015"},
 
     # ==============================================================
     # 🌳 KLASIFIKASI: ARSITEKTUR LANSKAP, TEKNIK ILUMINASI, DESAIN INTERIOR (AL)
