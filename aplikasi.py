@@ -180,32 +180,40 @@ data_jabatan = [
     {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Pengelasan", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "ME031001", "nama_jabatan": "Ahli Utama Teknik Pengelasan", "acuan": "SKKNI 11-2023"},
     {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Pengelasan", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "ME031002", "nama_jabatan": "Ahli Madya Teknik Pengelasan", "acuan": "SKKNI 11-2023"},
 
+   # ==============================================================
+    # 🏛️ KLASIFIKASI: ARSITEKTUR — LENGKAP SELURUH SUBKLASIFIKASI
     # ==============================================================
-    # 🏛️ KLASIFIKASI: ARSITEKTUR — SUDAH LENGKAP SEMUA SUBKLASIFIKASI
-    # ==============================================================
-    # --- Subklasifikasi: Arsitektural ---
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AR011001", "nama_jabatan": "Arsitek Utama", "acuan": "SKKNI 196-2021"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "AR011002", "nama_jabatan": "Arsitek Madya", "acuan": "SKKNI 196-2021"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "AR011004", "nama_jabatan": "Asisten Arsitek", "acuan": "SKKNI 196-2021"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "AR012001", "nama_jabatan": "Asisten Pemula Arsitek", "acuan": "SKKNI 196-2021"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AR012004", "nama_jabatan": "Pengawas Lapangan Arsitektur", "acuan": "SKKNI 196-2021"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "AR012005", "nama_jabatan": "Pelaksana Gambar Kerja Arsitektur", "acuan": "SKKNI 196-2021"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 3, "kode_jabatan": "AR012006", "nama_jabatan": "Operator Pembuatan Gambar Arsitektur", "acuan": "SKKNI 196-2021"},
+    # --- Subklasifikasi: Perancangan Arsitektural ---
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Perancangan Arsitektural", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AR011001", "nama_jabatan": "Arsitek Utama", "acuan": "SKKNI 196-2021"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Perancangan Arsitektural", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "AR011002", "nama_jabatan": "Arsitek Madya", "acuan": "SKKNI 196-2021"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Perancangan Arsitektural", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "AR011003", "nama_jabatan": "Arsitek Muda", "acuan": "SKKNI 196-2021"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Perancangan Arsitektural", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "AR011004", "nama_jabatan": "Asisten Arsitek", "acuan": "SKKNI 196-2021"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Perancangan Arsitektural", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "AR012001", "nama_jabatan": "Asisten Pemula Arsitek", "acuan": "SKKNI 196-2021"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Perancangan Arsitektural", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AR012002", "nama_jabatan": "Pengawas Lapangan Arsitektur", "acuan": "SKKNI 196-2021"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Perancangan Arsitektural", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "AR012003", "nama_jabatan": "Pelaksana Gambar Kerja Arsitektur", "acuan": "SKKNI 196-2021"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Perancangan Arsitektural", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "AR013001", "nama_jabatan": "Operator Pembuatan Gambar Arsitektur", "acuan": "SKKNI 196-2021"},
 
-    # --- ARSITEKTUR LANSKAP ---
-    {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Arsitektur Lanskap", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AL011009", "nama_jabatan": "Arsitek Lanskap Utama", "acuan": "SKKNI 31-2025; SKKNI 29-2023; SKKNI 17-2023"},
-    {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Arsitektur Lanskap", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "AL011010", "nama_jabatan": "Arsitek Lanskap Madya", "acuan": "SKKNI 31-2025; SKKNI 29-2023; SKKNI 17-2023"},
-    {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Arsitektur Lanskap", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "AL011011", "nama_jabatan": "Arsitek Lanskap Muda", "acuan": "SKKNI 31-2025; SKKNI 29-2023; SKKNI 17-2023"},
-    {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Arsitektur Lanskap", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "AL012006", "nama_jabatan": "Pengawas Lanskap (Level 6)", "acuan": "SKKNI 31-2025; SKKNI 29-2023; SKKNI 17-2023"},
-    {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Arsitektur Lanskap", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AL012007", "nama_jabatan": "Pengawas Lanskap (Level 5)", "acuan": "SKKNI 31-2025; SKKNI 29-2023; SKKNI 17-2023"},
+    # --- Subklasifikasi: Desain Interior ---
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Desain Interior", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AR021001", "nama_jabatan": "Desainer Interior Utama", "acuan": "SKKNI 211-2022"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Desain Interior", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "AR021002", "nama_jabatan": "Desainer Interior Madya", "acuan": "SKKNI 211-2022"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Desain Interior", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "AR021003", "nama_jabatan": "Desainer Interior Muda", "acuan": "SKKNI 211-2022"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Desain Interior", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "AR022001", "nama_jabatan": "Pengawas Pengerjaan Interior", "acuan": "SKKNI 211-2022"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Desain Interior", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AR022002", "nama_jabatan": "Pelaksana Desain Interior", "acuan": "SKKNI 211-2022"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Desain Interior", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "AR022003", "nama_jabatan": "Pelaksana Pemasangan Elemen Interior", "acuan": "SKKNI 211-2022"},
 
-    # --- ARSITEKTUR ---
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AR011001", "nama_jabatan": "Arsitek Utama", "acuan": "SKKNI 196-2021"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "AR011002", "nama_jabatan": "Arsitek Madya", "acuan": "SKKNI 196-2021"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "AR011004", "nama_jabatan": "Asisten Arsitek", "acuan": "SKKNI 196-2021"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "AR012001", "nama_jabatan": "Asisten Pemula Arsitek", "acuan": "SKKNI 196-2021"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AR012004", "nama_jabatan": "Pengawas Lapangan Arsitektur", "acuan": "SKKNI 196-2021"},
-]
+    # --- Subklasifikasi: Konservasi Bangunan Bersejarah ---
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Konservasi Bangunan Bersejarah", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AR031001", "nama_jabatan": "Ahli Utama Konservasi Bangunan Bersejarah", "acuan": "SKKNI 250-2019"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Konservasi Bangunan Bersejarah", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "AR031002", "nama_jabatan": "Ahli Madya Konservasi Bangunan Bersejarah", "acuan": "SKKNI 250-2019"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Konservasi Bangunan Bersejarah", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "AR031003", "nama_jabatan": "Ahli Muda Konservasi Bangunan Bersejarah", "acuan": "SKKNI 250-2019"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Konservasi Bangunan Bersejarah", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "AR032001", "nama_jabatan": "Pengawas Pemeliharaan Bangunan Bersejarah", "acuan": "SKKNI 250-2019"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Konservasi Bangunan Bersejarah", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AR032002", "nama_jabatan": "Pelaksana Pemeliharaan Bangunan Bersejarah", "acuan": "SKKNI 250-2019"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Konservasi Bangunan Bersejarah", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "AR032003", "nama_jabatan": "Teknisi Restorasi Bangunan Bersejarah", "acuan": "SKKNI 250-2019"},
+
+    # --- Subklasifikasi: Fasilitas dan Kenyamanan Bangunan ---
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Fasilitas dan Kenyamanan Bangunan", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AR041001", "nama_jabatan": "Ahli Utama Fasilitas Bangunan", "acuan": "SKKNI 287-2020"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Fasilitas dan Kenyamanan Bangunan", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "AR041002", "nama_jabatan": "Ahli Madya Fasilitas Bangunan", "acuan": "SKKNI 287-2020"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Fasilitas dan Kenyamanan Bangunan", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "AR041003", "nama_jabatan": "Ahli Muda Fasilitas Bangunan", "acuan": "SKKNI 287-2020"},
+    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Fasilitas dan Kenyamanan Bangunan", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "AR042001", "nama_jabatan": "Pengawas Pemeliharaan Fasilitas Bangunan", "acuan": "SKKNI 287-2020"},
 
 # ====================== HALAMAN UTAMA LOGIN ======================
 if st.session_state.peran is None:
