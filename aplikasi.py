@@ -74,7 +74,6 @@ export default function Certificates() {
 
   const handleSave = async () => {
     try {
-      // Validasi data wajib diisi
       if (!form.training_id) throw new Error("Silakan pilih pelatihan terlebih dahulu");
       if (!form.participant_name.trim()) throw new Error("Nama peserta tidak boleh kosong");
       if (!form.certificate_number.trim()) throw new Error("Nomor sertifikat tidak boleh kosong");
@@ -128,7 +127,6 @@ export default function Certificates() {
     "Dikirim": "bg-blue-100 text-blue-700"
   };
 
-  // Filter yang aman dan tidak error meskipun data tidak lengkap
   const filtered = certificates.filter(c => {
     const namaPeserta = String(c?.participant_name || "").toLowerCase();
     const kataKunci = search.trim().toLowerCase();
@@ -176,7 +174,7 @@ export default function Certificates() {
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm">{c?.participant_name || "Peserta Tidak Diketahui"}</p>
                   <p className="text-xs text-muted-foreground">
-                    No: {c?.certificate_number || "-"} • {c?.training_title || "-"}
+                    No: {c?.certificate_number || "-"} | {c?.training_title || "-"}
                   </p>
                   <p className="text-[10px] text-muted-foreground">
                     Terbit: {c?.issue_date ? new Date(c.issue_date).toLocaleDateString("id-ID") : "-"}
