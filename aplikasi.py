@@ -598,7 +598,10 @@
     function bukaHalaman(namaHalaman) {
       document.querySelectorAll("[id^='halaman-']").forEach(el => el.classList.add("sembunyi"));
       document.getElementById(`halaman-${namaHalaman}`).classList.remove("sembunyi");
-      if(namaHalaman === "admin") inisialisasiPilihan();
+      if(namaHalaman === "admin") {
+        inisialisasiPilihan();
+        tampilkanDaftarPendaftar();
+      }
       if(namaHalaman === "peserta") muatPilihanPelatihan();
     }
 
@@ -659,7 +662,7 @@
       `;
     }
 
-    // === FUNGSI SIMPAN PELATIHAN (DENGAN TANGGAL BARU) ===
+    // === FUNGSI SIMPAN PELATIHAN ===
     function simpanPelatihan() {
       const nama = document.getElementById("nama-pelatihan").value.trim();
       const bukaDaftar = document.getElementById("buka-pendaftaran").value;
@@ -708,5 +711,4 @@
       document.getElementById("lokasi").value = "";
       document.getElementById("syarat-umum").value = "1. Fotokopi KTP masih berlaku\n2. Fotokopi Ijazah Terakhir dilegalisir\n3. Pas foto 4x6 cm sebanyak 2 lembar\n4. Surat keterangan sehat dari dokter\n5. Surat tugas instansi (jika diperlukan)";
       document.getElementById("klasifikasi").value = "";
-      document.getElementById("subklasifikasi").innerHTML = `<option value="">-- Pilih Subklasifikasi --</option>`;
-      document.getElementById("jabatan").
+      document.getElementById("subklas
