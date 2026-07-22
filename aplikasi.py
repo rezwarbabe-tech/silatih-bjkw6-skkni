@@ -87,8 +87,8 @@ syarat_kualifikasi = {
 
 # ====================== DATA JABATAN LENGKAP SEMUA KLASIFIKASI ======================
 data_jabatan = [
-   # ==============================================================
-    # 🏗️ KLASIFIKASI: SIPIL — 100% SESUAI FILE MASTER DATA JABKER.XLSX
+    # ==============================================================
+    # 🏗️ KLASIFIKASI: SIPIL — SESUAI FILE MASTER DATA JABKER.XLSX
     # ==============================================================
     # --- Subklasifikasi: Air Tanah dan Air Baku ---
     {"klasifikasi": "SIPIL", "subklasifikasi": "Air Tanah dan Air Baku", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI101015", "nama_jabatan": "Ahli Utama Bidang Keahlian Teknik Sumber Daya Air", "acuan": "SKKNI 124-2021"},
@@ -158,7 +158,7 @@ data_jabatan = [
     {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI221002", "nama_jabatan": "Ahli Madya Manajemen Konstruksi", "acuan": "SKKNI 153-2019"},
     {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "SI221003", "nama_jabatan": "Ahli Muda Manajemen Konstruksi", "acuan": "SKKNI 153-2019"},
     {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "SI222001", "nama_jabatan": "Pengawas Keselamatan Konstruksi", "acuan": "SKKNI 153-2019"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI222002", "nama_jabatan": "Petugas Keselamatan Konstruksi", "acuan": "SKKNI 153-2019"}
+    {"klasifikasi": "SIPIL", "subklasifikasi": "Manajemen Konstruksi", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "SI222002", "nama_jabatan": "Petugas Keselamatan Konstruksi", "acuan": "SKKNI 153-2019"},
 
     # ==============================================================
     # 🔧 KLASIFIKASI: MEKANIKAL — SUDAH LENGKAP SESUAI EXCEL
