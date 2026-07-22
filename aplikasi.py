@@ -374,37 +374,37 @@ data_jabatan = [
 {"klasifikasi": "ARSITEKTUR LANSKAP, TEKNIK ILUMINASI, DESAIN INTERIOR", "subklasifikasi": "Desain Interior", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AL032006", "nama_jabatan": "Pengawas Pekerjaan Interior (Level 5)", "acuan": "SKKNI 342-2013"},
 {"klasifikasi": "ARSITEKTUR LANSKAP, TEKNIK ILUMINASI, DESAIN INTERIOR", "subklasifikasi": "Desain Interior", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "AL032007", "nama_jabatan": "Pelaksana Pekerjaan Interior (Level 5)", "acuan": "SKKNI 308-2013"}
 ]
-    # ==============================================================
-    # 🏛️ KLASIFIKASI: ARSITEKTUR (AR)
-    # ==============================================================
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AR011001", "nama_jabatan": "Arsitek Utama", "acuan": "SKKNI 196-2021"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "AR011002", "nama_jabatan": "Arsitek Madya", "acuan": "SKKNI 196-2021"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "AR011004", "nama_jabatan": "Asisten Arsitek", "acuan": "SKKNI 196-2021"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "TEKNISI/Analis", "jenjang": 6, "kode_jabatan": "AR012001", "nama_jabatan": "Asisten Pemula Arsitek", "acuan": "SKKNI 196-2021"},
-    {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "AR013003", "nama_jabatan": "Juru Gambar Arsitektur", "acuan": "SKK-Khusus 36-2022"},
+# ==============================================================
+# 🏛️ KLASIFIKASI: ARSITEKTUR (AR)
+# ==============================================================
+{"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AR011001", "nama_jabatan": "Arsitek Utama", "acuan": "SKKNI 196-2021"},
+{"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "AR011002", "nama_jabatan": "Arsitek Madya", "acuan": "SKKNI 196-2021"},
+{"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "AR011004", "nama_jabatan": "Asisten Arsitek", "acuan": "SKKNI 196-2021"},
+{"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "TEKNISI/Analis", "jenjang": 6, "kode_jabatan": "AR012001", "nama_jabatan": "Asisten Pemula Arsitek", "acuan": "SKKNI 196-2021"},
+ {"klasifikasi": "ARSITEKTUR", "subklasifikasi": "Arsitektural", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "AR013003", "nama_jabatan": "Juru Gambar Arsitektur", "acuan": "SKK-Khusus 36-2022"},
 
-    # ==============================================================
-    # 🏗️ KLASIFIKASI: SIPIL (SI)
-    # ==============================================================
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Gedung", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI011031", "nama_jabatan": "Ahli Utama Teknik Bangunan Gedung", "acuan": "SKKNI 192-2016; SKKNI 255-2019; SKKNI 106-2015"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Gedung", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI011032", "nama_jabatan": "Ahli Madya Teknik Bangunan Gedung", "acuan": "SKKNI 192-2016; SKKNI 255-2019; SKKNI 106-2015"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Gedung", "kualifikasi": "TEKNISI/Analis", "jenjang": 6, "kode_jabatan": "SI012029", "nama_jabatan": "Pengawas Pekerjaan Bangunan Gedung (Level 6)", "acuan": "SKKNI 340-2013"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Gedung", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "SI013060", "nama_jabatan": "Juru Gambar Konstruksi", "acuan": "SKKNI 13-2024; SKKNI 33-2021; SKKNI 327-2009"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Jalan", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI031022", "nama_jabatan": "Ahli Utama Teknik Jalan", "acuan": "SKKNI 126-2021"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Jembatan", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI041023", "nama_jabatan": "Ahli Utama Teknik Jembatan", "acuan": "SKKNI 84-2021"},
-    {"klasifikasi": "SIPIL", "subklasifikasi": "Geodesi", "kualifikasi": "TEKNISI/Analis", "jenjang": 6, "kode_jabatan": "SI162006", "nama_jabatan": "Surveyor Terestris", "acuan": "SKKNI 172-2020; SKKNI 38-2019"},
+# ==============================================================
+# 🏗️ KLASIFIKASI: SIPIL (SI)
+# ==============================================================
+{"klasifikasi": "SIPIL", "subklasifikasi": "Gedung", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI011031", "nama_jabatan": "Ahli Utama Teknik Bangunan Gedung", "acuan": "SKKNI 192-2016; SKKNI 255-2019; SKKNI 106-2015"},
+{"klasifikasi": "SIPIL", "subklasifikasi": "Gedung", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "SI011032", "nama_jabatan": "Ahli Madya Teknik Bangunan Gedung", "acuan": "SKKNI 192-2016; SKKNI 255-2019; SKKNI 106-2015"},
+{"klasifikasi": "SIPIL", "subklasifikasi": "Gedung", "kualifikasi": "TEKNISI/Analis", "jenjang": 6, "kode_jabatan": "SI012029", "nama_jabatan": "Pengawas Pekerjaan Bangunan Gedung (Level 6)", "acuan": "SKKNI 340-2013"},
+{"klasifikasi": "SIPIL", "subklasifikasi": "Gedung", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "SI013060", "nama_jabatan": "Juru Gambar Konstruksi", "acuan": "SKKNI 13-2024; SKKNI 33-2021; SKKNI 327-2009"},
+{"klasifikasi": "SIPIL", "subklasifikasi": "Jalan", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI031022", "nama_jabatan": "Ahli Utama Teknik Jalan", "acuan": "SKKNI 126-2021"},
+{"klasifikasi": "SIPIL", "subklasifikasi": "Jembatan", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "SI041023", "nama_jabatan": "Ahli Utama Teknik Jembatan", "acuan": "SKKNI 84-2021"},
+{"klasifikasi": "SIPIL", "subklasifikasi": "Geodesi", "kualifikasi": "TEKNISI/Analis", "jenjang": 6, "kode_jabatan": "SI162006", "nama_jabatan": "Surveyor Terestris", "acuan": "SKKNI 172-2020; SKKNI 38-2019"},
 
-    # ==============================================================
-    # 📊 KLASIFIKASI: MANAJEMEN PELAKSANAAN (MP)
-    # ==============================================================
-    {"klasifikasi": "MANAJEMEN PELAKSANAAN", "subklasifikasi": "Keselamatan Konstruksi", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "MP011006", "nama_jabatan": "Ahli Utama Keselamatan Konstruksi", "acuan": "SKKNI 60-2022"},
-    {"klasifikasi": "MANAJEMEN PELAKSANAAN", "subklasifikasi": "Estimasi Biaya Konstruksi", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "MP051005", "nama_jabatan": "Ahli Utama Quantity Surveyor", "acuan": "SKKNI 6-2011"},
+# ==============================================================
+# 📊 KLASIFIKASI: MANAJEMEN PELAKSANAAN (MP)
+# ==============================================================
+{"klasifikasi": "MANAJEMEN PELAKSANAAN", "subklasifikasi": "Keselamatan Konstruksi", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "MP011006", "nama_jabatan": "Ahli Utama Keselamatan Konstruksi", "acuan": "SKKNI 60-2022"},
+{"klasifikasi": "MANAJEMEN PELAKSANAAN", "subklasifikasi": "Estimasi Biaya Konstruksi", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "MP051005", "nama_jabatan": "Ahli Utama Quantity Surveyor", "acuan": "SKKNI 6-2011"},
 
-    # ==============================================================
-    # 🌿 KLASIFIKASI: TATA LINGKUNGAN (TL)
-    # ==============================================================
-    {"klasifikasi": "TATA LINGKUNGAN", "subklasifikasi": "Teknik Air Minum", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "TL011011", "nama_jabatan": "Ahli Utama Teknik Air Minum", "acuan": "SKKNI 19-2025; SKKNI 17-2023"},
-    {"klasifikasi": "TATA LINGKUNGAN", "subklasifikasi": "Teknik Air Limbah", "kualifikasi": "TEKNISI /Analis", "jenjang": 6, "kode_jabatan": "TL032004", "nama_jabatan": "Fasilitator Teknis Pembangunan Sarana Sanitasi Berbasis Masyarakat (Level 6)", "acuan": "SKKNI 204-2015"}
+# ==============================================================
+# 🌿 KLASIFIKASI: TATA LINGKUNGAN (TL)
+# ==============================================================
+{"klasifikasi": "TATA LINGKUNGAN", "subklasifikasi": "Teknik Air Minum", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "TL011011", "nama_jabatan": "Ahli Utama Teknik Air Minum", "acuan": "SKKNI 19-2025; SKKNI 17-2023"},
+{"klasifikasi": "TATA LINGKUNGAN", "subklasifikasi": "Teknik Air Limbah", "kualifikasi": "TEKNISI /Analis", "jenjang": 6, "kode_jabatan": "TL032004", "nama_jabatan": "Fasilitator Teknis Pembangunan Sarana Sanitasi Berbasis Masyarakat (Level 6)", "acuan": "SKKNI 204-2015"}
 ]
 
 # ====================== HALAMAN UTAMA LOGIN ======================
