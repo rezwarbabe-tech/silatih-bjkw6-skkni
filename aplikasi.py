@@ -1,605 +1,712 @@
-# ==============================================
-# APLIKASI siLATIH - BJKW VI MAKASSAR (VERSI 2.1)
-# Balai Jasa Konstruksi Wilayah VI Makassar - PUPR
-# Perubahan: Login Pengelola pakai Nama & NIP
-# ==============================================
-
-# 1. MUAT PUSTAKA & GAYA KUSTOM PUPR
-# ==============================================
-import streamlit as st
-import pandas as pd
-from io import BytesIO
-from datetime import datetime, date
-import re
-
-# === GAYA WARNA & LATAR IDENTITAS PUPR ===
-st.markdown("""
-<style>
-:root {
-    --pu-biru-utama: #004B87;
-    --pu-biru-terang: #0071BC;
-    --pu-biru-muda: #E8F3FC;
-    --pu-merah: #DC2626;
-    --pu-hijau: #059669;
-    --pu-kuning: #F59E0B;
-    --pu-abu: #F5F7FA;
-    --pu-teks: #2C3E50;
-}
-.stApp {
-    background-color: var(--pu-biru-muda);
-    background-image: radial-gradient(circle at 20% 50%, rgba(0,75,135,0.03) 0%, transparent 50%),
-                      radial-gradient(circle at 80% 20%, rgba(0,113,188,0.03) 0%, transparent 50%);
-    background-attachment: fixed;
-}
-h1, h2, h3, h4 { color: var(--pu-biru-utama); font-weight: 700; }
-.stButton>button, .stDownloadButton>button {
-    background-color: var(--pu-biru-utama); color: white; border-radius: 6px;
-    border: 2px solid var(--pu-biru-utama); padding: 0.5rem 1.2rem;
-    font-weight: 500; transition: all 0.3s ease;
-}
-.stButton>button:hover, .stDownloadButton>button:hover {
-    background-color: var(--pu-biru-terang); border-color: var(--pu-biru-terang); transform: translateY(-1px);
-}
-.pu-info { background: white; border-left: 6px solid var(--pu-biru-utama); padding: 1.2rem; border-radius: 8px; margin-bottom: 1rem; }
-.pu-sukses { background: #F0FDF4; border-left: 6px solid var(--pu-hijau); padding: 1.2rem; border-radius: 8px; margin-bottom: 1rem; }
-.pu-tolak { background: #FEF2F2; border-left: 6px solid var(--pu-merah); padding: 1.2rem; border-radius: 8px; margin-bottom: 1rem; }
-.pu-kuning { background: #FFFBEB; border-left: 6px solid var(--pu-kuning); padding: 1.2rem; border-radius: 8px; margin-bottom: 1rem; }
-section[data-testid="stSidebar"] { background-color: white; border-right: 3px solid var(--pu-biru-muda); }
-.stDataFrame { border-radius: 8px; border: 1px solid var(--pu-biru-muda); }
-div[data-testid="stForm"] {background: white; padding: 1.5rem; border-radius: 10px;}
-.status-akan {color: var(--pu-biru-terang); font-weight: 600;}
-.status-langsung {color: var(--pu-hijau); font-weight: 600;}
-.status-selesai {color: #6B7280; font-weight: 600;}
-</style>
-""", unsafe_allow_html=True)
-
-# ==============================================
-# 2. KONFIGURASI & DATA REFERENSI
-# ==============================================
-st.set_page_config(page_title="siLATIH - BJKW VI Makassar", page_icon="🏗️", layout="wide", initial_sidebar_state="expanded")
-
-# === DAFTAR PENGELOLA YANG DIPERBOLEHKAN ===
-daftar_pengelola = [
-    {
-        "nama_lengkap": "Muhamad Reza Bugis",
-        "nip": "197904142009111002"
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>siLATI - Sistem Pelatihan Terintegrasi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box; font-family:'Poppins', sans-serif; margin:0; padding:0;}
+    :root{
+      --biru-tua:#0A2463;
+      --biru-tengah:#1E3A8A;
+      --emas:#DAA520;
+      --kuning-terang:#FFD700;
+      --hijau-daun:#2E8B57;
+      --merah-bata:#C43A31;
+      --putih:#FFFFFF;
+      --abu-lembut:#F8FAFC;
+      --abu-batas:#E2E8F0;
     }
-]
-
-# === TABEL PERSYARATAN PENGALAMAN KERJA ===
-persyaratan = {
-    "Ahli Utama Teknik Sumber Daya Air": {
-        "jenjang": 9,
-        "min_tahun": {
-            "Doktor/Doktor Terapan/Pendidikan Spesialis_2": 0,
-            "S2/S2 Terapan/Pendidikan Spesialis_1": 4,
-            "Pendidikan Profesi": 7,
-            "S1/S1 Terapan/D4 Terapan": 8
-        }
-    },
-    "Ahli Madya Teknik Sumber Daya Air": {
-        "jenjang": 8,
-        "min_tahun": {
-            "Magister/Magister Terapan/S2/S2 Terapan/Pendidikan Spesialis_1": 0,
-            "Pendidikan Profesi": 5,
-            "S1/S1 Terapan/D4 Terapan": 6
-        }
-    },
-    "Ahli Muda Teknik Sumber Daya Air": {
-        "jenjang": 7,
-        "min_tahun": {
-            "Pendidikan Profesi": 0,
-            "S1/S1 Terapan/D4 Terapan (Fresh Graduate)": 0,
-            "S1/S1 Terapan/D4 Terapan": 2
-        }
-    },
-    "Ahli Utama Rekayasa Jalan Raya": {
-        "jenjang": 9,
-        "min_tahun": {
-            "Doktor/Doktor Terapan/Pendidikan Spesialis_2": 0,
-            "S2/S2 Terapan/Pendidikan Spesialis_1": 4,
-            "Pendidikan Profesi": 7,
-            "S1/S1 Terapan/D4 Terapan": 8
-        }
-    },
-    "Pengawas Pelaksanaan Gedung": {
-        "jenjang": 6,
-        "min_tahun": {
-            "S1/S1 Terapan/D4 Terapan": 0,
-            "D3": 4,
-            "D2": 8,
-            "D1": 12
-        }
-    },
-    "Tukang Beton Terampil": {
-        "jenjang": 4,
-        "min_tahun": {
-            "D2": 0,
-            "D1/SMK Plus": 2,
-            "SMK": 4,
-            "SMA": 6
-        }
-    },
-    "Operator Bulldozer": {
-        "jenjang": 3,
-        "min_tahun": {
-            "D1/SMK Plus": 0,
-            "SMK": 3,
-            "SMA": 4,
-            "Pendidikan Dasar": 5
-        }
-    },
-    "Operator Ekskavator": {
-        "jenjang": 3,
-        "min_tahun": {
-            "D1/SMK Plus": 0,
-            "SMK": 3,
-            "SMA": 4,
-            "Pendidikan Dasar": 5
-        }
-    },
-    "Teknisi Mekanik Alat Berat": {
-        "jenjang": 5,
-        "min_tahun": {
-            "D3": 0,
-            "D2": 4,
-            "D1/SMK Plus": 8,
-            "SMK": 10,
-            "SMA": 12
-        }
-    },
-    "Teknisi Instalasi Listrik Terampil": {
-        "jenjang": 5,
-        "min_tahun": {
-            "D3": 0,
-            "D2": 4,
-            "D1/SMK Plus": 8,
-            "SMK": 10,
-            "SMA": 12
-        }
-    },
-    "Teknisi Pemasangan Panel Surya": {
-        "jenjang": 5,
-        "min_tahun": {
-            "D3": 0,
-            "D2": 4,
-            "D1/SMK Plus": 8,
-            "SMK": 10,
-            "SMA": 12
-        }
-    },
-    "Ahli Utama Keselamatan dan Kesehatan Kerja": {
-        "jenjang": 9,
-        "min_tahun": {
-            "Doktor/Doktor Terapan/Pendidikan Spesialis_2": 0,
-            "S2/S2 Terapan/Pendidikan Spesialis_1": 4,
-            "Pendidikan Profesi": 7,
-            "S1/S1 Terapan/D4 Terapan": 8
-        }
-    },
-    "Manajer Proyek Utama": {
-        "jenjang": 9,
-        "min_tahun": {
-            "Doktor/Doktor Terapan/Pendidikan Spesialis_2": 0,
-            "S2/S2 Terapan/Pendidikan Spesialis_1": 4,
-            "Pendidikan Profesi": 7,
-            "S1/S1 Terapan/D4 Terapan": 8
-        }
+    body{
+      background:linear-gradient(135deg, #F0F4FF 0%, #F8FBFF 100%);
+      min-height:100vh;
+      padding:20px 10px;
+      position:relative;
+      overflow-x:hidden;
     }
-}
-
-daftar_jabatan = [
-    {"no": 1, "kode_jabatan": "SI-SDA-001", "klasifikasi": "SIPIL", "subklasifikasi": "Sumber Daya Air", "kualifikasi": "Ahli", "jenjang": 9, "nama_jabatan": "Ahli Utama Teknik Sumber Daya Air", "acuan_skkni": "SKKNI 124-2021"},
-    {"no": 2, "kode_jabatan": "SI-SDA-002", "klasifikasi": "SIPIL", "subklasifikasi": "Sumber Daya Air", "kualifikasi": "Ahli", "jenjang": 8, "nama_jabatan": "Ahli Madya Teknik Sumber Daya Air", "acuan_skkni": "SKKNI 124-2021"},
-    {"no": 3, "kode_jabatan": "SI-SDA-003", "klasifikasi": "SIPIL", "subklasifikasi": "Sumber Daya Air", "kualifikasi": "Ahli", "jenjang": 7, "nama_jabatan": "Ahli Muda Teknik Sumber Daya Air", "acuan_skkni": "SKKNI 124-2021"},
-    {"no": 4, "kode_jabatan": "SI-JLN-001", "klasifikasi": "SIPIL", "subklasifikasi": "Jalan & Jembatan", "kualifikasi": "Ahli", "jenjang": 9, "nama_jabatan": "Ahli Utama Rekayasa Jalan Raya", "acuan_skkni": "SKKNI 137-2022"},
-    {"no": 5, "kode_jabatan": "SI-GED-001", "klasifikasi": "SIPIL", "subklasifikasi": "Bangunan Gedung", "kualifikasi": "Pengawas", "jenjang": 6, "nama_jabatan": "Pengawas Pelaksanaan Gedung", "acuan_skkni": "SKKNI 141-2021"},
-    {"no": 6, "kode_jabatan": "SI-BET-001", "klasifikasi": "SIPIL", "subklasifikasi": "Pekerjaan Beton", "kualifikasi": "Tukang", "jenjang": 4, "nama_jabatan": "Tukang Beton Terampil", "acuan_skkni": "SKKNI 135-2022"},
-    {"no": 7, "kode_jabatan": "ME-ABT-001", "klasifikasi": "MEKANIKAL", "subklasifikasi": "Operator Alat Berat", "kualifikasi": "Operator", "jenjang": 3, "nama_jabatan": "Operator Bulldozer", "acuan_skkni": "SKK Khusus Reg.27-2022"},
-    {"no": 8, "kode_jabatan": "ME-ABG-001", "klasifikasi": "MEKANIKAL", "subklasifikasi": "Operator Alat Berat", "kualifikasi": "Operator", "jenjang": 3, "nama_jabatan": "Operator Ekskavator", "acuan_skkni": "SKKNI 91-2010"},
-    {"no": 9, "kode_jabatan": "ME-MNT-001", "klasifikasi": "MEKANIKAL", "subklasifikasi": "Pemeliharaan Alat Berat", "kualifikasi": "Teknisi", "jenjang": 5, "nama_jabatan": "Teknisi Mekanik Alat Berat", "acuan_skkni": "SKKNI 190-2024"},
-    {"no": 10, "kode_jabatan": "EL-ILG-001", "klasifikasi": "ELEKTRO", "subklasifikasi": "Instalasi Listrik", "kualifikasi": "Teknisi", "jenjang": 5, "nama_jabatan": "Teknisi Instalasi Listrik Terampil", "acuan_skkni": "SKKNI 130-2021"},
-    {"no": 11, "kode_jabatan": "EL-SRY-001", "klasifikasi": "ELEKTRO", "subklasifikasi": "Energi Terbarukan", "kualifikasi": "Teknisi", "jenjang": 5, "nama_jabatan": "Teknisi Pemasangan Panel Surya", "acuan_skkni": "SKKNI 241-2024"},
-    {"no": 12, "kode_jabatan": "K3-SMK-001", "klasifikasi": "KESELAMATAN KERJA", "subklasifikasi": "Sistem Manajemen K3", "kualifikasi": "Ahli", "jenjang": 9, "nama_jabatan": "Ahli Utama Keselamatan dan Kesehatan Kerja", "acuan_skkni": "SKKNI 119-2020"},
-    {"no": 13, "kode_jabatan": "MN-MPR-001", "klasifikasi": "MANAJEMEN PROYEK", "subklasifikasi": "Manajemen Proyek", "kualifikasi": "Manajer", "jenjang": 9, "nama_jabatan": "Manajer Proyek Utama", "acuan_skkni": "SKKNI 145-2021"}
-]
-
-# Inisialisasi State
-if "daftar_pelatihan" not in st.session_state:
-    st.session_state.daftar_pelatihan = []
-if "sedang_login" not in st.session_state:
-    st.session_state.sedang_login = False
-if "nama_pengelola" not in st.session_state:
-    st.session_state.nama_pengelola = ""
-
-# ==============================================
-# 3. FUNGSI BANTUAN & VALIDASI
-# ==============================================
-
-def cek_akses_pengelola(nama, nip):
-    """Memverifikasi apakah nama dan NIP terdaftar sebagai pengelola"""
-    nama_bersih = nama.strip().lower()
-    nip_bersih = nip.strip()
-    for pengelola in daftar_pengelola:
-        if (pengelola["nama_lengkap"].lower() == nama_bersih and 
-            pengelola["nip"] == nip_bersih):
-            return True, pengelola["nama_lengkap"]
-    return False, ""
-
-def tentukan_status(tgl_mulai, tgl_selesai):
-    """Menentukan status pelatihan berdasarkan tanggal hari ini"""
-    hari_ini = date.today()
-    if hari_ini < tgl_mulai:
-        return "🟢 Akan Datang"
-    elif tgl_mulai <= hari_ini <= tgl_selesai:
-        return "🔴 Sedang Berlangsung"
-    else:
-        return "⚪ Sudah Selesai"
-
-def validasi_nik(nik):
-    return bool(re.fullmatch(r"\d{16}", nik.strip()))
-
-def validasi_nip(nip):
-    """Memeriksa format NIP PNS 18 digit angka"""
-    return bool(re.fullmatch(r"\d{18}", nip.strip()))
-
-def validasi_no_hp(kontak):
-    return bool(re.fullmatch(r"^(0|\+62)\d{9,13}$", kontak.strip()))
-
-def validasi_email(email):
-    if not email: return True
-    return bool(re.fullmatch(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", email.strip()))
-
-def validasi_link_pddikti(link):
-    return bool(re.match(r"^https?://pddikti\.kemdikbud\.go\.id/", link.strip()))
-
-def ekstrak_tahun_pengalaman(berkas_list):
-    total_tahun = 0
-    try:
-        for berkas in berkas_list:
-            nama_berkas = berkas.name.lower()
-            pola_tanggal = r'(\d{4})'
-            tahun = re.findall(pola_tanggal, nama_berkas)
-            if len(tahun) >= 2:
-                mulai = int(tahun[0])
-                selesai = int(tahun[1]) if int(tahun[1]) <= datetime.now().year else datetime.now().year
-                total_tahun += max(0, selesai - mulai)
-            elif len(tahun) == 1:
-                total_tahun += max(0, datetime.now().year - int(tahun[0]))
-        return round(total_tahun, 1) if total_tahun > 0 else 0
-    except:
-        return 0
-
-def cek_kesesuaian_ktp_ijazah(nama_ktp, nik_ktp, nama_ijazah, nik_ijazah=""):
-    if not nama_ktp or not nama_ijazah:
-        return False, "Nama lengkap wajib diisi pada kedua berkas"
-    nama_sama = nama_ktp.lower().strip() == nama_ijazah.lower().strip()
-    nik_sama = True
-    if nik_ijazah:
-        nik_sama = nik_ktp.strip() == nik_ijazah.strip()
-    if nama_sama and nik_sama:
-        return True, "Data KTP dan Ijazah sesuai"
-    elif not nama_sama:
-        return False, "Nama lengkap pada KTP tidak sama dengan Ijazah"
-    else:
-        return False, "Nomor identitas pada KTP tidak sesuai dengan Ijazah"
-
-def verifikasi_syarat(jabatan_pilihan, jenjang_pendidikan, total_pengalaman):
-    if jabatan_pilihan not in persyaratan:
-        return True, "Syarat belum tercantum, diterima sementara"
-    syarat = persyaratan[jabatan_pilihan]
-    min_tahun = syarat["min_tahun"]
-    jenjang_terdekat = next((k for k in min_tahun.keys() if jenjang_pendidikan.lower() in k.lower()), None)
-    if not jenjang_terdekat:
-        return False, f"Jenjang pendidikan {jenjang_pendidikan} tidak sesuai untuk jabatan ini"
-    butuh = min_tahun[jenjang_terdekat]
-    if total_pengalaman >= butuh:
-        return True, f"Pengalaman kerja {total_pengalaman} tahun memenuhi syarat minimal {butuh} tahun"
-    else:
-        return False, f"Pengalaman kerja {total_pengalaman} tahun belum memenuhi syarat minimal {butuh} tahun"
-
-# ==============================================
-# 4. TAMPILAN UTAMA
-# ==============================================
-st.markdown("<hr style='border: 3px solid #004B87; border-radius: 2px; margin-bottom: 1.5rem;'>", unsafe_allow_html=True)
-st.title("🏛️ Aplikasi Pelatihan & Sertifikasi UJI Kompetensi")
-st.subheader("Balai Jasa Konstruksi Wilayah VI Makassar")
-st.markdown("<h3 style='color:#004B87;'>siLATIH - Sistem Informasi Pelatihan Terintegrasi</h3>", unsafe_allow_html=True)
-
-st.markdown("""
-<div class="pu-info">
-📢 <strong>Selamat Datang!</strong><br>
-Aplikasi resmi untuk informasi jabatan SKKNI, pengelolaan pelatihan, serta pendaftaran uji kompetensi.
-</div>
-""", unsafe_allow_html=True)
-
-# --- DAFTAR JABATAN ---
-st.header("📋 Daftar Jabatan Berdasarkan SKKNI")
-df = pd.DataFrame(daftar_jabatan)
-st.sidebar.markdown("---")
-st.sidebar.header("🔎 Saring Data")
-pilih_klasifikasi = st.sidebar.multiselect("Bidang Klasifikasi", options=sorted(df["klasifikasi"].unique()))
-if pilih_klasifikasi: df = df[df["klasifikasi"].isin(pilih_klasifikasi)]
-pilih_kualifikasi = st.sidebar.multiselect("Tingkat Kualifikasi", options=sorted(df["kualifikasi"].unique()))
-if pilih_kualifikasi: df = df[df["kualifikasi"].isin(pilih_kualifikasi)]
-kata_kunci = st.text_input("🔍 Cari Jabatan atau Kode Jabatan:")
-if kata_kunci: df = df[df["nama_jabatan"].str.contains(kata_kunci, case=False) | df["kode_jabatan"].str.contains(kata_kunci, case=False)]
-st.info(f"✅ Menampilkan **{len(df)}** jabatan yang sesuai kriteria Anda")
-st.dataframe(df, use_container_width=True, hide_index=True)
-
-# --- UNDUH DATA ---
-st.subheader("📥 Unduh Daftar Jabatan")
-buffer = BytesIO()
-with pd.ExcelWriter(buffer, engine='openpyxl') as writer: df.to_excel(writer, index=False, sheet_name="Daftar Jabatan SKKNI")
-st.download_button(label="📂 Unduh File Excel (.xlsx)", data=buffer.getvalue(), file_name="Daftar_Jabatan_SKKNI_BJKW6_PUPR.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-
-# --- SISTEM LOGIN PENGELOLA ---
-st.sidebar.markdown("---")
-st.sidebar.header("🔐 Akses Pengelola")
-
-if not st.session_state.sedang_login:
-    with st.sidebar.expander("🔑 Masuk Sebagai Pengelola"):
-        nama_pengguna = st.text_input("Nama Lengkap Sesuai Data Kepegawaian")
-        nip_pengguna = st.text_input("Nomor Induk Pegawai (NIP)", max_chars=18)
-        if st.button("Masuk Akun Pengelola"):
-            if not nama_pengguna or not nip_pengguna:
-                st.error("❌ Lengkapi Nama Lengkap dan NIP terlebih dahulu!")
-            elif not validasi_nip(nip_pengguna):
-                st.error("❌ Format NIP salah! Harus berisi 18 digit angka.")
-            else:
-                terdaftar, nama_terverifikasi = cek_akses_pengelola(nama_pengguna, nip_pengguna)
-                if terdaftar:
-                    st.session_state.sedang_login = True
-                    st.session_state.nama_pengelola = nama_terverifikasi
-                    st.rerun()
-                else:
-                    st.error("❌ Nama atau NIP tidak terdaftar sebagai pengelola aplikasi!")
-else:
-    st.sidebar.success(f"✅ Selamat datang, **{st.session_state.nama_pengelola}**")
-    if st.sidebar.button("🚪 Keluar Akun"):
-        st.session_state.sedang_login = False
-        st.session_state.nama_pengelola = ""
-        st.rerun()
-
-    # === MENU PENGELOLA: TAMBAH & UBAH PELATIHAN ===
-    st.markdown("---")
-    st.header("⚙️ Pengelolaan Pelatihan (Hanya Pengelola)")
     
-    # Form Tambah Pelatihan Baru
-    with st.form("form_pelatihan_baru", clear_on_submit=True):
-        col1, col2 = st.columns(2)
-        with col1:
-            nama_pelatihan = st.text_input("Nama Pelatihan *")
-            jabatan_terkait = st.selectbox("Jabatan Terkait *", df["nama_jabatan"].unique())
-            lokasi = st.text_input("Lokasi Pelatihan", value="Balai Jasa Konstruksi VI Makassar")
-            kuota = st.number_input("Kuota Peserta", min_value=1, value=25)
-        with col2:
-            tgl_buka_daftar = st.date_input("Tanggal Buka Pendaftaran")
-            tgl_tutup_daftar = st.date_input("Tanggal Tutup Pendaftaran")
-            tgl_mulai = st.date_input("Tanggal Mulai Pelatihan *")
-            tgl_selesai = st.date_input("Tanggal Selesai Pelatihan *")
-        
-        simpan = st.form_submit_button("➕ Tambahkan Pelatihan Baru")
-        if simpan:
-            if tgl_mulai > tgl_selesai:
-                st.error("❌ Tanggal mulai tidak boleh lebih lambat dari tanggal selesai!")
-            else:
-                st.session_state.daftar_pelatihan.append({
-                    "nama": nama_pelatihan, "jabatan": jabatan_terkait, "lokasi": lokasi,
-                    "kuota": kuota, "buka_daftar": tgl_buka_daftar, "tutup_daftar": tgl_tutup_daftar,
-                    "mulai": tgl_mulai, "selesai": tgl_selesai
-                })
-                st.success("✅ Pelatihan berhasil ditambahkan!")
-                st.rerun()
+    body::before{
+      content:"";
+      position:fixed;
+      top:-120px;
+      right:-120px;
+      width:450px;
+      height:450px;
+      background:radial-gradient(circle, rgba(218,165,32,0.08) 0%, transparent 70%);
+      z-index:-1;
+    }
+    body::after{
+      content:"";
+      position:fixed;
+      bottom:-100px;
+      left:-100px;
+      width:400px;
+      height:400px;
+      background:radial-gradient(circle, rgba(46,139,87,0.07) 0%, transparent 70%);
+      z-index:-1;
+    }
+    
+    .wadah{
+      max-width:1000px;
+      margin:0 auto;
+      padding:32px;
+      background:var(--putih);
+      border-radius:20px;
+      box-shadow:0 8px 32px rgba(10,36,99,0.12);
+      position:relative;
+      overflow:hidden;
+      border-top:6px solid var(--emas);
+    }
+    .wadah::before{
+      content:"";
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:5px;
+      background:linear-gradient(90deg, var(--biru-tua) 0%, var(--emas) 50%, var(--hijau-daun) 100%);
+    }
+    
+    h1{
+      font-size:2rem;
+      text-align:center;
+      color:var(--biru-tua);
+      margin-bottom:8px;
+      font-weight:700;
+      letter-spacing:0.5px;
+    }
+    h1 span{color:var(--emas);}
+    h2{
+      font-size:1.4rem;
+      margin:1.5rem 0 1rem;
+      color:var(--biru-tengah);
+      font-weight:600;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    h2::before{
+      content:"";
+      width:6px;
+      height:24px;
+      background:linear-gradient(180deg, var(--emas) 0%, var(--hijau-daun) 100%);
+      border-radius:3px;
+    }
+    h3{
+      font-size:1.15rem;
+      margin:1.2rem 0 0.7rem;
+      color:#1E293B;
+      font-weight:600;
+    }
+    
+    .tombol{
+      width:100%;
+      padding:14px 20px;
+      border:none;
+      border-radius:12px;
+      font-size:1rem;
+      font-weight:500;
+      cursor:pointer;
+      transition:all 0.3s ease;
+      margin:8px 0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      position:relative;
+      overflow:hidden;
+    }
+    .tombol::after{
+      content:"";
+      position:absolute;
+      top:0;
+      left:-100%;
+      width:100%;
+      height:100%;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+      transition:left 0.5s ease;
+    }
+    .tombol:hover::after{left:100%;}
+    .tombol-utama{
+      background:linear-gradient(135deg, var(--biru-tua) 0%, var(--biru-tengah) 100%);
+      color:white;
+      box-shadow:0 4px 12px rgba(10,36,99,0.3);
+    }
+    .tombol-utama:hover{
+      transform:translateY(-2px);
+      box-shadow:0 6px 20px rgba(10,36,99,0.4);
+    }
+    .tombol-biasa{
+      background:var(--abu-lembut);
+      color:var(--biru-tengah);
+      border:2px solid var(--abu-batas);
+      font-weight:500;
+    }
+    .tombol-biasa:hover{
+      background:rgba(218,165,32,0.08);
+      border-color:var(--emas);
+      transform:translateY(-1px);
+    }
+    .tombol-hijau{
+      background:linear-gradient(135deg, var(--hijau-daun) 0%, #227048 100%);
+      color:white;
+      box-shadow:0 4px 12px rgba(46,139,87,0.3);
+      margin-bottom:16px;
+    }
+    .tombol-hijau:hover{
+      transform:translateY(-2px);
+      box-shadow:0 6px 20px rgba(46,139,87,0.4);
+    }
+    
+    .grup{margin-bottom:18px;}
+    .dua-kolom{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+    }
+    label{
+      display:block;
+      margin-bottom:8px;
+      font-weight:500;
+      color:#334155;
+      font-size:0.95rem;
+    }
+    input, select, textarea{
+      width:100%;
+      padding:12px 16px;
+      border:2px solid var(--abu-batas);
+      border-radius:10px;
+      font-size:0.95rem;
+      transition:all 0.3s ease;
+      background:var(--putih);
+    }
+    input:focus, select:focus, textarea:focus{
+      outline:none;
+      border-color:var(--emas);
+      box-shadow:0 0 0 4px rgba(218,165,32,0.15);
+    }
+    
+    .info{
+      padding:16px;
+      background:linear-gradient(135deg, rgba(10,36,99,0.05) 0%, rgba(30,58,138,0.08) 100%);
+      border-left:5px solid var(--biru-tua);
+      border-radius:12px;
+      margin:12px 0;
+      font-size:0.95rem;
+      color:var(--biru-tengah);
+    }
+    .peringatan{
+      padding:16px;
+      background:linear-gradient(135deg, rgba(218,165,32,0.08) 0%, rgba(255,215,0,0.1) 100%);
+      border-left:5px solid var(--emas);
+      border-radius:12px;
+      margin:12px 0;
+      font-size:0.95rem;
+      color:#92400E;
+    }
+    .berhasil{
+      padding:16px;
+      background:linear-gradient(135deg, rgba(46,139,87,0.05) 0%, rgba(34,112,72,0.08) 100%);
+      border-left:5px solid var(--hijau-daun);
+      border-radius:12px;
+      margin:12px 0;
+      font-size:0.95rem;
+      color:#166534;
+    }
+    
+    .sembunyi{display:none;}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+      gap:16px;
+      margin:24px 0;
+    }
+    hr{
+      border:none;
+      border-top:2px solid var(--abu-batas);
+      margin:24px 0;
+      position:relative;
+    }
+    hr::after{
+      content:"";
+      position:absolute;
+      top:-1px;
+      left:50%;
+      transform:translateX(-50%);
+      width:120px;
+      height:3px;
+      background:linear-gradient(90deg, var(--biru-tua), var(--emas), var(--hijau-daun));
+      border-radius:2px;
+    }
+    
+    .daftar-item{
+      padding:14px;
+      border-bottom:1px solid var(--abu-batas);
+      font-size:0.9rem;
+      transition:all 0.2s ease;
+      border-radius:8px;
+      margin-bottom:8px;
+    }
+    .daftar-item:hover{
+      background:rgba(218,165,32,0.05);
+      padding-left:18px;
+    }
+    .daftar-item:last-child{border-bottom:none; margin-bottom:0;}
+    
+    .sub-judul{
+      text-align:center;
+      color:#475569;
+      margin-bottom:20px;
+      font-size:1rem;
+      line-height:1.6;
+    }
+    .tag-pupr{
+      display:inline-block;
+      padding:6px 14px;
+      background:linear-gradient(135deg, var(--biru-tua) 0%, var(--biru-tengah) 100%);
+      color:var(--putih);
+      border-radius:24px;
+      font-size:0.8rem;
+      font-weight:500;
+      margin-top:6px;
+      box-shadow:0 2px 8px rgba(10,36,99,0.2);
+    }
+    @media(max-width:600px){
+      .dua-kolom{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+  <div class="wadah">
+    <div id="halaman-utama">
+      <h1>🎓 <span>si</span>LATI</h1>
+      <p class="sub-judul">Sistem Pelatihan Terintegrasi</p>
+      <hr>
+      <h3 style="text-align:center">Silakan Pilih Akses Masuk:</h3>
+      <div class="grid">
+        <button class="tombol tombol-utama" onclick="bukaHalaman('admin')">🔧 Pengelola / Admin</button>
+        <button class="tombol tombol-utama" onclick="bukaHalaman('peserta')">👤 Peserta Pelatihan</button>
+      </div>
+    </div>
 
-    # Daftar Semua Pelatihan untuk Diedit
-    st.subheader("📋 Daftar Semua Pelatihan (Bisa Diedit/Dihapus)")
-    if not st.session_state.daftar_pelatihan:
-        st.info("ℹ️ Belum ada pelatihan yang dibuat.")
-    else:
-        for idx, latih in enumerate(st.session_state.daftar_pelatihan, 1):
-            status = tentukan_status(latih["mulai"], latih["selesai"])
-            warna_status = "status-akan" if "Akan Datang" in status else ("status-langsung" if "Sedang Berlangsung" in status else "status-selesai")
-            
-            with st.expander(f"📌 {idx}. {latih['nama']} — <span class='{warna_status}'>{status}</span>", unsafe_allow_html=True):
-                with st.form(f"ubah_pelatihan_{idx}"):
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        ubah_nama = st.text_input("Nama Pelatihan *", value=latih["nama"])
-                        ubah_jabatan = st.selectbox("Jabatan Terkait *", df["nama_jabatan"].unique(), index=df["nama_jabatan"].tolist().index(latih["jabatan"]))
-                        ubah_lokasi = st.text_input("Lokasi", value=latih["lokasi"])
-                        ubah_kuota = st.number_input("Kuota", min_value=1, value=latih["kuota"])
-                    with col2:
-                        ubah_buka = st.date_input("Buka Pendaftaran", value=latih["buka_daftar"])
-                        ubah_tutup = st.date_input("Tutup Pendaftaran", value=latih["tutup_daftar"])
-                        ubah_mulai = st.date_input("Mulai Pelatihan *", value=latih["mulai"])
-                        ubah_selesai = st.date_input("Selesai Pelatihan *", value=latih["selesai"])
-                    
-                    ubah = st.form_submit_button("💾 Simpan Perubahan")
-                    hapus = st.form_submit_button("🗑️ Hapus Pelatihan", type="secondary")
-                    
-                    if ubah:
-                        if ubah_mulai > ubah_selesai:
-                            st.error("❌ Tanggal mulai tidak boleh lebih lambat dari selesai!")
-                        else:
-                            st.session_state.daftar_pelatihan[idx-1] = {
-                                "nama": ubah_nama, "jabatan": ubah_jabatan, "lokasi": ubah_lokasi,
-                                "kuota": ubah_kuota, "buka_daftar": ubah_buka, "tutup_daftar": ubah_tutup,
-                                "mulai": ubah_mulai, "selesai": ubah_selesai
-                            }
-                            st.success("✅ Data pelatihan diperbarui!")
-                            st.rerun()
-                    if hapus:
-                        st.session_state.daftar_pelatihan.pop(idx-1)
-                        st.success("🗑️ Pelatihan dihapus!")
-                        st.rerun()
+    <div id="halaman-admin" class="sembunyi">
+      <button class="tombol tombol-biasa" onclick="bukaHalaman('utama')">🔙 Kembali ke Halaman Utama</button>
+      <h2>Dashboard Pengelola Pelatihan</h2>
+      
+      <h3>📝 Buat Pelatihan Baru</h3>
+      <div class="grup">
+        <label>Nama Pelatihan *</label>
+        <input type="text" id="nama-pelatihan" placeholder="Contoh: Pelatihan Ahli Muda Hidrologi 2026">
+      </div>
 
-# --- HALAMAN UTAMA PESERTA: DAFTAR PELATIHAN BERDASARKAN STATUS ---
-st.markdown("---")
-st.header("📚 Informasi Pelatihan")
+      <h4 style="margin:16px 0 8px; color:var(--biru-tengah); font-weight:600;">📅 Periode Pendaftaran</h4>
+      <div class="dua-kolom">
+        <div class="grup">
+          <label>Tanggal Buka Pendaftaran *</label>
+          <input type="date" id="buka-pendaftaran">
+        </div>
+        <div class="grup">
+          <label>Tanggal Tutup Pendaftaran *</label>
+          <input type="date" id="tutup-pendaftaran">
+        </div>
+      </div>
 
-# Kelompokkan pelatihan
-pelatihan_akan = []
-pelatihan_langsung = []
-pelatihan_selesai = []
+      <h4 style="margin:16px 0 8px; color:var(--biru-tengah); font-weight:600;">📅 Periode Pelaksanaan</h4>
+      <div class="dua-kolom">
+        <div class="grup">
+          <label>Tanggal Mulai Pelaksanaan *</label>
+          <input type="date" id="mulai-pelatihan">
+        </div>
+        <div class="grup">
+          <label>Tanggal Selesai Pelaksanaan *</label>
+          <input type="date" id="selesai-pelatihan">
+        </div>
+      </div>
 
-for latih in st.session_state.daftar_pelatihan:
-    status = tentukan_status(latih["mulai"], latih["selesai"])
-    if "Akan Datang" in status:
-        pelatihan_akan.append((latih, status))
-    elif "Sedang Berlangsung" in status:
-        pelatihan_langsung.append((latih, status))
-    else:
-        pelatihan_selesai.append((latih, status))
+      <div class="grup">
+        <label>Lokasi / Tautan *</label>
+        <input type="text" id="lokasi" placeholder="Alamat tempat atau tautan Zoom/Google Meet">
+      </div>
+      <div class="grup">
+        <label>Daftar Persyaratan Umum</label>
+        <textarea id="syarat-umum" rows="4">1. Fotokopi KTP masih berlaku
+2. Fotokopi Ijazah Terakhir dilegalisir
+3. Pas foto 4x6 cm sebanyak 2 lembar
+4. Surat keterangan sehat dari dokter
+5. Surat tugas instansi (jika diperlukan)</textarea>
+      </div>
 
-# Tampilkan Pelatihan Akan Datang
-st.subheader("🟢 Pelatihan Akan Datang")
-if pelatihan_akan:
-    for latih, status in pelatihan_akan:
-        st.markdown(f"""
-        <div class="pu-info">
-        <h4>{latih['nama']}</h4>
-        <p>Jabatan: <strong>{latih['jabatan']}</strong><br>
-        Pendaftaran dibuka: {latih['buka_daftar']} s.d {latih['tutup_daftar']}<br>
-        Pelatihan: {latih['mulai']} s.d {latih['selesai']}<br>
-        Kuota: {latih['kuota']} peserta | Lokasi: {latih['lokasi']}</p>
-        </div>""", unsafe_allow_html=True)
-else:
-    st.info("ℹ️ Belum ada pelatihan yang dijadwalkan.")
+      <h3>📌 Pilih Jabatan & Kualifikasi (Jenjang 1–9 Lengkap Semua Bidang)</h3>
+      <div class="grup">
+        <label>Klasifikasi Bidang *</label>
+        <select id="klasifikasi" onchange="updateSubklasifikasi()"></select>
+      </div>
+      <div class="grup">
+        <label>Subklasifikasi *</label>
+        <select id="subklasifikasi" onchange="updateJabatan()"></select>
+      </div>
+      <div class="grup">
+        <label>Nama Jabatan (Tertera Jenjang Lengkap) *</label>
+        <select id="jabatan" onchange="tampilkanSyarat()"></select>
+      </div>
+      <div id="syarat-kualifikasi" class="info"></div>
+      <button class="tombol tombol-utama" onclick="simpanPelatihan()">✅ Simpan Pelatihan</button>
 
-# Tampilkan Pelatihan Sedang Berlangsung
-st.subheader("🔴 Pelatihan Sedang Berlangsung")
-if pelatihan_langsung:
-    for latih, status in pelatihan_langsung:
-        st.markdown(f"""
-        <div class="pu-kuning">
-        <h4>{latih['nama']}</h4>
-        <p>Jabatan: <strong>{latih['jabatan']}</strong><br>
-        Pelatihan berlangsung: {latih['mulai']} s.d {latih['selesai']}<br>
-        Lokasi: {latih['lokasi']}</p>
-        <p><em>Pendaftaran sudah ditutup.</em></p>
-        </div>""", unsafe_allow_html=True)
-else:
-    st.info("ℹ️ Tidak ada pelatihan yang sedang berlangsung saat ini.")
+      <h2>Daftar Pendaftar</h2>
+      <button class="tombol tombol-hijau" onclick="unduhCSV()">📥 Unduh Daftar ke Excel (.CSV)</button>
+      <div id="daftar-pendaftar" class="peringatan">Belum ada data pendaftar.</div>
+    </div>
 
-# Tampilkan Pelatihan Sudah Selesai
-st.subheader("⚪ Pelatihan Telah Selesai")
-if pelatihan_selesai:
-    for latih, status in pelatihan_selesai:
-        st.markdown(f"""
-        <div style="background: #F9FAFB; border-left: 6px solid #9CA3AF; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-        <h4 style="color: #6B7280;">{latih['nama']}</h4>
-        <p>Jabatan: {latih['jabatan']}<br>
-        Pelatihan dilaksanakan: {latih['mulai']} s.d {latih['selesai']}<br>
-        Lokasi: {latih['lokasi']}</p>
-        <p><em>Periode pendaftaran telah berakhir.</em></p>
-        </div>""", unsafe_allow_html=True)
-else:
-    st.info("ℹ️ Belum ada riwayat pelatihan selesai.")
+    <div id="halaman-peserta" class="sembunyi">
+      <button class="tombol tombol-biasa" onclick="bukaHalaman('utama')">🔙 Kembali ke Halaman Utama</button>
+      <h2>Pendaftaran Pelatihan</h2>
+      
+      <div class="grup">
+        <label>Pilih Pelatihan yang Tersedia *</label>
+        <select id="pilih-pelatihan" onchange="tampilkanDetailPelatihan()"></select>
+      </div>
+      <div id="detail-pelatihan" class="peringatan">Silakan pilih pelatihan terlebih dahulu.</div>
 
-# --- FORM PENDAFTARAN (HANYA UNTUK PELATIHAN YANG BISA DIDAFTAR) ---
-st.markdown("---")
-st.header("📝 Formulir Pendaftaran")
+      <h3>📝 Isi Data Diri</h3>
+      <div class="grup">
+        <label>Nama Lengkap Sesuai KTP *</label>
+        <input type="text" id="nama-peserta" placeholder="Contoh: Andi Pratama">
+      </div>
+      <div class="grup">
+        <label>NIK / Nomor KTP *</label>
+        <input type="text" id="nik" placeholder="16 digit angka">
+      </div>
+      <div class="grup">
+        <label>Nomor WhatsApp Aktif *</label>
+        <input type="text" id="no-hp" placeholder="0812xxxxxxxxx">
+      </div>
+      <div class="grup">
+        <label>Pendidikan Terakhir *</label>
+        <input type="text" id="pendidikan" placeholder="Contoh: S1 Teknik Sipil">
+      </div>
+      <div class="grup">
+        <label>Lama Pengalaman Kerja (Tahun) *</label>
+        <input type="number" id="pengalaman" min="0" value="0">
+      </div>
+      <button class="tombol tombol-utama" onclick="kirimPendaftaran()">✅ Kirim Pendaftaran</button>
+      <div id="pesan-konfirmasi" class="sembunyi berhasil"></div>
+    </div>
+  </div>
 
-# Ambil daftar pelatihan yang bisa didaftar
-pilihan_pendaftaran = []
-for latih, status in pelatihan_akan:
-    pilihan_pendaftaran.append(f"{latih['nama']} — {latih['jabatan']}")
+  <script>
+    // === PERSYARATAN JENJANG 1–9 LENGKAP ===
+    const syaratKualifikasi = {
+      "9": {
+        nama: "Jenjang 9 - Ahli Utama",
+        aturan: [
+          "Doktor/Doktor Terapan/Spesialis 2: Minimal 0 Tahun",
+          "S2/Spesialis 1: Minimal 4 Tahun",
+          "Pendidikan Profesi: Minimal 7 Tahun",
+          "S1/D4 Terapan: Minimal 8 Tahun"
+        ]
+      },
+      "8": {
+        nama: "Jenjang 8 - Ahli Madya",
+        aturan: [
+          "S2/Spesialis 1: Minimal 0 Tahun",
+          "Pendidikan Profesi: Minimal 5 Tahun",
+          "S1/D4 Terapan: Minimal 6 Tahun"
+        ]
+      },
+      "7": {
+        nama: "Jenjang 7 - Ahli Muda",
+        aturan: [
+          "Pendidikan Profesi: Minimal 0 Tahun",
+          "S1/D4 Terapan: Minimal 0–2 Tahun"
+        ]
+      },
+      "6": {
+        nama: "Jenjang 6 - Teknisi/Analis Tingkat Ahli",
+        aturan: [
+          "S1/D4 Terapan: Minimal 0 Tahun",
+          "D3: Minimal 4 Tahun",
+          "D2: Minimal 8 Tahun",
+          "D1: Minimal 12 Tahun"
+        ]
+      },
+      "5": {
+        nama: "Jenjang 5 - Teknisi/Analis Tingkat Menengah",
+        aturan: [
+          "D3: Minimal 0 Tahun",
+          "D2: Minimal 4 Tahun",
+          "D1/SMK Plus: Minimal 8 Tahun",
+          "SMK: Minimal 10 Tahun",
+          "SMA: Minimal 12 Tahun"
+        ]
+      },
+      "4": {
+        nama: "Jenjang 4 - Teknisi/Analis Tingkat Dasar",
+        aturan: [
+          "D2: Minimal 0 Tahun",
+          "D1/SMK Plus: Minimal 2 Tahun",
+          "SMK: Minimal 4 Tahun",
+          "SMA: Minimal 6 Tahun"
+        ]
+      },
+      "3": {
+        nama: "Jenjang 3 - Operator/Pelaksana Tingkat Ahli",
+        aturan: [
+          "D1/SMK Plus: Minimal 0 Tahun",
+          "SMK: Minimal 3 Tahun",
+          "SMA: Minimal 4 Tahun",
+          "Pendidikan Dasar: Minimal 5 Tahun"
+        ]
+      },
+      "2": {
+        nama: "Jenjang 2 - Operator/Pelaksana Tingkat Menengah",
+        aturan: [
+          "SMK: Minimal 0 Tahun",
+          "SMA: Minimal 1 Tahun",
+          "Pendidikan Dasar: Minimal 0 Tahun"
+        ]
+      },
+      "1": {
+        nama: "Jenjang 1 - Operator/Pelaksana Tingkat Dasar",
+        aturan: [
+          "Pendidikan Dasar: Minimal 0 Tahun",
+          "Non Pendidikan (Dengan PBK): Minimal 2 Tahun"
+        ]
+      }
+    };
 
-if not pilihan_pendaftaran:
-    st.warning("⏳ Saat ini tidak ada pelatihan yang menerima pendaftaran. Silakan cek kembali nanti.")
-else:
-    with st.form("pendaftaran_pelatihan"):
-        st.subheader("👤 Data Diri Peserta")
-        col1, col2 = st.columns(2)
-        with col1:
-            nama = st.text_input("Nama Lengkap Sesuai KTP *")
-            nik = st.text_input("Nomor NIK / KTP *", max_chars=16)
-        with col2:
-            kontak = st.text_input("Nomor HP / WhatsApp *", placeholder="Contoh: 08123456789")
-            email = st.text_input("Alamat Email")
-        alamat = st.text_area("Alamat Lengkap Tempat Tinggal")
+    // === DATA JABATAN LENGKAP: SETIAP KLASIFIKASI & SUBKLASIFIKASI PUNYA JENJANG 1–9 ===
+    const dataJabatan = [
+      // ==============================================
+      // 1. TEKNIK SIPIL - SEMUA SUBKLASIFIKASI & JENJANG 1–9
+      // ==============================================
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Air Tanah dan Air Baku","jenjang":"9","kualifikasi":"Ahli Utama","nama_jabatan":"Ahli Utama Hidrologi"},
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Air Tanah dan Air Baku","jenjang":"8","kualifikasi":"Ahli Madya","nama_jabatan":"Ahli Madya Hidrologi"},
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Air Tanah dan Air Baku","jenjang":"7","kualifikasi":"Ahli Muda","nama_jabatan":"Ahli Muda Hidrologi"},
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Air Tanah dan Air Baku","jenjang":"6","kualifikasi":"Teknisi Ahli","nama_jabatan":"Pengawas Pengeboran Air Tanah"},
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Air Tanah dan Air Baku","jenjang":"5","kualifikasi":"Teknisi Menengah","nama_jabatan":"Teknisi Pengujian Air Tanah"},
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Air Tanah dan Air Baku","jenjang":"4","kualifikasi":"Teknisi Dasar","nama_jabatan":"Asisten Pengawas Pengeboran"},
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Air Tanah dan Air Baku","jenjang":"3","kualifikasi":"Pelaksana Ahli","nama_jabatan":"Pelaksana Pengeboran Air Tanah"},
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Air Tanah dan Air Baku","jenjang":"2","kualifikasi":"Pelaksana Menengah","nama_jabatan":"Operator Alat Pengeboran"},
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Air Tanah dan Air Baku","jenjang":"1","kualifikasi":"Pelaksana Dasar","nama_jabatan":"Pembantu Operator Pengeboran"},
+      
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Bangunan Jalan dan Jembatan","jenjang":"9","kualifikasi":"Ahli Utama","nama_jabatan":"Ahli Utama Perkerasan Jalan"},
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Bangunan Jalan dan Jembatan","jenjang":"8","kualifikasi":"Ahli Madya","nama_jabatan":"Ahli Madya Perencanaan Jembatan"},
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Bangunan Jalan dan Jembatan","jenjang":"7","kualifikasi":"Ahli Muda","nama_jabatan":"Ahli Muda Pengawasan Jalan"},
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Bangunan Jalan dan Jembatan","jenjang":"6","kualifikasi":"Teknisi Ahli","nama_jabatan":"Inspektur Jembatan"},
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Bangunan Jalan dan Jembatan","jenjang":"5","kualifikasi":"Teknisi Menengah","nama_jabatan":"Teknisi Pengujian Beton Jalan"},
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Bangunan Jalan dan Jembatan","jenjang":"4","kualifikasi":"Teknisi Dasar","nama_jabatan":"Asisten Inspeksi Jalan"},
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Bangunan Jalan dan Jembatan","jenjang":"3","kualifikasi":"Pelaksana Ahli","nama_jabatan":"Pelaksana Pekerjaan Perkerasan"},
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Bangunan Jalan dan Jembatan","jenjang":"2","kualifikasi":"Pelaksana Menengah","nama_jabatan":"Operator Alat Berat Jalan"},
+      {"klasifikasi":"TEKNIK SIPIL","subklasifikasi":"Bangunan Jalan dan Jembatan","jenjang":"1","kualifikasi":"Pelaksana Dasar","nama_jabatan":"Pembantu Pekerjaan Jalan"},
 
-        st.subheader("🎓 Data Pendidikan & Ijazah")
-        jenjang_pendidikan = st.selectbox("Jenjang Pendidikan Terakhir *", ["Pilih...", "Pendidikan Dasar", "SMA", "SMK", "SMK Plus/D1", "D2", "D3", "D4/S1", "Profesi", "S2", "Spesialis_1", "Doktor/Spesialis_2"])
-        nama_ijazah = st.text_input("Nama Lengkap Sesuai Ijazah *", placeholder="Harus sama persis dengan KTP")
-        nik_ijazah = st.text_input("Nomor Identitas di Ijazah (jika ada)")
-        berkas_ijazah = st.file_uploader("Unggah Scan Ijazah Terakhir *", type=["pdf", "jpg", "jpeg", "png", "doc", "docx"])
+      // ==============================================
+      // 2. TEKNIK MEKANIKAL - SEMUA SUBKLASIFIKASI & JENJANG 1–9
+      // ==============================================
+      {"klasifikasi":"TEKNIK MEKANIKAL","subklasifikasi":"Alat Berat Konstruksi","jenjang":"9","kualifikasi":"Ahli Utama","nama_jabatan":"Ahli Utama Teknik Alat Berat"},
+      {"klasifikasi":"TEKNIK MEKANIKAL","subklasifikasi":"Alat Berat Konstruksi","jenjang":"8","kualifikasi":"Ahli Madya","nama_jabatan":"Ahli Madya Perawatan Mesin"},
+      {"klasifikasi":"TEKNIK MEKANIKAL","subklasifikasi":"Alat Berat Konstruksi","jenjang":"7","kualifikasi":"Ahli Muda","nama_jabatan":"Ahli Muda Inspeksi Alat Berat"},
+      {"klasifikasi":"TEKNIK MEKANIKAL","subklasifikasi":"Alat Berat Konstruksi","jenjang":"6","kualifikasi":"Teknisi Ahli","nama_jabatan":"Teknisi Ahli Perbaikan Hidrolik"},
+      {"klasifikasi":"TEKNIK MEKANIKAL","subklasifikasi":"Alat Berat Konstruksi","jenjang":"5","kualifikasi":"Teknisi Menengah","nama_jabatan":"Teknisi Perawatan Berkala"},
+      {"klasifikasi":"TEKNIK MEKANIKAL","subklasifikasi":"Alat Berat Konstruksi","jenjang":"4","kualifikasi":"Teknisi Dasar","nama_jabatan":"Asisten Teknisi Mesin"},
+      {"klasifikasi":"TEKNIK MEKANIKAL","subklasifikasi":"Alat Berat Konstruksi","jenjang":"3","kualifikasi":"Pelaksana Ahli","nama_jabatan":"Operator Ahli Ekskavator"},
+      {"klasifikasi":"TEKNIK MEKANIKAL","subklasifikasi":"Alat Berat Konstruksi","jenjang":"2","kualifikasi":"Pelaksana Menengah","nama_jabatan":"Operator Alat Berat Umum"},
+      {"klasifikasi":"TEKNIK MEKANIKAL","subklasifikasi":"Alat Berat Konstruksi","jenjang":"1","kualifikasi":"Pelaksana Dasar","nama_jabatan":"Pembantu Perawatan Alat Berat"},
 
-        st.subheader("📎 Bukti Pendukung Lainnya")
-        bukti_ig = st.file_uploader("Bukti Mengikuti Instagram @bjkw6_makassar *", type=["pdf", "jpg", "jpeg", "png", "doc", "docx"])
-        link_pddikti = st.text_input("Link Bukti Kelulusan PDDIKTI *", placeholder="Harus dimulai dengan https://pddikti.kemdikbud.go.id/")
-        
-        st.subheader("💼 Bukti Pengalaman Kerja")
-        st.markdown("""
-        <div style="background:#FFF8E1;padding:1rem;border-radius:8px;border-left:5px solid #FF9800;">
-        ⚠️ <strong>Petunjuk:</strong> Sistem akan menghitung masa kerja otomatis berdasarkan tahun yang tertulis pada nama berkas (Contoh: SK_2020_2024.pdf).<br>
-        Format berkas yang diterima: PDF, JPG, PNG, DOC, DOCX, XLS, XLSX, RAR, ZIP
-        </div>""", unsafe_allow_html=True)
-        bukti_pengalaman = st.file_uploader("Unggah Bukti Pengalaman Kerja *", type=["pdf", "jpg", "jpeg", "png", "doc", "docx", "xls", "xlsx", "rar", "zip"], accept_multiple_files=True)
+      // ==============================================
+      // 3. TEKNIK ELEKTRIKAL - SEMUA SUBKLASIFIKASI & JENJANG 1–9
+      // ==============================================
+      {"klasifikasi":"TEKNIK ELEKTRIKAL","subklasifikasi":"Instalasi Listrik Konstruksi","jenjang":"9","kualifikasi":"Ahli Utama","nama_jabatan":"Ahli Utama Sistem Kelistrikan"},
+      {"klasifikasi":"TEKNIK ELEKTRIKAL","subklasifikasi":"Instalasi Listrik Konstruksi","jenjang":"8","kualifikasi":"Ahli Madya","nama_jabatan":"Ahli Madya Keamanan Listrik"},
+      {"klasifikasi":"TEKNIK ELEKTRIKAL","subklasifikasi":"Instalasi Listrik Konstruksi","jenjang":"7","kualifikasi":"Ahli Muda","nama_jabatan":"Ahli Muda Perencanaan Instalasi"},
+      {"klasifikasi":"TEKNIK ELEKTRIKAL","subklasifikasi":"Instalasi Listrik Konstruksi","jenjang":"6","kualifikasi":"Teknisi Ahli","nama_jabatan":"Pengawas Instalasi Listrik"},
+      {"klasifikasi":"TEKNIK ELEKTRIKAL","subklasifikasi":"Instalasi Listrik Konstruksi","jenjang":"5","kualifikasi":"Teknisi Menengah","nama_jabatan":"Teknisi Pengujian Kelistrikan"},
+      {"klasifikasi":"TEKNIK ELEKTRIKAL","subklasifikasi":"Instalasi Listrik Konstruksi","jenjang":"4","kualifikasi":"Teknisi Dasar","nama_jabatan":"Asisten Pengawas Listrik"},
+      {"klasifikasi":"TEKNIK ELEKTRIKAL","subklasifikasi":"Instalasi Listrik Konstruksi","jenjang":"3","kualifikasi":"Pelaksana Ahli","nama_jabatan":"Ahli Pemasangan Kabel"},
+      {"klasifikasi":"TEKNIK ELEKTRIKAL","subklasifikasi":"Instalasi Listrik Konstruksi","jenjang":"2","kualifikasi":"Pelaksana Menengah","nama_jabatan":"Teknisi Pemasangan Listrik"},
+      {"klasifikasi":"TEKNIK ELEKTRIKAL","subklasifikasi":"Instalasi Listrik Konstruksi","jenjang":"1","kualifikasi":"Pelaksana Dasar","nama_jabatan":"Pembantu Pemasangan Listrik"},
 
-        st.subheader("📄 Berkas Utama")
-        berkas_ktp = st.file_uploader("Unggah Scan KTP *", type=["pdf", "jpg", "jpeg", "png", "doc", "docx"])
+      // ==============================================
+      // 4. ARSITEKTUR - SEMUA SUBKLASIFIKASI & JENJANG 1–9
+      // ==============================================
+      {"klasifikasi":"ARSITEKTUR","subklasifikasi":"Perencanaan Arsitektur","jenjang":"9","kualifikasi":"Ahli Utama","nama_jabatan":"Arsitek Utama"},
+      {"klasifikasi":"ARSITEKTUR","subklasifikasi":"Perencanaan Arsitektur","jenjang":"8","kualifikasi":"Ahli Madya","nama_jabatan":"Arsitek Madya"},
+      {"klasifikasi":"ARSITEKTUR","subklasifikasi":"Perencanaan Arsitektur","jenjang":"7","kualifikasi":"Ahli Muda","nama_jabatan":"Arsitek Muda"},
+      {"klasifikasi":"ARSITEKTUR","subklasifikasi":"Perencanaan Arsitektur","jenjang":"6","kualifikasi":"Teknisi Ahli","nama_jabatan":"Penyusun Gambar Teknis Ahli"},
+      {"klasifikasi":"ARSITEKTUR","subklasifikasi":"Perencanaan Arsitektur","jenjang":"5","kualifikasi":"Teknisi Menengah","nama_jabatan":"Penyusun Gambar Kerja"},
+      {"klasifikasi":"ARSITEKTUR","subklasifikasi":"Perencanaan Arsitektur","jenjang":"4","kualifikasi":"Teknisi Dasar","nama_jabatan":"Asisten Penyusun Gambar"},
+      {"klasifikasi":"ARSITEKTUR","subklasifikasi":"Perencanaan Arsitektur","jenjang":"3","kualifikasi":"Pelaksana Ahli","nama_jabatan":"Pelaksana Tata Letak Bangunan"},
+      {"klasifikasi":"ARSITEKTUR","subklasifikasi":"Perencanaan Arsitektur","jenjang":"2","kualifikasi":"Pelaksana Menengah","nama_jabatan":"Pembuat Model Sederhana"},
+      {"klasifikasi":"ARSITEKTUR","subklasifikasi":"Perencanaan Arsitektur","jenjang":"1","kualifikasi":"Pelaksana Dasar","nama_jabatan":"Pembantu Persiapan Gambar"},
 
-        st.subheader("🎓 Pilihan Pelatihan")
-        pilihan = st.selectbox("Pilih Pelatihan yang Diikuti *", pilihan_pendaftaran)
-        jabatan_pilihan = pilihan.split(" — ")[1] if " — " in pilihan else pilihan
+      // ==============================================
+      // 5. ARSITEKTUR LANSKAP - SEMUA SUBKLASIFIKASI & JENJANG 1–9
+      // ==============================================
+      {"klasifikasi":"ARSITEKTUR LANSKAP","subklasifikasi":"Perancangan Lanskap","jenjang":"9","kualifikasi":"Ahli Utama","nama_jabatan":"Ahli Utama Lanskap"},
+      {"klasifikasi":"ARSITEKTUR LANSKAP","subklasifikasi":"Perancangan Lanskap","jenjang":"8","kualifikasi":"Ahli Madya","nama_jabatan":"Ahli Madya Taman Kota"},
+      {"klasifikasi":"ARSITEKTUR LANSKAP","subklasifikasi":"Perancangan Lanskap","jenjang":"7","kualifikasi":"Ahli Muda","nama_jabatan":"Ahli Muda Penghijauan"},
+      {"klasifikasi":"ARSITEKTUR LANSKAP","subklasifikasi":"Perancangan Lanskap","jenjang":"6","kualifikasi":"Teknisi Ahli","nama_jabatan":"Pengawas Pembuatan Taman"},
+      {"klasifikasi":"ARSITEKTUR LANSKAP","subklasifikasi":"Perancangan Lanskap","jenjang":"5","kualifikasi":"Teknisi Menengah","nama_jabatan":"Teknisi Pemilihan Tanaman"},
+      {"klasifikasi":"ARSITEKTUR LANSKAP","subklasifikasi":"Perancangan Lanskap","jenjang":"4","kualifikasi":"Teknisi Dasar","nama_jabatan":"Asisten Perancangan Taman"},
+      {"klasifikasi":"ARSITEKTUR LANSKAP","subklasifikasi":"Perancangan Lanskap","jenjang":"3","kualifikasi":"Pelaksana Ahli","nama_jabatan":"Pelaksana Penanaman Pohon"},
+      {"klasifikasi":"ARSITEKTUR LANSKAP","subklasifikasi":"Perancangan Lanskap","jenjang":"2","kualifikasi":"Pelaksana Menengah","nama_jabatan":"Perawat Taman Menengah"},
+      {"klasifikasi":"ARSITEKTUR LANSKAP","subklasifikasi":"Perancangan Lanskap","jenjang":"1","kualifikasi":"Pelaksana Dasar","nama_jabatan":"Pembantu Penanaman Tanaman"},
 
-        kirim = st.form_submit_button("✅ Kirim & Verifikasi Pendaftaran")
+      // ==============================================
+      // 6. TATA LINGKUNGAN - SEMUA SUBKLASIFIKASI & JENJANG 1–9
+      // ==============================================
+      {"klasifikasi":"TATA LINGKUNGAN","subklasifikasi":"Analisis Dampak Lingkungan","jenjang":"9","kualifikasi":"Ahli Utama","nama_jabatan":"Ahli Utama AMDAL"},
+      {"klasifikasi":"TATA LINGKUNGAN","subklasifikasi":"Analisis Dampak Lingkungan","jenjang":"8","kualifikasi":"Ahli Madya","nama_jabatan":"Ahli Madya Pengelolaan Lingkungan"},
+      {"klasifikasi":"TATA LINGKUNGAN","subklasifikasi":"Analisis Dampak Lingkungan","jenjang":"7","kualifikasi":"Ahli Muda","nama_jabatan":"Ahli Muda Pemantauan Lingkungan"},
+      {"klasifikasi":"TATA LINGKUNGAN","subklasifikasi":"Analisis Dampak Lingkungan","jenjang":"6","kualifikasi":"Teknisi Ahli","nama_jabatan":"Pengawas Pemantauan Lingkungan"},
+      {"klasifikasi":"TATA LINGKUNGAN","subklasifikasi":"Analisis Dampak Lingkungan","jenjang":"5","kualifikasi":"Teknisi Menengah","nama_jabatan":"Teknisi Pengujian Limbah"},
+      {"klasifikasi":"TATA LINGKUNGAN","subklasifikasi":"Analisis Dampak Lingkungan","jenjang":"4","kualifikasi":"Teknisi Dasar","nama_jabatan":"Asisten Pengambilan Sampel"},
+      {"klasifikasi":"TATA LINGKUNGAN","subklasifikasi":"Analisis Dampak Lingkungan","jenjang":"3","kualifikasi":"Pelaksana Ahli","nama_jabatan":"Pelaksana Pengolahan Limbah"},
+      {"klasifikasi":"TATA LINGKUNGAN","subklasifikasi":"Analisis Dampak Lingkungan","jenjang":"2","kualifikasi":"Pelaksana Menengah","nama_jabatan":"Pemantau Lapangan Lingkungan"},
+      {"klasifikasi":"TATA LINGKUNGAN","subklasifikasi":"Analisis Dampak Lingkungan","jenjang":"1","kualifikasi":"Pelaksana Dasar","nama_jabatan":"Pembantu Lapangan Lingkungan"},
 
-        if kirim:
-            valid = True
-            pesan_error = []
+      // ==============================================
+      // 7. MANAJEMEN KONSTRUKSI - SEMUA SUBKLASIFIKASI & JENJANG 1–9
+      // ==============================================
+      {"klasifikasi":"MANAJEMEN KONSTRUKSI","subklasifikasi":"Manajemen Proyek Konstruksi","jenjang":"9","kualifikasi":"Ahli Utama","nama_jabatan":"Manajer Proyek Utama"},
+      {"klasifikasi":"MANAJEMEN KONSTRUKSI","subklasifikasi":"Manajemen Proyek Konstruksi","jenjang":"8","kualifikasi":"Ahli Madya","nama_jabatan":"Manajer Proyek Madya"},
+      {"klasifikasi":"MANAJEMEN KONSTRUKSI","subklasifikasi":"Manajemen Proyek Konstruksi","jenjang":"7","kualifikasi":"Ahli Muda","nama_jabatan":"Manajer Proyek Muda"},
+      {"klasifikasi":"MANAJEMEN KONSTRUKSI","subklasifikasi":"Manajemen Proyek Konstruksi","jenjang":"6","kualifikasi":"Teknisi Ahli","nama_jabatan":"Pengawas Lapangan Ahli"},
+      {"klasifikasi":"MANAJEMEN KONSTRUKSI","subklasifikasi":"Manajemen Proyek Konstruksi","jenjang":"5","kualifikasi":"Teknisi Menengah","nama_jabatan":"Penyusun Laporan Proyek"},
+      {"klasifikasi":"MANAJEMEN KONSTRUKSI","subklasifikasi":"Manajemen Proyek Konstruksi","jenjang":"4","kualifikasi":"Teknisi Dasar","nama_jabatan":"Asisten Administrasi Proyek"},
+      {"klasifikasi":"MANAJEMEN KONSTRUKSI","subklasifikasi":"Manajemen Proyek Konstruksi","jenjang":"3","kualifikasi":"Pelaksana Ahli","nama_jabatan":"Pelaksana Jadwal Proyek"},
+      {"klasifikasi":"MANAJEMEN KONSTRUKSI","subklasifikasi":"Manajemen Proyek Konstruksi","jenjang":"2","kualifikasi":"Pelaksana Menengah","nama_jabatan":"Petugas Administrasi Lapangan"},
+      {"klasifikasi":"MANAJEMEN KONSTRUKSI","subklasifikasi":"Manajemen Proyek Konstruksi","jenjang":"1","kualifikasi":"Pelaksana Dasar","nama_jabatan":"Pembantu Dokumen Proyek"},
 
-            if not nama or not nik or not kontak or not nama_ijazah or not berkas_ijazah or not bukti_ig or not link_pddikti or not bukti_pengalaman or not berkas_ktp or jenjang_pendidikan == "Pilih...":
-                pesan_error.append("Lengkapi semua kolom bertanda * terlebih dahulu!")
-                valid = False
-            
-            if not validasi_nik(nik):
-                pesan_error.append("Format NIK salah! Harus berisi 16 digit angka.")
-                valid = False
+      // ==============================================
+      // 8. TEKNIK INDUSTRI - SEMUA SUBKLASIFIKASI & JENJANG 1–9
+      // ==============================================
+      {"klasifikasi":"TEKNIK INDUSTRI","subklasifikasi":"Pengendalian Mutu Konstruksi","jenjang":"9","kualifikasi":"Ahli Utama","nama_jabatan":"Ahli Utama Mutu Konstruksi"},
+      {"klasifikasi":"TEKNIK INDUSTRI","subklasifikasi":"Pengendalian Mutu Konstruksi","jenjang":"8","kualifikasi":"Ahli Madya","nama_jabatan":"Ahli Madya Jaminan Mutu"},
+      {"klasifikasi":"TEKNIK INDUSTRI","subklasifikasi":"Pengendalian Mutu Konstruksi","jenjang":"7","kualifikasi":"Ahli Muda","nama_jabatan":"Ahli Muda Pengujian Mutu"},
+      {"klasifikasi":"TEKNIK INDUSTRI","subklasifikasi":"Pengendalian Mutu Konstruksi","jenjang":"6","kualifikasi":"Teknisi Ahli","nama_jabatan":"Pengawas Mutu Lapangan"},
+      {"klasifikasi":"TEKNIK INDUSTRI","subklasifikasi":"Pengendalian Mutu Konstruksi","jenjang":"5","kualifikasi":"Teknisi Menengah","nama_jabatan":"Teknisi Pengujian Bahan"},
+      {"klasifikasi":"TEKNIK INDUSTRI","subklasifikasi":"Pengendalian Mutu Konstruksi","jenjang":"4","kualifikasi":"Teknisi Dasar","nama_jabatan":"Asisten Pengujian Mutu"},
+      {"klasifikasi":"TEKNIK INDUSTRI","subklasifikasi":"Pengendalian Mutu Konstruksi","jenjang":"3","kualifikasi":"Pelaksana Ahli","nama_jabatan":"Pelaksana Pemeriksaan Bahan"},
+      {"klasifikasi":"TEKNIK INDUSTRI","subklasifikasi":"Pengendalian Mutu Konstruksi","jenjang":"2","kualifikasi":"Pelaksana Menengah","nama_jabatan":"Pemeriksa Bahan Menengah"},
+      {"klasifikasi":"TEKNIK INDUSTRI","subklasifikasi":"Pengendalian Mutu Konstruksi","jenjang":"1","kualifikasi":"Pelaksana Dasar","nama_jabatan":"Pembantu Pemeriksaan Mutu"}
+    ];
 
-            if not validasi_no_hp(kontak):
-                pesan_error.append("Format nomor HP salah! Contoh yang benar: 08123456789 atau +628123456789.")
-                valid = False
+    // === FUNGSI PENYIMPANAN DATA ===
+    let daftarPelatihan = JSON.parse(localStorage.getItem("daftarPelatihan") || "[]");
+    let daftarPendaftar = JSON.parse(localStorage.getItem("daftarPendaftar") || "[]");
 
-            if not validasi_email(email):
-                pesan_error.append("Format email tidak valid.")
-                valid = False
+    // === FUNGSI NAVIGASI ===
+    function bukaHalaman(namaHalaman) {
+      document.querySelectorAll("[id^='halaman-']").forEach(el => el.classList.add("sembunyi"));
+      document.getElementById(`halaman-${namaHalaman}`).classList.remove("sembunyi");
+      if(namaHalaman === "admin") inisialisasiPilihan();
+      if(namaHalaman === "peserta") muatPilihanPelatihan();
+    }
 
-            if not validasi_link_pddikti(link_pddikti):
-                pesan_error.append("Link PDDIKTI harus berasal dari situs resmi: https://pddikti.kemdikbud.go.id/")
-                valid = False
+    // === INISIALISASI PILIHAN KLASIFIKASI ===
+    function inisialisasiPilihan() {
+      const daftarKlasifikasi = [...new Set(dataJabatan.map(item => item.klasifikasi))].sort();
+      const elemenKlasifikasi = document.getElementById("klasifikasi");
+      elemenKlasifikasi.innerHTML = `<option value="">-- Pilih Klasifikasi --</option>`;
+      daftarKlasifikasi.forEach(klas => {
+        elemenKlasifikasi.innerHTML += `<option value="${klas}">${klas}</option>`;
+      });
+    }
 
-            if not valid:
-                for err in pesan_error: st.error(f"⚠️ {err}")
-                st.stop()
-            
-            # Cek kesesuaian data
-            sesuai_ktp, pesan_ktp = cek_kesesuaian_ktp_ijazah(nama, nik, nama_ijazah, nik_ijazah)
-            if not sesuai_ktp:
-                st.markdown(f"""
-                <div class="pu-tolak"><h4>❌ Pendaftaran Ditolak</h4><p>{pesan_ktp}</p>
-                <p>Silakan perbaiki data dan unggah ulang berkas yang sesuai.</p></div>""", unsafe_allow_html=True)
-                st.stop()
-            
-            total_pengalaman = ekstrak_tahun_pengalaman(bukti_pengalaman)
-            st.info(f"🔍 Hasil perhitungan otomatis: Akumulasi pengalaman kerja Anda adalah **{total_pengalaman} tahun**")
-            
-            lulus_syarat, pesan_syarat = verifikasi_syarat(jabatan_pilihan, jenjang_pendidikan, total_pengalaman)
-            if not lulus_syarat:
-                st.markdown(f"""
-                <div class="pu-tolak"><h4>❌ Pendaftaran Ditolak</h4><p>{pesan_syarat}</p>
-                <p>Silakan tambahkan bukti pengalaman kerja atau pilih jabatan yang sesuai dengan kualifikasi Anda.</p></div>""", unsafe_allow_html=True)
-                st.stop()
-            
-            st.balloons()
-            st.markdown(f"""
-            <div class="pu-sukses"><h4>🎉 Pendaftaran Diterima!</h4>
-            <p>Terima kasih <strong>{nama}</strong> telah mendaftar untuk pelatihan <strong>{pilihan}</strong>.</p>
-            <p>✅ {pesan_ktp}<br>✅ {pesan_syarat}</p>
-            <p>Kami akan menghubungi Anda lewat nomor {kontak} paling lambat 3 hari kerja.</p></div>""", unsafe_allow_html=True)
+    // === UPDATE SUBKLASIFIKASI OTOMATIS ===
+    function updateSubklasifikasi() {
+      const klasifikasiTerpilih = document.getElementById("klasifikasi").value;
+      const elemenSubklasifikasi = document.getElementById("subklasifikasi");
+      const elemenJabatan = document.getElementById("jabatan");
+      elemenSubklasifikasi.innerHTML = `<option value="">-- Pilih Subklasifikasi --</option>`;
+      elemenJabatan.innerHTML = `<option value="">-- Pilih Jabatan Dulu --</option>`;
+      document.getElementById("syarat-kualifikasi").innerHTML = "";
+      
+      if(!klasifikasiTerpilih) return;
+      const daftarSubklas = [...new Set(dataJabatan.filter(item => item.klasifikasi === klasifikasiTerpilih).map(item => item.subklasifikasi))].sort();
+      daftarSubklas.forEach(sub => {
+        elemenSubklasifikasi.innerHTML += `<option value="${sub}">${sub}</option>`;
+      });
+    }
 
-# Kaki halaman
-st.markdown("<hr style='border: 2px solid #004B87; margin-top: 2rem;'>", unsafe_allow_html=True)
-st.caption("© 2026 Balai Jasa Konstruksi Wilayah VI Makassar — Kementerian Pekerjaan Umum | siLATIH v2.1")
+    // === UPDATE JABATAN & JENJANG OTOMATIS ===
+    function updateJabatan() {
+      const klasifikasiTerpilih = document.getElementById("klasifikasi").value;
+      const subklasTerpilih = document.getElementById("subklasifikasi").value;
+      const elemenJabatan = document.getElementById("jabatan");
+      elemenJabatan.innerHTML = `<option value="">-- Pilih Jabatan --</option>`;
+      document.getElementById("syarat-kualifikasi").innerHTML = "";
+      
+      if(!klasifikasiTerpilih || !subklasTerpilih) return;
+      const daftarJabatan = dataJabatan.filter(item => item.klasifikasi === klasifikasiTerpilih && item.subklasifikasi === subklasTerpilih);
+      daftarJabatan.forEach(jab => {
+        elemenJabatan.innerHTML += `<option value="${jab.jenjang}">${jab.nama_jabatan} | ${jab.kualifikasi} (Jenjang ${jab.jenjang})</option>`;
+      });
+    }
+
+    // === TAMPILKAN SYARAT JENJANG OTOMATIS ===
+    function tampilkanSyarat() {
+      const jenjangTerpilih = document.getElementById("jabatan").value;
+      const elemenSyarat = document.getElementById("syarat-kualifikasi");
+      if(!jenjangTerpilih) {
+        elemenSyarat.innerHTML = "";
+        return;
+      }
+      const dataSyarat = syaratKualifikasi[jenjangTerpilih];
+      elemenSyarat.innerHTML = `
+        <strong>${dataSyarat.nama}</strong><br>
+        Persyaratan Pendidikan & Pengalaman:<br>
+        ${dataSyarat.aturan.map(a => `• ${a}`).join("<br>")}
+      `;
+    }
+
+    // === FUNGSI SIMPAN PELATIHAN (DENGAN TANGGAL BARU) ===
+    function simpanPelatihan() {
+      const nama = document.getElementById("nama-pelatihan").value.trim();
+      const bukaDaftar = document.getElementById("buka-pendaftaran").value;
+      const tutupDaftar = document.getElementById("tutup-pendaftaran").value;
+      const mulaiLat = document.getElementById("mulai-pelatihan").value;
+      const selesaiLat = document.getElementById("selesai-pelatihan").value;
+      const lokasi = document.getElementById("lokasi").value.trim();
+      const syaratUmum = document.getElementById("syarat-umum").value.trim();
+      const jenjang = document.getElementById("jabatan").value;
+      const jabatanTerpilih = document.getElementById("jabatan").options[document.getElementById("jabatan").selectedIndex]?.text || "";
+      
+      if(!nama || !bukaDaftar || !tutupDaftar || !mulaiLat || !selesaiLat || !lokasi || !jenjang) {
+        alert("Harap lengkapi semua data bertanda * termasuk tanggal pendaftaran dan pelaksanaan!");
+        return;
+      }
+      
+      if(new Date(tutupDaftar) < new Date(bukaDaftar)) {
+        alert("Tanggal tutup pendaftaran tidak boleh lebih awal dari tanggal buka!");
+        return;
+      }
+      if(new Date(selesaiLat) < new Date(mulaiLat)) {
+        alert("Tanggal selesai pelaksanaan tidak boleh lebih awal dari tanggal mulai!");
+        return;
+      }
+      
+      daftarPelatihan.push({
+        nama, 
+        bukaPendaftaran: bukaDaftar, 
+        tutupPendaftaran: tutupDaftar,
+        mulaiPelatihan: mulaiLat,
+        selesaiPelatihan: selesaiLat,
+        lokasi, 
+        syaratUmum, 
+        jenjang, 
+        jabatanTerpilih
+      });
+      localStorage.setItem("daftarPelatihan", JSON.stringify(daftarPelatihan));
+      alert("✅ Pelatihan berhasil disimpan dengan lengkap!");
+      
+      // Reset form
+      document.getElementById("nama-pelatihan").value = "";
+      document.getElementById("buka-pendaftaran").value = "";
+      document.getElementById("tutup-pendaftaran").value = "";
+      document.getElementById("mulai-pelatihan").value = "";
+      document.getElementById("selesai-pelatihan").value = "";
+      document.getElementById("lokasi").value = "";
+      document.getElementById("syarat-umum").value = "1. Fotokopi KTP masih berlaku\n2. Fotokopi Ijazah Terakhir dilegalisir\n3. Pas foto 4x6 cm sebanyak 2 lembar\n4. Surat keterangan sehat dari dokter\n5. Surat tugas instansi (jika diperlukan)";
+      document.getElementById("klasifikasi").value = "";
+      document.getElementById("subklasifikasi").innerHTML = `<option value="">-- Pilih Subklasifikasi --</option>`;
+      document.getElementById("jabatan").
