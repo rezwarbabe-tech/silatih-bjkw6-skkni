@@ -221,6 +221,31 @@ data_jabatan = [
     {"klasifikasi": "ARSITEKTUR LANSKAP", "subklasifikasi": "Konservasi Sumber Daya Lanskap", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "AL032001", "nama_jabatan": "Pengawas Konservasi Lanskap", "acuan": "SKKNI 17-2023"}
 ]
 
+# ==============================================================
+    # ⚙️ KLASIFIKASI: MEKANIKAL — LENGKAP SELURUH SUBKLASIFIKASI
+    # ==============================================================
+    # --- Subklasifikasi: Instalasi Mekanikal Gedung ---
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Instalasi Mekanikal Gedung", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "MK011001", "nama_jabatan": "Ahli Utama Teknik Instalasi Mekanikal", "acuan": "SKKNI 134-2021"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Instalasi Mekanikal Gedung", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "MK011002", "nama_jabatan": "Ahli Madya Teknik Instalasi Mekanikal", "acuan": "SKKNI 134-2021"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Instalasi Mekanikal Gedung", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "MK011003", "nama_jabatan": "Ahli Muda Teknik Instalasi Mekanikal", "acuan": "SKKNI 134-2021"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Instalasi Mekanikal Gedung", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "MK012001", "nama_jabatan": "Pengawas Instalasi Mekanikal", "acuan": "SKKNI 134-2021"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Instalasi Mekanikal Gedung", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "MK012002", "nama_jabatan": "Pelaksana Instalasi Mekanikal", "acuan": "SKKNI 134-2021"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Instalasi Mekanikal Gedung", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 4, "kode_jabatan": "MK012003", "nama_jabatan": "Pelaksana Instalasi Mekanikal Dasar", "acuan": "SKKNI 134-2021"},
+
+    # --- Subklasifikasi: Sistem Pendingin & Tata Udara ---
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Sistem Pendingin & Tata Udara", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "MK021001", "nama_jabatan": "Ahli Utama Sistem Tata Udara", "acuan": "SKKNI 135-2021"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Sistem Pendingin & Tata Udara", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "MK021002", "nama_jabatan": "Ahli Madya Sistem Tata Udara", "acuan": "SKKNI 135-2021"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Sistem Pendingin & Tata Udara", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "MK021003", "nama_jabatan": "Ahli Muda Sistem Tata Udara", "acuan": "SKKNI 135-2021"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Sistem Pendingin & Tata Udara", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "MK022001", "nama_jabatan": "Pengawas Pemasangan AC & Ventilasi", "acuan": "SKKNI 135-2021"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Sistem Pendingin & Tata Udara", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "MK022002", "nama_jabatan": "Teknisi Pemasangan Sistem Tata Udara", "acuan": "SKKNI 135-2021"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Sistem Pendingin & Tata Udara", "kualifikasi": "OPERATOR", "jenjang": 3, "kode_jabatan": "MK023001", "nama_jabatan": "Operator Perawatan Sistem Pendingin", "acuan": "SKKNI 135-2021"},
+
+    # --- Subklasifikasi: Perpipaan & Sistem Fluida ---
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Perpipaan & Sistem Fluida", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "MK031001", "nama_jabatan": "Ahli Utama Teknik Perpipaan", "acuan": "SKKNI 189-2020"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Perpipaan & Sistem Fluida", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "MK031002", "nama_jabatan": "Ahli Madya Teknik Perpipaan", "acuan": "SKKNI 189-2020"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Perpipaan & Sistem Fluida", "kualifikasi": "AHLI", "jenjang": 7, "kode_jabatan": "MK031003", "nama_jabatan": "Ahli Muda Teknik Perpipaan", "acuan": "SKKNI 189-2020"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Perpipaan & Sistem Fluida", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 6, "kode_jabatan": "MK032001", "nama_jabatan": "Pengawas Pemasangan Perpipaan", "acuan": "SKKNI 189-2020"},
+    {"klasifikasi": "MEKANIKAL", "subklasifikasi": "Perpipaan & Sistem Fluida", "kualifikasi": "TEKNISI/ANALIS", "jenjang": 5, "kode_jabatan": "MK032002", "nama_jabatan": "Pelaksana Pemasangan Perpipaan", "acuan": "SKKNI 189-2020"},
 # ====================== HALAMAN UTAMA LOGIN ======================
 if st.session_state.peran is None:
     st.title("🎓 siLATIH - Sistem Pelatihan Terintegrasi")
