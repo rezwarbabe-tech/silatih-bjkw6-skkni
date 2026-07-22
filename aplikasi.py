@@ -290,6 +290,7 @@ data_jabatan = [
 # ==============================================================
 # KLASIFIKASI: ARSITEKTUR LANSKAP, TEKNIK ILUMINASI, DESAIN INTERIOR (AL)
 # ==============================================================
+data_jabatan = [
 # Subklasifikasi: Arsitektur Lanskap
 {"klasifikasi": "ARSITEKTUR LANSKAP, TEKNIK ILUMINASI, DESAIN INTERIOR", "subklasifikasi": "Arsitektur Lanskap", "kualifikasi": "AHLI", "jenjang": 9, "kode_jabatan": "AL011009", "nama_jabatan": "Arsitek Lanskap Utama", "acuan": "SKKNI 31-2025; SKKNI 29-2023; SKKNI 17-2023"},
 {"klasifikasi": "ARSITEKTUR LANSKAP, TEKNIK ILUMINASI, DESAIN INTERIOR", "subklasifikasi": "Arsitektur Lanskap", "kualifikasi": "AHLI", "jenjang": 8, "kode_jabatan": "AL011010", "nama_jabatan": "Arsitek Lanskap Madya", "acuan": "SKKNI 31-2025; SKKNI 29-2023; SKKNI 17-2023"},
